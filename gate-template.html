@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="staticrypt-html">
+    <head>
+        <meta charset="utf-8" />
+        <title>/*[|template_title|]*/0</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+        <!-- do not cache this page -->
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma" content="no-cache" />
+
+        <style>
+            /* SkySlope-branded gate — tokens from brand-guidelines.html */
+            :root{
+                --blue:#0059DA; --blue-deep:#1537BB; --slate:#3F5B77; --ink:#212529;
+                --gray300:#DEE2E6; --gray600:#696969; --danger:#DC3545; --spindle:#A7C2E7;
+                --ring:0 0 0 3px rgba(0,89,218,.35);
+                --font:proxima-nova,"Proxima Nova","Helvetica Neue",Helvetica,Arial,-apple-system,"Segoe UI",sans-serif;
+            }
+            .staticrypt-html{height:100%}
+            .staticrypt-body{height:100%;margin:0;font-family:var(--font);color:var(--ink);
+                background-color:#161B28;background-image:linear-gradient(180deg,#161B28 58%,#1A6AAC 100%);
+                background-attachment:fixed;-webkit-font-smoothing:antialiased}
+            .stars,.stars2{position:fixed;inset:0;background-repeat:repeat;pointer-events:none;z-index:0}
+            .stars{background-image:radial-gradient(1.4px 1.4px at 30px 40px,rgba(255,255,255,.9) 50%,transparent 51%),radial-gradient(1px 1px at 140px 90px,rgba(255,255,255,.65) 50%,transparent 51%),radial-gradient(1.2px 1.2px at 230px 160px,rgba(255,255,255,.8) 50%,transparent 51%),radial-gradient(.9px .9px at 320px 60px,rgba(255,255,255,.55) 50%,transparent 51%);background-size:380px 220px}
+            .stars2{background-image:radial-gradient(1px 1px at 80px 130px,rgba(167,194,231,.7) 50%,transparent 51%),radial-gradient(1.6px 1.6px at 260px 30px,rgba(135,198,255,.8) 50%,transparent 51%),radial-gradient(.8px .8px at 180px 200px,rgba(255,255,255,.5) 50%,transparent 51%);background-size:340px 260px}
+            .staticrypt-content{position:relative;z-index:2;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;box-sizing:border-box}
+            .lockup{width:212px;max-width:60vw;margin-bottom:30px}
+            .gate-card{background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(10,14,24,.45);padding:32px 30px;width:100%;max-width:400px;box-sizing:border-box}
+            .gate-eyebrow{font-size:11.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray600);margin:0 0 6px}
+            .gate-title{font-size:23px;line-height:1.15;font-weight:700;color:var(--ink);margin:0 0 8px}
+            .gate-instructions{font-size:14.5px;line-height:1.5;color:var(--slate);margin:0 0 20px}
+            .staticrypt-password-container{position:relative;margin:0 0 14px}
+            #staticrypt-password{width:100%;box-sizing:border-box;font-family:var(--font);font-size:16px;padding:12px 46px 12px 14px;border:1px solid var(--gray300);border-radius:8px;color:var(--ink);outline:0;background:#fff}
+            #staticrypt-password:focus{border-color:var(--blue);box-shadow:var(--ring)}
+            #staticrypt-password.gate-error-state{border-color:var(--danger)}
+            .staticrypt-toggle-password-visibility{cursor:pointer;height:18px;width:18px;opacity:.55;padding:12px;position:absolute;right:2px;top:50%;transform:translateY(-50%)}
+            label.staticrypt-remember{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--slate);margin:0 0 18px;cursor:pointer}
+            .staticrypt-remember input[type="checkbox"]{width:16px;height:16px;accent-color:var(--blue);margin:0}
+            .gate-error{display:none;font-size:13.5px;line-height:1.45;color:var(--danger);margin:-6px 0 14px}
+            .gate-error.show{display:block}
+            .staticrypt-decrypt-button{display:block;width:100%;font-family:var(--font);font-size:16px;font-weight:700;line-height:1;border-radius:999px;padding:14px 24px;border:0;background:var(--blue);color:#fff;cursor:pointer;transition:background .15s ease}
+            .staticrypt-decrypt-button:hover,.staticrypt-decrypt-button:active{background:var(--blue-deep)}
+            .staticrypt-decrypt-button:focus-visible{outline:none;box-shadow:var(--ring)}
+            .gate-foot{margin-top:26px;font-size:12.5px;color:var(--spindle);text-align:center;line-height:1.6;max-width:400px}
+            .hidden{display:none !important}
+            .staticrypt-spinner-container{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
+            .staticrypt-spinner{display:inline-block;width:2rem;height:2rem;border:.25em solid rgba(255,255,255,.35);border-right-color:transparent;border-radius:50%;animation:spinner-border .75s linear infinite}
+            @keyframes spinner-border{100%{transform:rotate(360deg)}}
+            @media (prefers-reduced-motion: reduce){.staticrypt-spinner{animation-duration:1.6s}}
+        </style>
+    </head>
+
+    <body class="staticrypt-body">
+        <div class="stars" aria-hidden="true"></div><div class="stars2" aria-hidden="true"></div>
+
+        <div id="staticrypt_loading" class="staticrypt-spinner-container">
+            <div class="staticrypt-spinner" role="status" aria-label="Loading"></div>
+        </div>
+
+        <div id="staticrypt_content" class="staticrypt-content hidden">
+            <svg class="lockup" viewBox="0 0 153 25" role="img" aria-label="SkySlope">
+            <path d="M31.8214059,16.4730902 C32.9218046,17.693805 34.6820338,18.7684539 36.9561134,18.7684539 C39.5966032,18.7684539 40.5259131,17.4255801 40.5259131,16.2532624 C40.5259131,14.5442033 38.6675852,14.0558591 36.5894111,13.5188262 C33.972862,12.8351443 30.9411453,12.0782836 30.9411453,8.75754279 C30.9411453,6.07179526 33.3127396,4.11841832 36.7117425,4.11841832 C39.2299009,4.11841832 41.2105603,4.92425919 42.6531366,6.38900035 L41.2350849,8.19572825 C39.9878301,6.87734459 38.2763583,6.29162306 36.516129,6.29162306 C34.7065585,6.29162306 33.4595957,7.21933133 33.4595957,8.58669519 C33.4595957,10.0517279 35.2201168,10.515582 37.2495336,11.0284164 C39.9145481,11.7362969 43.0198388,12.5666278 43.0198388,16.0340177 C43.0198388,18.5731162 41.2593176,20.941367 36.8580147,20.941367 C33.9486293,20.941367 31.8214059,19.8917914 30.4275869,18.3532884 L31.8214059,16.4730902 Z" id="Fill-1" fill="#FFFFFF"></path>
+            <polygon id="Fill-3" fill="#FFFFFF" points="50.8090794 13.567544 49.2686964 15.3013847 49.2686964 20.6483897 46.8235281 20.6483897 46.8235281 4.36276536 49.2686964 4.36276536 49.2686964 12.444498 56.090351 4.36276536 59.1223597 4.36276536 52.3985118 12.0783127 59.6601508 20.6483897 56.628434 20.6483897"></polygon>
+            <polygon id="Fill-5" fill="#FFFFFF" points="67.1902474 13.8360313 60.808577 4.36273621 63.6204476 4.36273621 68.4126855 11.638628 73.1561661 4.36273621 75.9925613 4.36273621 69.6354157 13.8360313 69.6354157 20.6483605 67.1902474 20.6483605"></polygon>
+            <path d="M78.5905125,16.4730902 C79.6909113,17.693805 81.4511405,18.7684539 83.72522,18.7684539 C86.3660018,18.7684539 87.2950198,17.4255801 87.2950198,16.2532624 C87.2950198,14.5442033 85.4366918,14.0558591 83.3585178,13.5188262 C80.7422606,12.8351443 77.7102519,12.0782836 77.7102519,8.75754279 C77.7102519,6.07179526 80.0818462,4.11841832 83.4808492,4.11841832 C85.9990076,4.11841832 87.9796669,4.92425919 89.4225352,6.38900035 L88.0041916,8.19572825 C86.7572287,6.87734459 85.0454649,6.29162306 83.2852357,6.29162306 C81.4756652,6.29162306 80.2287023,7.21933133 80.2287023,8.58669519 C80.2287023,10.0517279 81.9892235,10.515582 84.0186402,11.0284164 C86.6836547,11.7362969 89.7889455,12.5666278 89.7889455,16.0340177 C89.7889455,18.5731162 88.0284243,20.941367 83.6274133,20.941367 C80.717736,20.941367 78.5905125,19.8917914 77.1966936,18.3532884 L78.5905125,16.4730902 Z" id="Fill-7" fill="#FFFFFF"></path>
+            <polygon id="Fill-9" fill="#FFFFFF" points="93.5926931 4.36270705 96.0378614 4.36270705 96.0378614 18.4996167 103.446356 18.4996167 103.446356 20.6483313 93.5926931 20.6483313"></polygon>
+            <path d="M113.475225,6.26701634 C109.978708,6.26701634 107.778202,8.92856531 107.778202,12.517531 C107.778202,16.0825897 109.978708,18.7683372 113.475225,18.7683372 C116.922986,18.7683372 119.17254,16.0825897 119.17254,12.517531 C119.17254,8.92856531 116.922986,6.26701634 113.475225,6.26701634 M113.475225,4.0938116 C118.341037,4.0938116 121.690991,7.68306885 121.690991,12.517531 C121.690991,17.3522847 118.341037,20.9412504 113.475225,20.9412504 C108.609413,20.9412504 105.259752,17.3522847 105.259752,12.517531 C105.259752,7.68306885 108.609413,4.0938116 113.475225,4.0938116" id="Fill-11" fill="#FFFFFF"></path>
+            <path d="M132.181507,6.5111593 L128.073917,6.5111593 L128.073917,12.2246411 L132.181507,12.2246411 C133.942029,12.2246411 135.188991,11.077105 135.188991,9.36804597 C135.188991,7.65898692 133.942029,6.5111593 132.181507,6.5111593 L132.181507,6.5111593 Z M125.628748,4.36273621 L132.499452,4.36273621 C135.849406,4.36273621 137.707442,6.65780835 137.707442,9.36804597 C137.707442,12.0782836 135.824589,14.3733557 132.499452,14.3733557 L128.073917,14.3733557 L128.073917,20.6483605 L125.628748,20.6483605 L125.628748,4.36273621 Z" id="Fill-13" fill="#FFFFFF"></path>
+            <polygon id="Fill-15" fill="#FFFFFF" points="140.865344 4.36270705 151.819406 4.36270705 151.819406 6.51113014 143.310512 6.51113014 143.310512 11.2724136 151.648317 11.2724136 151.648317 13.4211282 143.310512 13.4211282 143.310512 18.4996167 151.819406 18.4996167 151.819406 20.6483313 140.865344 20.6483313"></polygon>
+            <path d="M0.834247636,2.53140159 C2.13171964,0.510676874 4.99731092,0.0660649576 7.37416051,0.385019342 C14.3896769,1.32730506 19.0487809,6.10141662 19.0487809,6.10141662 C19.0487809,6.10141662 13.4145291,2.42177924 9.35978316,3.14482026 C8.29471164,3.33520163 7.12687005,3.82850219 6.45039781,4.77224565 C5.61831069,5.93290141 5.64575496,7.45128755 6.05508344,8.79095428 C6.46499583,10.1317872 7.64363995,12.5119916 11.454307,16.0344842 C12.8317762,17.3073862 12.132531,18.5604629 9.60386205,17.497476 C8.69761698,17.1164217 6.8655655,16.0787996 4.74476518,14.1085128 C1.25788217,10.8696972 -1.42844543,6.05476881 0.834247636,2.53140159" id="Fill-17" fill="#FFFFFF"></path>
+            <path d="M21.4345644,22.5279756 C20.1370924,24.5487003 17.2715011,24.9936038 14.8946516,24.6743579 C7.87942717,23.7320721 3.22032317,18.9582521 3.22032317,18.9582521 C3.22032317,18.9582521 8.85428293,22.6375979 12.9090289,21.9145569 C13.9738085,21.7244671 15.141942,21.230875 15.8184143,20.2871315 C16.6505014,19.1267673 16.6192616,17.6092558 16.2137286,16.2687145 C15.6257204,14.3255417 14.6254641,12.5473856 10.814505,9.02518458 C9.43732784,7.75228253 10.136281,6.4992058 12.66495,7.56219272 C13.5711951,7.94324699 15.4032466,8.98086917 17.5240469,10.9508644 C21.0109299,14.18968 23.6972575,19.0048999 21.4345644,22.5279756" id="Fill-20" fill="#FFFFFF"></path>
+        </svg>
+            <div class="gate-card">
+                <p class="gate-eyebrow">Click Shift · Team Workspace</p>
+                <h1 class="gate-title">/*[|template_title|]*/0</h1>
+                <p class="gate-instructions">/*[|template_instructions|]*/0</p>
+
+                <form id="staticrypt-form" action="#" method="post">
+                    <div class="staticrypt-password-container">
+                        <input
+                            id="staticrypt-password"
+                            type="password"
+                            name="password"
+                            placeholder="/*[|template_placeholder|]*/0"
+                            autofocus
+                        />
+                        <img
+                            class="staticrypt-toggle-password-visibility"
+                            alt="/*[|template_toggle_show|]*/0"
+                            title="/*[|template_toggle_show|]*/0"
+                            src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTM4LjggNS4xQzI4LjQtMy4xIDEzLjMtMS4yIDUuMSA5LjJTLTEuMiAzNC43IDkuMiA0Mi45bDU5MiA0NjRjMTAuNCA4LjIgMjUuNSA2LjMgMzMuNy00LjFzNi4zLTI1LjUtNC4xLTMzLjdMNTI1LjYgMzg2LjdjMzkuNi00MC42IDY2LjQtODYuMSA3OS45LTExOC40YzMuMy03LjkgMy4zLTE2LjcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4xQzQ2NS41IDY4LjggNDAwLjggMzIgMzIwIDMyYy02OC4yIDAtMTI1IDI2LjMtMTY5LjMgNjAuOEwzOC44IDUuMXpNMjIzLjEgMTQ5LjVDMjQ4LjYgMTI2LjIgMjgyLjcgMTEyIDMyMCAxMTJjNzkuNSAwIDE0NCA2NC41IDE0NCAxNDRjMCAyNC45LTYuMyA0OC4zLTE3LjQgNjguN0w0MDggMjk0LjVjOC40LTE5LjMgMTAuNi00MS40IDQuOC02My4zYy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM2MwIDEwLjItMi40IDE5LjgtNi42IDI4LjNsLTkwLjMtNzAuOHpNMzczIDM4OS45Yy0xNi40IDYuNS0zNC4zIDEwLjEtNTMgMTAuMWMtNzkuNSAwLTE0NC02NC41LTE0NC0xNDRjMC02LjkgLjUtMTMuNiAxLjQtMjAuMkw4My4xIDE2MS41QzYwLjMgMTkxLjIgNDQgMjIwLjggMzQuNSAyNDMuN2MtMy4zIDcuOS0zLjMgMTYuNyAwIDI0LjZjMTQuOSAzNS43IDQ2LjIgODcuNyA5MyAxMzEuMUMxNzQuNSA0NDMuMiAyMzkuMiA0ODAgMzIwIDQ4MGM0Ny44IDAgODkuOS0xMi45IDEyNi4yLTMyLjVMMzczIDM4OS45eiIvPjwvc3ZnPg=="
+                        />
+                    </div>
+
+                    <p class="gate-error" id="gate-error" role="alert"></p>
+
+                    <label id="staticrypt-remember-label" class="staticrypt-remember hidden">
+                        <input id="staticrypt-remember" type="checkbox" name="remember" />
+                        /*[|template_remember|]*/0
+                    </label>
+
+                    <input type="submit" class="staticrypt-decrypt-button" value="/*[|template_button|]*/0" />
+                </form>
+            </div>
+            <p class="gate-foot">Unofficial team workspace operated by Click Shift Performance Marketing.<br />Not a SkySlope, Inc. website.</p>
+        </div>
+
+        <script>
+            // these variables will be filled when generating the file - the template format is '/*[|variable_name|]*/0'
+            const staticryptInitiator = /*[|js_staticrypt|]*/ 0;
+            const templateError = "/*[|template_error|]*/0",
+                templateToggleAltShow = "/*[|template_toggle_show|]*/0",
+                templateToggleAltHide = "/*[|template_toggle_hide|]*/0",
+                isRememberEnabled = /*[|is_remember_enabled|]*/ 0,
+                staticryptConfig = /*[|staticrypt_config|]*/ 0;
+
+            // you can edit these values to customize some of the behavior of StatiCrypt
+            const templateConfig = {
+                rememberExpirationKey: "staticrypt_expiration",
+                rememberPassphraseKey: "staticrypt_passphrase",
+                replaceHtmlCallback: null,
+                clearLocalStorageCallback: null,
+            };
+
+            // init the staticrypt engine
+            const staticrypt = staticryptInitiator.init(staticryptConfig, templateConfig);
+
+            // try to automatically decrypt on load if there is a saved password
+            window.onload = async function () {
+                const { isSuccessful } = await staticrypt.handleDecryptOnLoad();
+
+                // if we didn't decrypt anything on load, show the password prompt. Otherwise the content has already been
+                // replaced, no need to do anything
+                if (!isSuccessful) {
+                    // hide loading screen
+                    document.getElementById("staticrypt_loading").classList.add("hidden");
+                    document.getElementById("staticrypt_content").classList.remove("hidden");
+                    document.getElementById("staticrypt-password").focus();
+
+                    // show the remember me checkbox
+                    if (isRememberEnabled) {
+                        document.getElementById("staticrypt-remember-label").classList.remove("hidden");
+                    }
+                }
+            };
+
+            // toggle password visibility
+            const toggleIcon = document.querySelector(".staticrypt-toggle-password-visibility");
+            // these two icons are coming from FontAwesome
+            const imgSrcEyeClosed =
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTM4LjggNS4xQzI4LjQtMy4xIDEzLjMtMS4yIDUuMSA5LjJTLTEuMiAzNC43IDkuMiA0Mi45bDU5MiA0NjRjMTAuNCA4LjIgMjUuNSA2LjMgMzMuNy00LjFzNi4zLTI1LjUtNC4xLTMzLjdMNTI1LjYgMzg2LjdjMzkuNi00MC42IDY2LjQtODYuMSA3OS45LTExOC40YzMuMy03LjkgMy4zLTE2LjcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4xQzQ2NS41IDY4LjggNDAwLjggMzIgMzIwIDMyYy02OC4yIDAtMTI1IDI2LjMtMTY5LjMgNjAuOEwzOC44IDUuMXpNMjIzLjEgMTQ5LjVDMjQ4LjYgMTI2LjIgMjgyLjcgMTEyIDMyMCAxMTJjNzkuNSAwIDE0NCA2NC41IDE0NCAxNDRjMCAyNC45LTYuMyA0OC4zLTE3LjQgNjguN0w0MDggMjk0LjVjOC40LTE5LjMgMTAuNi00MS40IDQuOC02My4zYy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM2MwIDEwLjItMi40IDE5LjgtNi42IDI4LjNsLTkwLjMtNzAuOHpNMzczIDM4OS45Yy0xNi40IDYuNS0zNC4zIDEwLjEtNTMgMTAuMWMtNzkuNSAwLTE0NC02NC41LTE0NC0xNDRjMC02LjkgLjUtMTMuNiAxLjQtMjAuMkw4My4xIDE2MS41QzYwLjMgMTkxLjIgNDQgMjIwLjggMzQuNSAyNDMuN2MtMy4zIDcuOS0zLjMgMTYuNyAwIDI0LjZjMTQuOSAzNS43IDQ2LjIgODcuNyA5MyAxMzEuMUMxNzQuNSA0NDMuMiAyMzkuMiA0ODAgMzIwIDQ4MGM0Ny44IDAgODkuOS0xMi45IDEyNi4yLTMyLjVMMzczIDM4OS45eiIvPjwvc3ZnPg==";
+            const imgSrcEyeOpened =
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTI4OCAzMmMtODAuOCAwLTE0NS41IDM2LjgtMTkyLjYgODAuNkM0OC42IDE1NiAxNy4zIDIwOCAyLjUgMjQzLjdjLTMuMyA3LjktMy4zIDE2LjcgMCAyNC42QzE3LjMgMzA0IDQ4LjYgMzU2IDk1LjQgMzk5LjRDMTQyLjUgNDQzLjIgMjA3LjIgNDgwIDI4OCA0ODBzMTQ1LjUtMzYuOCAxOTIuNi04MC42YzQ2LjgtNDMuNSA3OC4xLTk1LjQgOTMtMTMxLjFjMy4zLTcuOSAzLjMtMTYuNyAwLTI0LjZjLTE0LjktMzUuNy00Ni4yLTg3LjctOTMtMTMxLjFDNDMzLjUgNjguOCAzNjguOCAzMiAyODggMzJ6TTE0NCAyNTZhMTQ0IDE0NCAwIDEgMSAyODggMCAxNDQgMTQ0IDAgMSAxIC0yODggMHptMTQ0LTY0YzAgMzUuMy0yOC43IDY0LTY0IDY0Yy03LjEgMC0xMy45LTEuMi0yMC4zLTMuM2MtNS41LTEuOC0xMS45IDEuNi0xMS43IDcuNGMuMyA2LjkgMS4zIDEzLjggMy4yIDIwLjdjMTMuNyA1MS4yIDY2LjQgODEuNiAxMTcuNiA2Ny45czgxLjYtNjYuNCA2Ny45LTExNy42Yy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM3oiLz48L3N2Zz4=";
+            toggleIcon.addEventListener("click", function () {
+                const passwordInput = document.getElementById("staticrypt-password");
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    toggleIcon.src = imgSrcEyeOpened;
+                    toggleIcon.alt = templateToggleAltHide;
+                    toggleIcon.title = templateToggleAltHide;
+                } else {
+                    passwordInput.type = "password";
+                    toggleIcon.src = imgSrcEyeClosed;
+                    toggleIcon.alt = templateToggleAltShow;
+                    toggleIcon.title = templateToggleAltShow;
+                }
+            });
+
+            // handle password form submission — errors show inline instead of alert()
+            document.getElementById("staticrypt-form").addEventListener("submit", async function (e) {
+                e.preventDefault();
+
+                const passwordInput = document.getElementById("staticrypt-password"),
+                    errorEl = document.getElementById("gate-error"),
+                    password = passwordInput.value,
+                    isRememberChecked = document.getElementById("staticrypt-remember").checked;
+
+                const { isSuccessful } = await staticrypt.handleDecryptionOfPage(password, isRememberChecked);
+
+                if (!isSuccessful) {
+                    errorEl.textContent = templateError;
+                    errorEl.classList.add("show");
+                    passwordInput.classList.add("gate-error-state");
+                    passwordInput.focus();
+                    passwordInput.select();
+                }
+            });
+            document.getElementById("staticrypt-password").addEventListener("input", function () {
+                document.getElementById("gate-error").classList.remove("show");
+                this.classList.remove("gate-error-state");
+            });
+        </script>
+    </body>
+</html>
