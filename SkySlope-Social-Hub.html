@@ -201,10 +201,18 @@
   .wordbank.lean span{border-color:rgba(27,175,122,.45)}
   .wordbank.avoid span{border-color:rgba(208,59,59,.4)}
   .tagline{font-style:italic;color:var(--muted);font-size:13px;margin:2px 0 8px}
+  /* ---- v2.1: logout + sortable headers ---- */
+  .logout{position:fixed;top:14px;right:18px;z-index:70;display:none;font-size:12.5px;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:20px;padding:6px 14px;cursor:pointer;font-family:inherit;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .logout:hover{background:var(--accentwash);color:var(--blue)}
+  th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+  th.sortable:hover{color:var(--ink)}
+  th .arr{opacity:.55;font-size:9px;margin-left:3px}
+  @media print{.logout{display:none!important}}
 </style>
 </head>
 <body>
 <script>try{var __t=localStorage.getItem('sshub_theme');if(__t)document.documentElement.setAttribute('data-theme',__t);}catch(e){}</script>
+<button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device">⎋ Log out</button>
 <div class="layout">
   <!-- ================= SIDEBAR ================= -->
   <nav class="sidebar">
@@ -1006,16 +1014,11 @@
       <h2>YouTube catalog — all 255 videos</h2>
       <div class="toolbar">
         <input type="search" id="assetSearch" placeholder="Search titles &amp; playlists…" aria-label="Search videos">
-        <select id="assetSort" aria-label="Sort videos">
-          <option value="cat">Catalog order</option>
-          <option value="views">Most views</option>
-          <option value="dur">Longest first</option>
-        </select>
       </div>
       <div class="filters" id="assetFilters"></div>
       <div class="count-note" id="assetCount"></div>
       <div style="overflow-x:auto"><table id="assetTable">
-        <thead><tr><th>Title</th><th>Channel</th><th>Found in</th><th>Length</th><th>Views</th><th>Age</th></tr></thead>
+        <thead><tr><th class="sortable" data-key="title">Title<span class="arr">↕</span></th><th class="sortable" data-key="channel">Channel<span class="arr">↕</span></th><th class="sortable" data-key="found">Found in<span class="arr">↕</span></th><th class="sortable" data-key="dur">Length<span class="arr">↕</span></th><th class="sortable" data-key="views">Views<span class="arr">↕</span></th><th class="sortable" data-key="up">Age<span class="arr">↕</span></th></tr></thead>
         <tbody></tbody>
       </table></div>
 
@@ -1039,7 +1042,7 @@
       <div class="filters" id="kwFilters"></div>
       <div class="count-note" id="kwCount"></div>
       <div style="overflow-x:auto"><table id="kwTable">
-        <thead><tr><th>Keyword</th><th>Vol/mo</th><th>SkySlope</th><th>Dotloop</th><th>Paperless</th><th>BoldTrail</th></tr></thead>
+        <thead><tr><th class="sortable" data-key="kw">Keyword<span class="arr">↕</span></th><th class="sortable" data-key="vol">Vol/mo<span class="arr">↕</span></th><th class="sortable" data-key="s">SkySlope<span class="arr">↕</span></th><th class="sortable" data-key="d">Dotloop<span class="arr">↕</span></th><th class="sortable" data-key="p">Paperless<span class="arr">↕</span></th><th class="sortable" data-key="b">BoldTrail<span class="arr">↕</span></th></tr></thead>
         <tbody></tbody>
       </table></div>
       <div class="note-card"><b>How to use this for content:</b> every high-volume keyword where SkySlope is unranked and a competitor ranks is a content brief — especially the TC cluster (Paperless Pipeline's 5,560 searches/mo). Every SkySlope <b>AI</b> win is a moat to defend with fresh data content (AI answers feed on cited, linkable claims — exactly what the Index produces). Counts here can differ by a keyword or two from the Overview chart, which uses the strategy-doc snapshot; this table shows the latest position captured during the week.</div>
@@ -1537,13 +1540,22 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
 
 // ---------- Asset Library ----------
 (function(){
-  var q='', ch='All', sort='cat';
+  var q='', ch='All', sortKey=null, sortDir=1;
+  var DEF_DIR={views:-1,dur:-1}; // numeric columns: first click shows biggest first
   var CH_LABEL = {'@SkySlope (main)':'Main','@SkySlopeSupport':'Support','@SkySlopeTraining':'Training'};
   function v2n(s){ var m=(s||'').trim().match(/^([\d.]+)\s*([KM])?/i); if(!m) return 0; return Math.round(parseFloat(m[1])*(((m[2]||'').toUpperCase()==='M')?1e6:((m[2]||'').toUpperCase()==='K')?1e3:1)); }
   function d2s(d){ var p=(d||'').split(':'); if(!p.length) return 0; var t=0; for(var i=0;i<p.length;i++){ var n=parseInt(p[i],10); if(isNaN(n)) return 0; t=t*60+n; } return t; }
+  function age(u){ var m=(u||'').match(/(\d+)\s*(hour|day|week|month|year)/i); if(!m) return 1e9; return parseInt(m[1],10)*({hour:1/24,day:1,week:7,month:30,year:365})[m[2].toLowerCase()]; }
   function playlists(f){ return (f||'').split(';').map(function(s){return s.replace(/Playlist:\s*/,'').trim();}).filter(Boolean).join(' · '); }
   function isShort(v){ return v.type==='Short' || /Shorts tab/.test(v.found); }
-
+  var SORTS={
+    title:function(v){return v.title.toLowerCase();},
+    channel:function(v){return (CH_LABEL[v.channel]||v.channel).toLowerCase();},
+    found:function(v){return playlists(v.found).toLowerCase();},
+    dur:function(v){return d2s(v.dur);},
+    views:function(v){return v2n(v.views);},
+    up:function(v){return age(v.up);}
+  };
   function filters(){
     var f=document.getElementById('assetFilters'); if(!f) return;
     f.innerHTML='';
@@ -1559,12 +1571,24 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
     if(q){ var hay=(v.title+' '+v.found+' '+v.channel).toLowerCase(); if(hay.indexOf(q)===-1) return false; }
     return true;
   }
+  function arrows(){
+    Array.prototype.forEach.call(document.querySelectorAll('#assetTable thead th.sortable'), function(th){
+      var a=th.querySelector('.arr'); if(a) a.textContent = th.getAttribute('data-key')===sortKey ? (sortDir===1?'▲':'▼') : '↕';
+    });
+  }
   function render(){
     var tb=document.querySelector('#assetTable tbody'); if(!tb) return;
     var rows=YT_ASSETS.filter(matches);
-    if(sort==='views') rows=rows.slice().sort(function(a,b){return v2n(b.views)-v2n(a.views);});
-    else if(sort==='dur') rows=rows.slice().sort(function(a,b){return d2s(b.dur)-d2s(a.dur);});
-    document.getElementById('assetCount').textContent='Showing '+rows.length+' of '+YT_ASSETS.length+' videos';
+    if(sortKey){
+      var kf=SORTS[sortKey];
+      rows=rows.slice().sort(function(a,b){
+        var x=kf(a), y=kf(b);
+        var c=(typeof x==='number') ? x-y : (x<y?-1:x>y?1:0);
+        return c*sortDir;
+      });
+    }
+    arrows();
+    document.getElementById('assetCount').textContent='Showing '+rows.length+' of '+YT_ASSETS.length+' videos · click a column header to sort'+(sortKey?' (third click resets)':'');
     tb.innerHTML=rows.map(function(v){
       return '<tr><td><a href="'+v.url+'" target="_blank" rel="noopener">'+v.title.replace(/</g,'&lt;')+'</a>'+(isShort(v)?' <span class="fmt">Short</span>':'')+'</td>'+
         '<td>'+(CH_LABEL[v.channel]||v.channel)+'</td>'+
@@ -1572,10 +1596,16 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
         '<td>'+(v.dur||'—')+'</td><td><b>'+(v.views||'—')+'</b></td><td>'+(v.up||'')+'</td></tr>';
     }).join('');
   }
+  Array.prototype.forEach.call(document.querySelectorAll('#assetTable thead th.sortable'), function(th){
+    th.addEventListener('click', function(){
+      var k=th.getAttribute('data-key'), first=DEF_DIR[k]||1;
+      if(sortKey===k){ if(sortDir===first){ sortDir=-first; } else { sortKey=null; sortDir=1; } }
+      else { sortKey=k; sortDir=first; }
+      render();
+    });
+  });
   var s=document.getElementById('assetSearch');
   if(s) s.addEventListener('input', function(){ q=s.value.trim().toLowerCase(); render(); });
-  var so=document.getElementById('assetSort');
-  if(so) so.addEventListener('change', function(){ sort=so.value; render(); });
   filters(); render();
 })();
 
@@ -1617,6 +1647,14 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
     var cls=p<=3?'top':(p<=10?'mid':'low');
     return '<td><span class="pos '+cls+'">'+p+'</span>'+(t==='ai'?'<sup class="ai">AI</sup>':'')+'</td>';
   }
+  var hs=null; // header sort: {key,dir}; overrides the preset dropdown until reset
+  var DEF_DIR={vol:-1}; // volume: first click shows highest first; positions: best first
+  function cmpPos(a,b,dir){ if(!a&&!b) return 0; if(!a) return 1; if(!b) return -1; return (a-b)*dir; } // unranked always last
+  function arrows(){
+    Array.prototype.forEach.call(document.querySelectorAll('#kwTable thead th.sortable'), function(th){
+      var a=th.querySelector('.arr'); if(a) a.textContent = (hs&&th.getAttribute('data-key')===hs.key) ? (hs.dir===1?'▲':'▼') : '↕';
+    });
+  }
   function render(){
     var tb=document.querySelector('#kwTable tbody'); if(!tb) return;
     var rows=KW_DATA.filter(function(k){
@@ -1624,22 +1662,38 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
       if(q&&k.kw.toLowerCase().indexOf(q)===-1) return false;
       return true;
     });
-    if(sort==='vol') rows=rows.slice().sort(function(a,b){return b.vol-a.vol;});
+    if(hs){
+      rows=rows.slice().sort(function(a,b){
+        if(hs.key==='kw'){ var x=a.kw.toLowerCase(), y=b.kw.toLowerCase(); return (x<y?-1:x>y?1:0)*hs.dir; }
+        if(hs.key==='vol'){ return (a.vol-b.vol)*hs.dir || b.vol-a.vol; }
+        return cmpPos(a[hs.key],b[hs.key],hs.dir) || b.vol-a.vol;
+      });
+    }
+    else if(sort==='vol') rows=rows.slice().sort(function(a,b){return b.vol-a.vol;});
     else if(sort==='sky') rows=rows.slice().sort(function(a,b){return (a.s||999)-(b.s||999)||b.vol-a.vol;});
     else if(sort==='gap') rows=rows.slice().sort(function(a,b){
       function g(k){ var best=Math.min(k.d||999,k.p||999,k.b||999); return (k.s?0:1)*(k.vol+1)*(best<999?1:0); }
       return g(b)-g(a)||b.vol-a.vol;
     });
-    document.getElementById('kwCount').textContent='Showing '+rows.length+' of '+KW_DATA.length+' keywords';
+    arrows();
+    document.getElementById('kwCount').textContent='Showing '+rows.length+' of '+KW_DATA.length+' keywords · click a column header to sort'+(hs?' (third click returns to the dropdown sort)':'');
     tb.innerHTML=rows.map(function(k){
       return '<tr><td>'+k.kw.replace(/</g,'&lt;')+'</td><td><b>'+k.vol.toLocaleString()+'</b></td>'+
         posCell(k.s,k.st)+posCell(k.d,k.dt)+posCell(k.p,k.pt)+posCell(k.b,k.bt)+'</tr>';
     }).join('');
   }
+  Array.prototype.forEach.call(document.querySelectorAll('#kwTable thead th.sortable'), function(th){
+    th.addEventListener('click', function(){
+      var k=th.getAttribute('data-key'), first=DEF_DIR[k]||1;
+      if(hs&&hs.key===k){ if(hs.dir===first){ hs.dir=-first; } else { hs=null; } }
+      else { hs={key:k,dir:first}; }
+      render();
+    });
+  });
   var s=document.getElementById('kwSearch');
   if(s) s.addEventListener('input', function(){ q=s.value.trim().toLowerCase(); render(); });
   var so=document.getElementById('kwSort');
-  if(so) so.addEventListener('change', function(){ sort=so.value; render(); });
+  if(so) so.addEventListener('change', function(){ sort=so.value; hs=null; render(); });
   tiles(); filters(); render();
 })();
 
@@ -1703,6 +1757,54 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
     });
   };
 })();
+
+// ---------- Logout (password gate) ----------
+// Shown only when the page is served through the StatiCrypt gate
+// (skyslope.soldonsocial.com) or a remembered password exists on this device.
+(function(){
+  var btn=document.getElementById('logoutBtn'); if(!btn) return;
+  function gateKeys(){
+    var ks=[]; try{ for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(k&&k.indexOf('staticrypt')===0) ks.push(k); } }catch(e){}
+    return ks;
+  }
+  var onGate=/soldonsocial\.com$/i.test(location.hostname);
+  if(!(onGate||gateKeys().length)) return;
+  btn.style.display='block';
+  btn.onclick=function(){
+    try{ gateKeys().forEach(function(k){ localStorage.removeItem(k); }); }catch(e){}
+    location.replace(location.origin+'/?staticrypt_logout');
+  };
+})();
+
+// ---------- Sortable headers for the remaining data tables ----------
+function makeSortable(tbl){
+  if(!tbl||!tbl.tHead||!tbl.tHead.rows.length) return;
+  var ths=tbl.tHead.rows[0].cells, orig=null, cur={i:-1,dir:1};
+  Array.prototype.forEach.call(ths, function(th,i){
+    th.classList.add('sortable');
+    var a=document.createElement('span'); a.className='arr'; a.textContent='↕'; th.appendChild(a);
+    th.addEventListener('click', function(){
+      var tb=tbl.tBodies[0]; if(!tb) return;
+      if(!orig) orig=Array.prototype.slice.call(tb.rows);
+      if(cur.i===i){ cur.dir = cur.dir===1 ? -1 : 0; } else { cur={i:i,dir:1}; }
+      Array.prototype.forEach.call(ths, function(t){ var s=t.querySelector('.arr'); if(s) s.textContent='↕'; });
+      var rows;
+      if(cur.dir===0){ rows=orig.slice(); cur={i:-1,dir:1}; }
+      else{
+        a.textContent = cur.dir===1 ? '▲' : '▼';
+        rows=Array.prototype.slice.call(tb.rows).sort(function(r1,r2){
+          var x=(r1.cells[i]?r1.cells[i].textContent:'').trim(), y=(r2.cells[i]?r2.cells[i].textContent:'').trim();
+          var nx=parseFloat(x.replace(/[,$%]/g,'')), ny=parseFloat(y.replace(/[,$%]/g,''));
+          var c=(!isNaN(nx)&&!isNaN(ny)) ? nx-ny : x.toLowerCase().localeCompare(y.toLowerCase());
+          return c*cur.dir;
+        });
+      }
+      rows.forEach(function(r){ tb.appendChild(r); });
+    });
+  });
+}
+makeSortable(document.getElementById('followTable'));
+makeSortable(document.getElementById('chartTable2'));
 </script>
 </body>
 </html>
