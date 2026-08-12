@@ -170,7 +170,22 @@
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--page);border-radius:8px;padding:8px 16px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
   input[type=file]{display:none}
   @media(max-width:700px){.pcard{grid-template-columns:1fr}.pcard .img{width:100%;height:140px}.pctrl{flex-direction:row;flex-wrap:wrap;align-items:center}}
-  @media (max-width:820px){.layout{flex-direction:column}.sidebar{width:100%;height:auto;position:relative}.main{padding:20px 18px 60px}}
+  .sidebar-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .menu-toggle{display:none;font-family:inherit;font-size:13px;font-weight:700;border:1px solid var(--grid);border-radius:999px;background:var(--surface);color:var(--ink-2);padding:7px 16px;cursor:pointer}
+  @media (max-width:820px){
+    .layout{flex-direction:column}
+    .sidebar{width:100%;height:auto;position:sticky;top:0;z-index:60;padding:10px 14px;border-right:0;border-bottom:1px solid var(--grid);box-shadow:var(--shadow);overflow:visible}
+    .menu-toggle{display:block;flex-shrink:0;margin-top:4px}
+    .sslogo{width:118px;margin:2px 0 2px}
+    .sidebar .navgroup,.sidebar .search,.sidebar .mode-toggle,.sidebar .brand small{display:none}
+    .sidebar.open .navgroup{display:block}
+    .sidebar.open .search,.sidebar.open .mode-toggle{display:block}
+    .sidebar.open .brand small{display:block}
+    .sidebar.open{max-height:80vh;overflow-y:auto}
+    .main{padding:20px 16px 60px}
+    .search,.toolbar input[type=search],.toolbar select{font-size:16px}
+    .logout{top:auto;bottom:16px;right:14px}
+  }
   @media print{.sidebar,.mode-toggle,.tbtn{display:none}.view{display:block!important}.card{break-inside:avoid}}
 
   /* ---- v2: system dark preference (when no explicit choice is stored) ---- */
@@ -287,33 +302,36 @@
         </symbol><symbol id="ss-mark" viewBox="-0.7 -0.2 24.9 25.4"><path d="M0.834247636,2.53140159 C2.13171964,0.510676874 4.99731092,0.0660649576 7.37416051,0.385019342 C14.3896769,1.32730506 19.0487809,6.10141662 19.0487809,6.10141662 C19.0487809,6.10141662 13.4145291,2.42177924 9.35978316,3.14482026 C8.29471164,3.33520163 7.12687005,3.82850219 6.45039781,4.77224565 C5.61831069,5.93290141 5.64575496,7.45128755 6.05508344,8.79095428 C6.46499583,10.1317872 7.64363995,12.5119916 11.454307,16.0344842 C12.8317762,17.3073862 12.132531,18.5604629 9.60386205,17.497476 C8.69761698,17.1164217 6.8655655,16.0787996 4.74476518,14.1085128 C1.25788217,10.8696972 -1.42844543,6.05476881 0.834247636,2.53140159" id="Fill-17" style="fill:var(--logo-mark,#0059DA)"></path><path d="M21.4345644,22.5279756 C20.1370924,24.5487003 17.2715011,24.9936038 14.8946516,24.6743579 C7.87942717,23.7320721 3.22032317,18.9582521 3.22032317,18.9582521 C3.22032317,18.9582521 8.85428293,22.6375979 12.9090289,21.9145569 C13.9738085,21.7244671 15.141942,21.230875 15.8184143,20.2871315 C16.6505014,19.1267673 16.6192616,17.6092558 16.2137286,16.2687145 C15.6257204,14.3255417 14.6254641,12.5473856 10.814505,9.02518458 C9.43732784,7.75228253 10.136281,6.4992058 12.66495,7.56219272 C13.5711951,7.94324699 15.4032466,8.98086917 17.5240469,10.9508644 C21.0109299,14.18968 23.6972575,19.0048999 21.4345644,22.5279756" id="Fill-20" style="fill:var(--logo-mark,#0059DA)"></path></symbol></svg>
 <div class="layout">
   <!-- ================= SIDEBAR ================= -->
-  <nav class="sidebar">
-    <svg class="sslogo" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
-    <div class="brand">Social Hub<small>Command Center v2 · Operator: Naomi Pinkston · Click Shift · Aug 2026</small></div>
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div><svg class="sslogo" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
+      <div class="brand">Social Hub<small>Command Center v2 · Operator: Naomi Pinkston · Click Shift · Aug 2026</small></div></div>
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="sidebar">Menu</button>
+    </div>
     <input class="search" id="searchBox" type="search" placeholder="Search sections…  ( / )" aria-label="Search sections">
     <div class="navgroup"><div class="gt">Portal</div>
-      <button class="navlink active" data-view="overview" data-terms="overview dashboard summary stats">⌂ Overview</button>
-      <button class="navlink" data-view="social" data-terms="social channels access hub linkedin instagram facebook youtube tiktok x feeds engagement posts tracker analytics consoles">📡 Channels &amp; Feeds</button>
-      <button class="navlink" data-view="assets" data-terms="asset library videos youtube tutorials playlists images media inventory clips footage b-roll spotlights shorts">🎬 Asset Library</button>
-      <button class="navlink" data-view="keywords" data-terms="keyword explorer semrush rankings search seo positions competitors gaps tc cluster ai overview volume">🔎 Keyword Explorer</button>
-      <button class="navlink" data-view="next" data-terms="next steps actions checklist rob decisions">✓ Action Tracker</button>
+      <button class="navlink active" data-view="overview" data-terms="overview dashboard summary stats">Overview</button>
+      <button class="navlink" data-view="social" data-terms="social channels access hub linkedin instagram facebook youtube tiktok x feeds engagement posts tracker analytics consoles">Channels &amp; Feeds</button>
+      <button class="navlink" data-view="assets" data-terms="asset library videos youtube tutorials playlists images media inventory clips footage b-roll spotlights shorts">Asset Library</button>
+      <button class="navlink" data-view="keywords" data-terms="keyword explorer semrush rankings search seo positions competitors gaps tc cluster ai overview volume">Keyword Explorer</button>
+      <button class="navlink" data-view="next" data-terms="next steps actions checklist rob decisions">Action Tracker</button>
     </div>
     <div class="navgroup"><div class="gt">Operate (Naomi)</div>
-      <button class="navlink" data-view="studio" data-terms="content studio posts backlog drafts captions queue publish compose edit reorder images pillars">📝 Content Studio</button>
-      <button class="navlink" data-view="inspo" data-terms="inspiration hooks formulas accounts study examples ideas">💡 Inspiration</button>
-      <button class="navlink" data-view="growth" data-terms="follow unfollow lists accounts partners press tc community growth">📈 Follow / Unfollow</button>
-      <button class="navlink" data-view="auto" data-terms="automation policy dm bots scheduling rules tos compliance">🤖 Automation Policy</button>
-      <button class="navlink" data-view="ops" data-terms="weekly rhythm operations roles roadmap naomi cadence">🔁 Weekly Rhythm</button>
+      <button class="navlink" data-view="studio" data-terms="content studio posts backlog drafts captions queue publish compose edit reorder images pillars">Content Studio</button>
+      <button class="navlink" data-view="inspo" data-terms="inspiration hooks formulas accounts study examples ideas">Inspiration</button>
+      <button class="navlink" data-view="growth" data-terms="follow unfollow lists accounts partners press tc community growth">Follow / Unfollow</button>
+      <button class="navlink" data-view="auto" data-terms="automation policy dm bots scheduling rules tos compliance">Automation Policy</button>
+      <button class="navlink" data-view="ops" data-terms="weekly rhythm operations roles roadmap naomi cadence">Weekly Rhythm</button>
     </div>
     <div class="navgroup"><div class="gt">Brand Reference</div>
-      <button class="navlink" data-view="brand" data-terms="brand guidelines style guide logo colors palette typography tokens components imagery accessibility science blue slate mirage">🎨 Brand Guidelines</button>
+      <button class="navlink" data-view="brand" data-terms="brand guidelines style guide logo colors palette typography tokens components imagery accessibility science blue slate mirage">Brand Guidelines</button>
       <button class="navlink sub" data-view="brand" data-jump="b-logo" data-terms="logo lockup mark clear space reversed white">Logo rules</button>
       <button class="navlink sub" data-view="brand" data-jump="b-color" data-terms="color palette swatches hex science blue gradients">Color</button>
       <button class="navlink sub" data-view="brand" data-jump="b-tokens" data-terms="design tokens css variables copy paste">Design tokens</button>
-      <button class="navlink" data-view="voice" data-terms="voice tone brand writing style register wink guardian attributes quotes dials">🗣 Voice &amp; Tone</button>
+      <button class="navlink" data-view="voice" data-terms="voice tone brand writing style register wink guardian attributes quotes dials">Voice &amp; Tone</button>
       <button class="navlink sub" data-view="voice" data-jump="v-names" data-terms="product names exact spellings digisign skytc ayce skysight capitals">Exact spellings</button>
       <button class="navlink sub" data-view="voice" data-jump="v-check" data-terms="voice checklist pre-publish qa draft">Pre-publish checklist</button>
-      <button class="navlink" data-view="products" data-terms="product guide suite pipeline pricing forms digisign breeze offers books skytc skysight ayce pilot smart">📦 Product Guide</button>
+      <button class="navlink" data-view="products" data-terms="product guide suite pipeline pricing forms digisign breeze offers books skytc skysight ayce pilot smart">Product Guide</button>
       <button class="navlink sub" data-view="products" data-jump="p-pricing" data-terms="pricing price 340 6.25 299 published">Pricing</button>
       <button class="navlink sub" data-view="products" data-jump="p-smart" data-terms="smart suite ai assist listings scan emails blocks voice beta">Smart Suite AI</button>
       <button class="navlink sub" data-view="products" data-jump="p-watch" data-terms="accuracy watch-outs caption errors claims stale numbers">⚠ Accuracy watch-outs</button>
@@ -373,38 +391,23 @@
         </table>
       </div>
 
-      <h2>The two documents</h2>
-      <div class="card" open><summary>📘 Doc 1 — Social Media Strategy <span class="tag">What we publish</span><span class="chev">▶</span></summary>
-        <div class="body"><p>The plan Rob can green-light: the <b>SkySlope Index</b> data franchise at the center, the June audit's fixes hard-wired in (zero-CTA bucket, testimonial cadence, QA step), platform lanes per the shared engagement plan, and the 20-hour monthly scope from the July 9 proposal.</p>
-        <p><a href="#" data-goto="d1">Open Doc 1 →</a></p></div>
-      </div>
-      <div class="card" open><summary>📗 Doc 2 — Audience, Personas &amp; Path to Purchase <span class="tag">Who it's for &amp; how it grows</span><span class="chev">▶</span></summary>
-        <div class="body"><p>Built from the Semrush competitor file: the competitive set, audience definition, four personas with buyer journeys, the six-stage path to purchase — plus the <b style="color:var(--crit)">Big Warning</b> on what researching buyers see today, and the <b>Audience Growth Engine</b> for the low-follower/low-engagement problem.</p>
-        <p><a href="#" data-goto="d2">Open Doc 2 →</a></p></div>
-      </div>
-
-      <div class="card" open><summary>📝 Content Studio <span class="tag">Naomi's workspace</span><span class="chev">▶</span></summary>
-        <div class="body"><p>The editable post backlog across all four pillars — statuses, reordering, image slots, and one-click <b>Copy + Compose</b> handoff to each platform's native composer. Plus inspiration, follow/unfollow lists, the automation policy, and the weekly operating rhythm under <b>Operate</b> in the sidebar.</p>
-        <p><a href="#" data-goto="studio">Open Content Studio →</a></p></div>
-      </div>
-      <div class="card" open><summary>📡 Channels &amp; Feeds <span class="tag">Access hub</span><span class="chev">▶</span></summary>
-        <div class="body"><p>One-click access to every channel and its analytics console, cadence targets per the strategy, and the post-by-post <b>engagement tracker</b> pre-loaded with the June audit baseline (updated monthly as part of reporting).</p>
-        <p><a href="#" data-goto="social">Open Channels &amp; Feeds →</a></p></div>
-      </div>
-
-      <h2>Reference shelf</h2>
+      <h2>Start here</h2>
       <div class="grid2">
-        <div class="ccard"><h3>🎨 Brand Guidelines</h3>The visual identity — logo rules, the blue-to-deep-space palette, typography, components, and copy-paste design tokens. This hub now runs on them. <a href="#" data-goto="brand">Open →</a></div>
-        <div class="ccard"><h3>🗣 Voice &amp; Tone</h3>Five voice attributes, six tone dials, exact product spellings, and the pre-publish voice checklist — distilled from the full site + YouTube crawl. <a href="#" data-goto="voice">Open →</a></div>
-        <div class="ccard"><h3>📦 Product Guide</h3>All ten products with pricing, the Smart Suite AI claims, and the accuracy watch-outs that prevent caption errors. <a href="#" data-goto="products">Open →</a></div>
-        <div class="ccard"><h3>🎬 Asset Library</h3>255 YouTube videos, 46 embedded videos, 765 site images — searchable, so pillars can launch on footage SkySlope already owns. <a href="#" data-goto="assets">Open →</a></div>
-        <div class="ccard"><h3>🔎 Keyword Explorer</h3>All 215 tracked keywords with SkySlope vs competitor positions — every gap is a content brief. <a href="#" data-goto="keywords">Open →</a></div>
+        <div class="ccard"><h3>Doc 1 · Social Media Strategy</h3>The plan Rob can green-light: the SkySlope Index data franchise, the June-audit fixes hard-wired in, platform lanes, and the 20-hour monthly scope. <a href="#" data-goto="d1">Open →</a></div>
+        <div class="ccard"><h3>Doc 2 · Audience &amp; Path to Purchase</h3>The competitive set, four personas, the six-stage path to purchase, the Big Warning on review-platform social proof, and the Audience Growth Engine. <a href="#" data-goto="d2">Open →</a></div>
+        <div class="ccard"><h3>Content Studio</h3>Naomi's workspace: the editable backlog across all four pillars with statuses, publish days, calendar view, and Copy + Compose handoff. <a href="#" data-goto="studio">Open →</a></div>
+        <div class="ccard"><h3>Channels &amp; Feeds</h3>Every channel and its analytics console one click away, follower and posts-per-month tiles, and the engagement tracker with the June baseline. <a href="#" data-goto="social">Open →</a></div>
+        <div class="ccard"><h3>Brand Guidelines</h3>Logo rules, palette, typography, components, and copy-paste tokens — the visual identity this hub runs on. <a href="#" data-goto="brand">Open →</a></div>
+        <div class="ccard"><h3>Voice &amp; Tone</h3>Five voice attributes, six tone dials, exact product spellings, and the pre-publish checklist. <a href="#" data-goto="voice">Open →</a></div>
+        <div class="ccard"><h3>Product Guide</h3>All ten products with pricing, the Smart Suite claims, and the accuracy watch-outs that prevent caption errors. <a href="#" data-goto="products">Open →</a></div>
+        <div class="ccard"><h3>Asset Library</h3>255 searchable YouTube videos plus the image inventory — pillars can launch on footage SkySlope already owns. <a href="#" data-goto="assets">Open →</a></div>
+        <div class="ccard"><h3>Keyword Explorer</h3>215 tracked keywords with SkySlope vs competitor positions — every gap is a content brief. <a href="#" data-goto="keywords">Open →</a></div>
       </div>
 
       <h2>The one-paragraph story</h2>
-      <div class="card" open><summary>How it all connects<span class="chev">▶</span></summary>
+      <details class="card" open><summary>How it all connects<span class="chev">▶</span></summary>
         <div class="body"><p>The June audit proved SkySlope's channels are all ask and no give. The keyword data shows competitors own the research narrative — Paperless Pipeline owns the TC audience, Dotloop owns brand gravity — while SkySlope wins AI overviews on broker terms. The review platforms show a validation gap (3.9★ Capterra, half the review volume of rivals). The answer: publish the industry's only proprietary transaction data (the give nobody else can copy), deliver it through the personas' actual channels, activate 900K users + sales + execs as distribution, and fix the review surface in parallel. Awareness → credibility → referral, each stage reinforcing the next.</p></div>
-      </div>
+      </details>
     </section>
 
     <!-- ========== DOC 1 ========== -->
@@ -412,16 +415,16 @@
       <h1>Doc 1 · Social Media Strategy</h1>
       <div class="sub">Turning 3 million transactions into the most shareable data in real estate · Builds on the July 9 proposal + the shared "2026: SkySlope Social Media Engagement" plan</div>
 
-      <div class="card" open id="d1-exec"><summary>Executive Summary<span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="d1-exec"><summary>Executive Summary<span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>Core services stand</b> (July 9 proposal): content strategy, creation, publishing, community management across LinkedIn, Facebook, Instagram — 20 hrs/month.</li>
           <li><b>The audit's bottom line frames everything:</b> engagement is a content problem, not frequency or paid spend. Channels have been a press-release feed — every post an ask, none a give.</li>
           <li><b>What's new:</b> SkySlope sits on one of the largest proprietary datasets in residential real estate ops — 900K+ professionals, 3M+ transactions/yr. Zillow/Redfin own the consumer-data narrative; <b>nobody owns the transaction-process narrative.</b></li>
           <li><b>Recommendation:</b> launch <b>The SkySlope Index</b> — a recurring data franchise converting anonymized aggregate data into headline-grabbing claims that earn links, press, and shares — compounding the SEO and AI-citation work already under way.</li>
         </ul>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d1-audit"><summary>Where We're Starting: The June Audit<span class="tag">Baseline</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d1-audit"><summary>Where We're Starting: The June Audit<span class="tag">Baseline</span><span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>Flat baseline</b> — sampled IG posts: 2–9 likes, zero comments; account reads as a press-release channel.</li>
           <li><b>Testimonials win</b> — the two customer Spotlight videos (Century 21 Judge Fite, NextHome) beat every static post. Human voice is the one proven lever.</li>
@@ -430,9 +433,9 @@
           <li><b>Hashtags/paid aren't the lever</b> — generic tags don't drive discovery; boosting flat content buys impressions nobody reacts to.</li>
         </ul>
         <p>Success = engagement rate (likes + comments + shares / reach) vs this baseline, month over month — not reach or follower count.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d1-index"><summary>The Big Idea: The SkySlope Index<span class="tag">Hero franchise</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d1-index"><summary>The Big Idea: The SkySlope Index<span class="tag">Hero franchise</span><span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>Monthly Stat Drop</b> — one bold, counterintuitive number as a shareable graphic.</li>
           <li><b>Quarterly "State of the Transaction"</b> — 5–8 stats with charts; carousel + blog + email; pitched to Inman, HousingWire, RISMedia.</li>
@@ -446,9 +449,9 @@
           <li>"The most common day to go under contract is Tuesday. Least common? Sunday."</li>
         </ul>
         <p><b>Why it wins:</b> data content compounds the SEO/interlinking work and AI-answer visibility (SkySlope already ranks #1 in some ChatGPT answers); no competitor publishes proprietary industry data; agents share stats that make their world legible.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d1-gov"><summary>Data Governance (Read This First)<span class="tag red">Guardrails</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d1-gov"><summary>Data Governance (Read This First)<span class="tag red">Guardrails</span><span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>No PII</b> — aggregate and anonymized only; never addresses, client/agent names, brokerage-identifiable figures, or deal-level detail.</li>
           <li><b>Minimum thresholds</b> — no stat from a slice small enough to identify anyone.</li>
@@ -456,9 +459,9 @@
           <li><b>Access process</b> — SkySlope's team defines exports; Click Shift works from approved aggregates, never raw records.</li>
         </ul>
         <p>This is what makes the numbers press-citable — protection and credibility are the same move.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d1-pillars"><summary>Content Pillars<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d1-pillars"><summary>Content Pillars<span class="chev">▶</span></summary><div class="body">
         <table>
           <thead><tr><th>Pillar</th><th>What it is</th><th>Share</th></tr></thead>
           <tbody>
@@ -469,9 +472,9 @@
           </tbody>
         </table>
         <p class="note-strip">The corporate-satire direction was considered and set aside as high-risk for SaaS sales; "relatable office hours" gets the para-social benefit without punching at our own users.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d1-platforms"><summary>Platforms &amp; Cadence<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d1-platforms"><summary>Platforms &amp; Cadence<span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>LinkedIn — the insight channel (6–8/mo).</b> Index stats + quarterly reports as document/carousel posts; 2–3 execs posting personally 1×/week with the Page resharing; partnership news lands here first.</li>
           <li><b>Instagram — the end-user channel (4–6/mo).</b> Lead each week with a testimonial or relatable pain-point post before any feature content; drop generic hashtags; waitlist/launch content is paid-only.</li>
@@ -479,9 +482,9 @@
           <li><b>TikTok — phase-2 test.</b> Longer-format tolerance suits office-hours; launch with intentional seeding to the right audience, no friends-and-family padding.</li>
         </ul>
         <p><b>Paid rule:</b> boost only formats with proven organic engagement (testimonials; Index once validated) — never waitlist/launch posts.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d1-month"><summary>Monthly Scope, Measurement &amp; First 90 Days<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d1-month"><summary>Monthly Scope, Measurement &amp; First 90 Days<span class="chev">▶</span></summary><div class="body">
         <p><b>A month in 20 hours:</b> strategy meeting + calendar · 10–12 posts (incl. 1 Index drop) · 4–6 short videos · captions/graphics/scheduling · community monitoring + escalations · <b>pre-publish QA on every post</b> · monthly analytics report. Quarter-end months weight toward the State of the Transaction report.</p>
         <p><b>Measurement:</b> engagement rate by pillar vs June baseline; shares/press/backlinks from Index content; UTM'd traffic + retargeting growth; reported in Jessica's invoice rhythm.</p>
         <table>
@@ -492,7 +495,7 @@
             <tr><td><b>3</b></td><td>First quarterly "State of the Transaction" (carousel + blog + press outreach) · pillar review · TikTok go/no-go for Q4.</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
     </section>
 
     <!-- ========== DOC 2 ========== -->
@@ -500,7 +503,7 @@
       <h1>Doc 2 · Audience, Personas &amp; Path to Purchase</h1>
       <div class="sub">Source: Semrush position tracking (215 keywords, Aug 4–10 2026) + public review-platform research</div>
 
-      <div class="card" open id="d2-comp"><summary>The Competitive Set<span class="tag">From the ranking data</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="d2-comp"><summary>The Competitive Set<span class="tag">From the ranking data</span><span class="chev">▶</span></summary><div class="body">
         <table>
           <thead><tr><th>Competitor</th><th>Footprint</th><th>Identity</th></tr></thead>
           <tbody>
@@ -511,27 +514,27 @@
           </tbody>
         </table>
         <p><b>Why it matters for social:</b> intent mix is 187 informational / 49 commercial — this market researches heavily before talking to sales. Whoever owns research-stage trust wins the shortlist.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d2-aud"><summary>Audience Definition<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d2-aud"><summary>Audience Definition<span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>Economic buyers</b> — broker-owners, ops leaders, admins at mid-size→enterprise residential brokerages &amp; franchises (US/CA) who own the back-office decision.</li>
           <li><b>Users &amp; champions</b> — TCs (in-house and independent) and agents: rarely sign the contract, but make or break adoption, renewal, word-of-mouth — and they're the largest searching audience in the data.</li>
           <li><b>Ecosystem</b> — MLSs/associations, franchise leadership, RE-tech reviewers, TC communities, peer brokers: the referral network that validates the shortlist.</li>
         </ul>
         <p><b>Defining trait:</b> a small, dense, hyper-networked industry. Social here isn't broadcast media — it's the industry's group chat.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d2-personas"><summary>Key Personas &amp; Buyer Journeys<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d2-personas"><summary>Key Personas &amp; Buyer Journeys<span class="chev">▶</span></summary><div class="body">
         <div class="persona">
           <div class="tile"><b>Barbara — Broker-Owner / COO</b><div class="ct" style="margin-top:6px">Owns P&amp;L and liability: audit risk, E&amp;O, commission accuracy, agent retention. Searches the back-office cluster where SkySlope wins AI overviews.<br><br><b>Journey:</b> pain trigger → peer brokers → Google/ChatGPT → G2/Capterra → shortlist 2–3 → committee demo → trust + switching-cost math.<br><b>Social's job:</b> LinkedIn exec POV, compliance data, peer testimonials get SkySlope shortlisted before sales calls.</div></div>
           <div class="tile"><b>Tina — Transaction Coordinator</b><div class="ct" style="margin-top:6px">15–40 files at once; cares about checklists, speed, not getting blamed. <b>Highest-volume searcher in the dataset — least visible persona to SkySlope today.</b><br><br><b>Journey:</b> discovers tools in TC Facebook groups, courses, Reddit, ex-colleagues; evaluates by watching real workflows on video.<br><b>Social's job:</b> relatable TC-life content, workflow tips, paperwork stats. The industry's most active sharer.</div></div>
           <div class="tile"><b>Alex — Producing Agent / Team Lead</b><div class="ct" style="margin-top:6px">Uses what the brokerage provides; complains loudly when clunky. Mobile speed, e-sign UX, looking professional.<br><br><b>Journey:</b> doesn't buy TM alone, but agent sentiment drives renewals. Dotloop's brand gravity lives here.<br><b>Social's job:</b> IG/TikTok humor + day-in-the-life wins goodwill; "fast closing" content counters the compliance-tool image.</div></div>
           <div class="tile"><b>Carmen — Compliance / Ops Manager</b><div class="ct" style="margin-top:6px">The silent evaluator on every demo: file-review queues, audit trails, state-form coverage. Small search volume, outsized veto power.<br><br><b>Social's job:</b> methodology-backed compliance stats and case studies are shareable armor she brings to the decision meeting.</div></div>
         </div>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d2-path"><summary>Path to Purchase — Where Social Does the Work<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d2-path"><summary>Path to Purchase — Where Social Does the Work<span class="chev">▶</span></summary><div class="body">
         <div class="stage"><div class="num">1</div><div class="sc"><div class="st">Trigger</div><div class="sd">Audit scare, admin overload, growth, franchise mandate, incumbent renewal.</div><div class="sj">Social's job: be already-known — familiarity from feed presence. → Zero-CTA content, Index drops</div></div></div>
         <div class="stage"><div class="num">2</div><div class="sc"><div class="st">Research</div><div class="sd">Googles category terms; asks ChatGPT (AI overviews answer 92 of 215 tracked queries for somebody); reads listicles — often competitor-hosted.</div><div class="sj">Social's job: authority — data content earns the citations that feed AI answers; feeds are checked as a legitimacy signal. → Quarterly report, LinkedIn carousels</div></div></div>
         <div class="stage"><div class="num">3</div><div class="sc"><div class="st">Validation</div><div class="sd">Checks G2/Capterra; asks peers in FB groups, Reddit, TC communities; watches real users on video; stalks the brand's socials and comments.</div><div class="sj">Social's job: credibility — deals are quietly won or lost here. See the Big Warning. → Spotlights, community presence, review responses</div></div></div>
@@ -539,9 +542,9 @@
         <div class="stage"><div class="num">5</div><div class="sc"><div class="st">Decision &amp; onboarding</div><div class="sd">Migration fear is objection #1.</div><div class="sj">Social's job: de-risk — real onboarding stories, public support wins. → Onboarding-journey content</div></div></div>
         <div class="stage"><div class="num">6</div><div class="sc"><div class="st">Adoption → Referral</div><div class="sd">Opinions form in week one; happy TCs and brokers recommend in the same communities stage 3 happens in.</div><div class="sj">Social's job: the referral engine — celebrate customers publicly; every Spotlight is retention + validation at once. → Spotlights, Wrapped, tag-a-colleague</div></div></div>
         <p><b>The loop beats the funnel:</b> stage-6 content is exactly what stage-3 researchers find.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card warn" open id="d2-warning"><summary>⚠ THE BIG WARNING: What Researching Buyers See Today<span class="chev">▶</span></summary><div class="body">
+      <details class="card warn" open id="d2-warning"><summary>⚠ THE BIG WARNING: What Researching Buyers See Today<span class="chev">▶</span></summary><div class="body">
         <p><b>When Barbara or Tina does stage-3 validation right now, this is the side-by-side — and it is not neutral territory:</b></p>
         <table>
           <thead><tr><th>Signal</th><th>SkySlope</th><th>Dotloop</th><th>Paperless Pipeline</th><th>BoldTrail</th></tr></thead>
@@ -559,9 +562,9 @@
           <li><b>AI amplifies it</b> — review corpora increasingly feed AI answers; a thin, aging review base is a compounding liability even where SkySlope wins AI overviews today.</li>
           <li><b>The fix is orchestrated, not organic-only</b> — review-generation program (happy enterprise customers → G2/Capterra, timed to renewals and support wins), feeds that look alive, owned comparison content, community presence. The social strategy is the delivery vehicle for all four.</li>
         </ul>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="d2-engine"><summary>The Audience Growth &amp; Engagement Engine<span class="tag">Fixing low follows</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="d2-engine"><summary>The Audience Growth &amp; Engagement Engine<span class="tag">Fixing low follows</span><span class="chev">▶</span></summary><div class="body">
         <p>Content alone won't fix a distribution problem. Follows and engagement are low relative to a 900K-user base — so the engine builds the audience deliberately:</p>
         <ul>
           <li><b>6.1 Convert the base you own</b> — follow prompts with a reason ("follow for the monthly Index stat") in-product, in onboarding emails, support-resolution emails, webinar end-cards, newsletter footers. Feature-to-follow flywheel: Customer Spotlights and "TC of the Month" make being featured the incentive. Annual Wrapped personal stats = the single strongest follow driver available.</li>
@@ -570,7 +573,7 @@
           <li><b>6.4 Engagement mechanics</b> — every post engineered for a response (polls, "tag a TC who…", first-line hooks); reply to every comment/DM in 24h; product mention in the reply, not the caption; paid only against warm audiences (customer lists, retargeting, lookalikes).</li>
           <li><b>6.5 Targets (2 quarters)</b> — engagement rate above June baseline within 6 weeks; comments &gt;0 on 80% of posts in 90 days; follower growth tracked by % from named customer/prospect accounts; <b>+40 fresh G2/Capterra reviews in 6 months</b> (Capterra first, non-CA voices); 10 employee advocates weekly, 2 exec voices, 3 sustained community groups.</li>
         </ul>
-      </div></div>
+      </div></details>
     </section>
 
     <!-- ========== SOCIAL CHANNELS & FEEDS ========== -->
@@ -738,21 +741,21 @@
       <div class="sub">Hook formulas per pillar (rooted in the June audit's rules) and accounts to study — not copy.</div>
       <h2>Hook formulas</h2>
       <div class="grid2">
-        <div class="ccard"><h3>📊 Data &amp; Index posts</h3><ul>
+        <div class="ccard"><h3>Data &amp; Index posts</h3><ul>
           <li>"The average closing runs on <b>[number]</b>." — one stat, huge type, nothing else on the graphic.</li>
           <li>Leaderboards: "Fastest-closing states, ranked." People argue with rankings in comments — that's the point.</li>
           <li>Counterintuitive beats impressive: "Sunday is the rarest day to go under contract" outperforms "we processed 3M transactions."</li>
           <li>Always end carousels with the methodology slide — credibility is the moat.</li></ul></div>
-        <div class="ccard"><h3>🎬 Testimonial / Spotlight</h3><ul>
+        <div class="ccard"><h3>Testimonial / Spotlight</h3><ul>
           <li>Open on the customer's result, not their name: "She closes 40 files a month. Here's how."</li>
           <li>Cut a 15-sec vertical teaser from every long interview; full video to YouTube.</li>
           <li>Caption = one quote from the video, nothing more.</li></ul></div>
-        <div class="ccard"><h3>😅 Zero-CTA relatable</h3><ul>
+        <div class="ccard"><h3>Zero-CTA relatable</h3><ul>
           <li>POV formats: "POV: the lender says 'quick question' at 4:58pm Friday."</li>
           <li>Tag-a-colleague: "Tag a TC who's survived a 40-document closing."</li>
           <li>Polls: "Worst part of closing week?" — four options, all painful.</li>
           <li>RULE: no link, no pitch, no product name in the caption. Product lives in a comment reply if anyone asks.</li></ul></div>
-        <div class="ccard"><h3>🎓 Education / product</h3><ul>
+        <div class="ccard"><h3>Education / product</h3><ul>
           <li>Lead with the pain, not the feature: "Chasing signatures at 9pm?" then the 3-click answer.</li>
           <li>Screen-record real workflows — agents trust screens, not renders.</li></ul></div>
       </div>
@@ -817,10 +820,10 @@
       <table>
         <thead><tr><th>Day</th><th>Block</th><th>What happens</th></tr></thead>
         <tbody>
-          <tr><td><b>Mon</b></td><td>60–90 min</td><td>Queue check in Content Studio → finalize this week's 2–3 posts → QA checklist → schedule via native tools. Move cards to "Scheduled."</td></tr>
+          <tr><td><b>Mon</b></td><td>60–90 min</td><td>Queue check in <a href="#" data-goto="studio">Content Studio</a> → finalize this week's 2–3 posts → run the <a href="#" data-goto="voice">voice checklist</a> → schedule via native tools. Move cards to "Scheduled."</td></tr>
           <tr><td><b>Tue–Thu</b></td><td>20 min/day</td><td>Engagement block: reply to every comment/DM, seed first comments after publishing, engage 5–10 accounts from the follow list as the brand.</td></tr>
           <tr><td><b>Wed</b></td><td>—</td><td>Feed anything needing Rob's sign-off into the Dave/Rob/Jessica 5:30pm meeting.</td></tr>
-          <tr><td><b>Fri</b></td><td>45 min</td><td>Log the week's posts + engagement into the tracker (Channels &amp; Feeds) · flag winners for paid boost · pull next week's drafts from the Idea column · export state to Click Shift.</td></tr>
+          <tr><td><b>Fri</b></td><td>45 min</td><td>Log the week's posts + engagement into the <a href="#" data-goto="social">tracker</a> · flag winners for paid boost · pull next week's drafts from the Idea column · export state to Click Shift.</td></tr>
           <tr><td><b>Monthly</b></td><td>2–3 hrs</td><td>Analytics pull from consoles → report with Jessica's invoice rhythm · Index stat working session · follow-list additions · (quarterly) unfollow review.</td></tr>
         </tbody>
       </table>
@@ -850,7 +853,7 @@
       <h1>Brand Guidelines</h1>
       <div class="sub">SkySlope's visual identity, reconstructed from the live site (Aug 12, 2026) — this hub itself now runs on these tokens. <a href="brand-guidelines.html" target="_blank" rel="noopener"><b>Open the full interactive guide ↗</b></a> (13 sections incl. imagery, components, and the complete accessibility matrix; same password as this site when opened from the live link). Unofficial reference — defer to SkySlope marketing where they conflict. For how the brand <i>sounds</i>, see <a href="#" data-goto="voice">Voice &amp; Tone</a>.</div>
 
-      <div class="card" open id="b-logo"><summary>Logo — the mark of momentum<span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="b-logo"><summary>Logo — the mark of momentum<span class="chev">▶</span></summary><div class="body">
         <p>The lockup pairs the Science Blue “S” swoosh with a Slope Slate all-caps wordmark. The mark is always Science Blue on light; <b>everything goes white on dark or saturated backgrounds</b> (the blue mark fails contrast on navy — 2.85:1).</p>
         <div class="logo-row">
           <div class="logo-tile on-white"><svg class="logo-fixed" width="170" viewBox="0 0 153 25" role="img" aria-label="SkySlope logo, two-color"><use href="#ss-logo"/></svg><figcaption>Primary · white &amp; light tints</figcaption></div>
@@ -864,9 +867,9 @@
           <li>On photography: white only, over a dark or scrimmed area keeping ≥ 4.5:1 contrast.</li>
           <li>Canonical SVG: <code>skyslope.com/wp-content/uploads/2021/03/logo-skyslope-2x.svg</code> (inlined in this hub, so it works offline).</li>
         </ul>
-      </div></div>
+      </div></details>
 
-      <div class="card" open id="b-color"><summary>Color — blue, from daylight to deep space<span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="b-color"><summary>Color — blue, from daylight to deep space<span class="chev">▶</span></summary><div class="body">
         <p><b>Proportions ~60/30/10:</b> white &amp; light neutrals for content, space navies for hero moments, Science Blue and sky accents for actions. Science Blue is an <i>accent with authority</i> — when everything is blue, nothing is.</p>
         <p><b>Core:</b></p>
         <div class="swgrid">
@@ -896,9 +899,9 @@
           <div class="g" style="background:linear-gradient(180deg,#161B28 58%,#1A6AAC 100%)">Space — heroes &amp; dark sections</div>
           <div class="g" style="background:linear-gradient(117deg,#533DB1 0%,#079EFF 100%)">AI gradient — Smart Suite surfaces only</div>
         </div>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="b-type"><summary>Typography<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="b-type"><summary>Typography<span class="chev">▶</span></summary><div class="body">
         <table>
           <thead><tr><th>Role</th><th>Family</th><th>Weights</th><th>Notes</th></tr></thead>
           <tbody>
@@ -912,9 +915,9 @@
           <li>Two weights are enough — Medium for reading, Bold for hierarchy. No Light, no Black.</li>
           <li>Em dashes without surrounding spaces—matching site copy. Headline measure ≤ 14 words; body 60–76 characters.</li>
         </ul>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="b-shape"><summary>Spacing, shape &amp; components<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="b-shape"><summary>Spacing, shape &amp; components<span class="chev">▶</span></summary><div class="body">
         <table>
           <thead><tr><th>Token</th><th>Value</th><th>Notes</th></tr></thead>
           <tbody>
@@ -925,27 +928,27 @@
             <tr><td>CTA labels</td><td>Title Case, 1–3 words</td><td>Request Demo · Learn More · Watch Video. One primary button per section.</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="b-img"><summary>Imagery &amp; iconography<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="b-img"><summary>Imagery &amp; iconography<span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>The space world:</b> astronauts, UFOs, starfields on Mirage gradients — flat vector, neon violet/cyan glows, always dramatizing a product action. Keep space scenes on dark; never drop them onto white without their scene. No red/orange menace — this cosmos is optimistic.</li>
           <li><b>Product imagery:</b> real, legible screenshots in white rounded frames with the soft cool shadow. Never blurred or skewed.</li>
           <li><b>Photography:</b> warm, candid agents/homes/teams on editorial surfaces.</li>
           <li><b>Icons:</b> simple, rounded, monochrome (Slate or Science Blue on light; white or Light Sky on dark). 16/20/24px grid. Don't mix icon families; never emoji as UI icons.</li>
         </ul>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="b-a11y"><summary>Accessibility essentials<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="b-a11y"><summary>Accessibility essentials<span class="chev">▶</span></summary><div class="body">
         <p>Target WCAG 2.1 AA minimum. Key computed ratios:</p>
         <ul>
           <li><span class="ok">✔</span> Science Blue on white 6.1:1 (AA, any size) · Slate on white 7.1:1 (AAA) · Light Sky on Mirage 9.6:1 (AAA)</li>
           <li><span class="no">✘</span> White on Signal Sky #079EFF (2.9:1) · Science Blue on Mirage (2.9:1) — on dark, actions go white or Light Sky</li>
           <li>Body ≥ 16px · never grayer than Gray 600 on white · visible 3px focus ring on everything interactive · status colors always paired with icons/labels · starfield animations respect <code>prefers-reduced-motion</code> · pills keep ≥ 44px touch height.</li>
         </ul>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="b-tokens"><summary>Design tokens — copy-paste the brand<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="b-tokens"><summary>Design tokens — copy-paste the brand<span class="chev">▶</span></summary><div class="body">
         <p>The same tokens this hub now runs on. JSON version in the <a href="brand-guidelines.html" target="_blank" rel="noopener">full guide ↗</a>.</p>
 <pre class="tokenpre">:root{
   --ss-blue:#0059DA;         /* Science Blue — actions, links, logo mark */
@@ -964,7 +967,7 @@
   --ss-shadow-card:0 10px 30px rgba(21,26,39,.08);
   --ss-focus-ring:0 0 0 3px rgba(0,89,218,.35);
 }</pre>
-      </div></div>
+      </div></details>
     </section>
 
     <!-- ========== VOICE & TONE ========== -->
@@ -972,11 +975,11 @@
       <h1>Voice &amp; Tone</h1>
       <div class="sub">How SkySlope sounds — distilled from all 276 live pages of skyslope.com, 255 YouTube videos, and the 2026 AI-first rebrand copy. Every quote is verbatim from a SkySlope property (Aug 10–11, 2026). Word version for sharing: SkySlope-Voice-Tone-Guide.docx.</div>
 
-      <div class="card" open id="v-brand"><summary>The brand in one paragraph<span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="v-brand"><summary>The brand in one paragraph<span class="chev">▶</span></summary><div class="body">
         <p>SkySlope is the <b>compliance backbone</b> of residential real estate brokerages: founded 2011 in Sacramento, now behind <b>900,000+ professionals</b> and <b>~3M transactions/yr</b>, trusted by 35% of the top-20 U.S. brokerages. In 2026 it repositioned around <b>“The AI-first way to run a brokerage.”</b> The voice job is to carry both truths at once: the steady authority of the platform brokers stake their license on, and the energy of a product team shipping AI that removes busywork. Underneath the enterprise polish is a genuinely human company (the old vlogs, SkyCast, “Made with ♥ in Sacramento”) — which is why the zero-CTA, human side of our strategy is authentic to this brand, not a bolt-on.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" open id="v-attrs"><summary>The voice: five attributes<span class="tag">If a draft has none, it isn't SkySlope yet</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="v-attrs"><summary>The voice: five attributes<span class="tag">If a draft has none, it isn't SkySlope yet</span><span class="chev">▶</span></summary><div class="body">
         <h2 style="margin-top:10px">1 · Outcome-first and plain-spoken</h2>
         <p>The result comes first, in short declaratives; the mechanism second. Headlines rarely run past seven words.</p>
         <div class="quote">“Less managing. More closing.”<span class="src">— products-services page</span></div>
@@ -1001,9 +1004,9 @@
         <p>Real people appear constantly — customers by name, employees, Sacramento. The best-performing content is people talking, not brand talking.</p>
         <div class="quote">“You've saved me at least 50 hours. I'll always use SkyTC for transactions from here on out.”<span class="src">— John Greff, Allison James Estates &amp; Homes</span></div>
         <div class="dodont"><div class="do"><b>Do</b>Name customers and let them talk · credit TCs, admins, auditors — the unsung roles · sign off like humans.</div><div class="dont"><b>Don't</b>Faceless corporate announcement voice (“We are pleased to announce…”) — the exact press-release habit the June audit flagged.</div></div>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="v-dials"><summary>Tone: one voice, six dials<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="v-dials"><summary>Tone: one voice, six dials<span class="chev">▶</span></summary><div class="body">
         <p>The voice never changes; the tone dials up or down by surface. Personas from Doc 2 in brackets.</p>
         <table>
           <thead><tr><th>Context</th><th>Setting</th><th>Sounds like</th></tr></thead>
@@ -1016,9 +1019,9 @@
             <tr><td><b>Compliance &amp; security</b></td><td>Guardian register. No jokes, no exclamation marks.</td><td>“Constant state of readiness.” Stakes → mechanism → peace of mind.</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="v-names"><summary>Product names — exact spellings<span class="tag red">One wrong capital reads as an outsider</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="v-names"><summary>Product names — exact spellings<span class="tag red">One wrong capital reads as an outsider</span><span class="chev">▶</span></summary><div class="body">
         <p>First mention takes the full name (“SkySlope Forms”); after that the short name is fine (“Forms”).</p>
         <table>
           <thead><tr><th>Write it exactly</th><th>Never</th><th>Notes</th></tr></thead>
@@ -1036,9 +1039,9 @@
             <tr><td><b>Pilot</b></td><td>SkyPilot</td><td>Pre-launch (waitlist). Say “coming soon,” not “available.”</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="v-mech"><summary>House style &amp; word bank<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="v-mech"><summary>House style &amp; word bank<span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>Short sentences, second person.</b> “Your brokerage,” “your agents.” Contractions welcome.</li>
           <li><b>Sentence case headlines.</b> Don't imitate the legacy ALL-CAPS labels on older pages.</li>
@@ -1051,9 +1054,9 @@
         <div class="wordbank lean"><span>busywork</span><span>contract to close</span><span>contract to payout</span><span>audit-ready</span><span>compliance backbone</span><span>checklists</span><span>envelopes</span><span>file review</span><span>surface risk early</span><span>keep deals moving</span><span>intelligence built in</span><span>white glove (SkyTC only)</span><span>peace of mind</span></div>
         <p><b>Avoid:</b></p>
         <div class="wordbank avoid"><span>“revolutionary / game-changing” (fine inside a customer quote)</span><span>generic AI hype with no named feature</span><span>“users”</span><span>“solutions” as filler</span><span>starting a caption with a link</span><span>exclamation stacking</span><span>generic hashtags (#RealEstate #PropTech)</span></div>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="v-pillars"><summary>One feature, four ways — Smart Assist worked example<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="v-pillars"><summary>One feature, four ways — Smart Assist worked example<span class="chev">▶</span></summary><div class="body">
         <p>How the voice behaves inside each pillar, shown on one real feature. The old habit (what the audit flagged): <i>“SkySlope is excited to announce Smart Assist, our new AI-powered compliance review tool! Request a demo today. #RealEstate #PropTech”</i> — announcement voice, all ask, no give.</p>
         <table>
           <thead><tr><th>Surface</th><th>On-brand execution</th></tr></thead>
@@ -1064,9 +1067,9 @@
             <tr><td><b>Index (confident analyst)</b></td><td>The stat is the headline; one line of takeaway; methodology note underneath; zero pitch. The number flexes so the brand doesn't have to.</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
 
-      <div class="card" open id="v-check"><summary>Pre-publish voice checklist<span class="tag">Run on every draft</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="v-check"><summary>Pre-publish voice checklist<span class="tag">Run on every draft</span><span class="chev">▶</span></summary><div class="body">
         <p class="note-strip" style="margin:4px 0 10px">These boxes are per-post scratch — they don't save. <button class="cbtn" id="voiceReset" type="button">↺ Reset for next post</button></p>
         <label class="check"><input type="checkbox"><span class="ct">The outcome appears in the first sentence (or the stat IS the headline).</span></label>
         <label class="check"><input type="checkbox"><span class="ct">Every claim has a receipt — a number, a named customer, or a named feature.</span></label>
@@ -1078,7 +1081,7 @@
         <label class="check"><input type="checkbox"><span class="ct">Humor punches at paperwork, never at people — and never at compliance, security, or fair housing.</span></label>
         <label class="check"><input type="checkbox"><span class="ct">Caption matches the asset (names, video, links) — the audit's “Johnny” QA step.</span></label>
         <label class="check"><input type="checkbox"><span class="ct">Canadian content uses Canadian terms (cheques, provinces, postal codes).</span></label>
-      </div></div>
+      </div></details>
     </section>
 
     <!-- ========== PRODUCT GUIDE ========== -->
@@ -1086,7 +1089,7 @@
       <h1>Product Guide</h1>
       <div class="sub">Every product, who it's for, and how to talk about it accurately — all facts as published on skyslope.com, verified Aug 10–11, 2026. Word version for sharing: SkySlope-Product-Guide.docx.</div>
 
-      <div class="card" open id="p-story"><summary>The suite in one story<span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="p-story"><summary>The suite in one story<span class="chev">▶</span></summary><div class="body">
         <p>SkySlope sells <b>one connected pipeline</b> — “one intelligent platform from contract to payout.” When writing about any single product, the connective tissue is the differentiator: <b>competitors sell tools; SkySlope sells the pipeline.</b></p>
         <table>
           <thead><tr><th>Stage</th><th>Products</th><th>What happens</th></tr></thead>
@@ -1099,9 +1102,9 @@
             <tr><td><b>The AI layer</b></td><td>Smart Suite</td><td>Smart Assist, Smart Listings, Smart Scan, Smart Emails, Smart Blocks, Auto-Split and Assign, Voice.</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="p-pricing"><summary>Pricing at a glance<span class="tag">Public signals only</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="p-pricing"><summary>Pricing at a glance<span class="tag">Public signals only</span><span class="chev">▶</span></summary><div class="body">
         <table>
           <thead><tr><th>Product</th><th>Published price</th><th>Notes</th></tr></thead>
           <tbody>
@@ -1113,65 +1116,65 @@
             <tr><td><b>Pilot</b></td><td>Not published (waitlist)</td><td>Pre-launch — “coming soon,” never “available now.”</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
 
       <h2>Product by product</h2>
-      <div class="card" id="pp-core"><summary>SkySlope — the core platform<span class="tag">Manage &amp; comply</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="pp-core"><summary>SkySlope — the core platform<span class="tag">Manage &amp; comply</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“The Intelligent Way to Run a Brokerage.”</p>
         <p><b>What:</b> AI-enhanced transaction management — the system of record where every file lives, gets checked, and gets audited. <b>Who:</b> Brokers (Barbara) buy it; admins/auditors (Carmen) live in review queues; agents (Alex) and TCs (Tina) feed it files. Web + iOS + Android.</p>
         <p><b>Standouts:</b> Broker Dashboard (“One View. Every Transaction.”) · customizable checklists · Quick Audit (“admins will triple their productivity”) · full audit logging · MLS sync · Buyer Agreement Quick Start.</p>
         <p><b>Content angles:</b> compliance peace-of-mind for LinkedIn · Quick Audit time-savings for the Index (“audit files within minutes of submission” — Dale Milton, DPR Realty) · 34 tutorials on the Support channel to clip.</p>
-      </div></div>
-      <div class="card" id="pp-forms"><summary>SkySlope Forms (incl. Broker Edition &amp; Net Sheets)<span class="tag">Create &amp; sign</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-forms"><summary>SkySlope Forms (incl. Broker Edition &amp; Net Sheets)<span class="tag">Create &amp; sign</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“Initiate real estate contracts quickly and professionally.”</p>
         <p><b>What:</b> Every association/MLS form, auto-filled from MLS data, templated, handed to DigiSign in one click. Broker Edition adds brokerage-wide libraries and TC Access; Net Sheets generates seller net sheets inside Forms. <b>Who:</b> Agents daily, TCs constantly; Broker Edition for brokers/admins. Included in the Suite.</p>
         <p><b>Standouts:</b> MLS Synced (“automagic” field updates) · Broker Libraries · Smart Listings auto-creates the file when a listing agreement signs · drafts auto-save.</p>
         <p><b>Content angles:</b> the TC-audience wedge (Doc 2's biggest gap): “start contracts in seconds, not hours” · buyer-agreement compliance post-NAR settlement · 22 Forms tutorials + 10 mobile tutorials.</p>
-      </div></div>
-      <div class="card" id="pp-digisign"><summary>DigiSign<span class="tag">Create &amp; sign</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-digisign"><summary>DigiSign<span class="tag">Create &amp; sign</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“Send documents for signature from virtually anywhere, at any time, to anyone.”</p>
         <p><b>What:</b> Built-in e-signature purpose-built for real estate — envelopes, mobile signing, reminders, full audit trail. <b>Who:</b> Agents and TCs sending envelopes; brokerages standardizing e-signature cost.</p>
         <p><b>Standouts:</b> 360º envelope dashboard · reusable templates · Smart Blocks auto-places fields (“reduces prep time per envelope by 50%, from 8 to 4 minutes”) · AES-256, ESIGN/UETA compliance.</p>
         <p><b>Content angles:</b> price-disruption story ($6.25/mo vs “$240/year” incumbents) · e-sign speed clips · 8 tutorials available.</p>
-      </div></div>
-      <div class="card" id="pp-offers"><summary>SkySlope Offers<span class="tag">Create &amp; sign</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-offers"><summary>SkySlope Offers<span class="tag">Create &amp; sign</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“Everything you need to collect, compare, and accept offers like a pro.”</p>
         <p><b>What:</b> One dashboard capturing every offer, side-by-side comparison, one-click accept/counter, shareable listing links. <b>Who:</b> Listing agents and teams; MLSs license it as a member benefit (Stellar, Bright, realMLS).</p>
         <p><b>Standouts:</b> comparison on price/closing/contingencies · real-time notifications both directions · deliberate fair-housing design — “conceals the buyer names… to keep potential implicit bias at bay.”</p>
         <p><b>Content angles:</b> fair-housing thought leadership (“built to prevent bias”) · MLS-partnership announcements (LinkedIn-first) · 12 tutorials.</p>
-      </div></div>
-      <div class="card" id="pp-breeze"><summary>Breeze (incl. Breeze AVID)<span class="tag">Create &amp; sign</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-breeze"><summary>Breeze (incl. Breeze AVID)<span class="tag">Create &amp; sign</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“Sending disclosures is a Breeze.”</p>
         <p><b>What:</b> Guided seller-disclosure completion — a digital questionnaire with plain-language tips, MLS pre-fill, DigiSign signatures. <b>Who:</b> Listing agents and their sellers; state-specific builds (CA, AZ, WA, OR, NV, TX, HI) and association member-benefit deals. Breeze AVID is the CA walkthrough companion.</p>
         <p><b>Content angles:</b> the “client experience” story (a product the SELLER touches) · state-launch news · “disclosures without the dread” zero-CTA material · only 2 public tutorials — an asset-production opportunity.</p>
-      </div></div>
-      <div class="card" id="pp-books"><summary>SkySlope Books<span class="tag">Pay &amp; account</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-books"><summary>SkySlope Books<span class="tag">Pay &amp; account</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“The smart way to build a real estate business.”</p>
         <p><b>What:</b> Back-office accounting and commission disbursement — splits, tiers, caps, royalties, next-day payouts via Payload.co, 1099s, QuickBooks sync. <b>Who:</b> Broker-owners and ops/accounting (Barbara, Carmen). Suite add-on.</p>
         <p><b>Content angles:</b> the “10–20 hours a month of manual commission math” pain stat · “agents get paid faster” retention angle · 16 Books tutorials incl. a 43-minute workflow training.</p>
-      </div></div>
-      <div class="card" id="pp-skytc"><summary>SkyTC<span class="tag">Done for you — humans, not software</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-skytc"><summary>SkyTC<span class="tag">Done for you — humans, not software</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“A white glove transaction coordination service customized to your real estate business.”</p>
         <p><b>What:</b> Not software — certified transaction coordinators who run paperwork, deadlines, escrow follow-ups inside the SkySlope stack. From $299/deal. <b>Who:</b> Agents who want their hours back (“only 15% of REALTORS® have a personal assistant” — NAR).</p>
         <p><b>Content angles:</b> time-math content (“save an average of 10 hours per deal,” “You've saved me at least 50 hours” — John Greff) · a human-service story that humanizes the AI-first brand. <b>Never describe SkyTC as an app or software.</b> Handle with care around TC audiences — for an independent TC it can read as competitor.</p>
-      </div></div>
-      <div class="card" id="pp-skysight"><summary>SkySight<span class="tag">See &amp; grow · iOS only</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-skysight"><summary>SkySight<span class="tag">See &amp; grow · iOS only</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“Lead the Market with Data-Driven Intelligence.”</p>
         <p><b>What:</b> iOS app turning brokerage data into weekly visual insights and a Monday-morning AI audio briefing — “a 4-minute AI-powered podcast” about your own brokerage. <b>Who:</b> Broker-owners and leadership.</p>
         <p><b>Content angles:</b> perfect Index-adjacent content (data-as-product) · “listen to your brokerage” demo clips · inherently shareable podcast novelty. <b>iOS-only — never promise Android.</b></p>
-      </div></div>
-      <div class="card" id="pp-ayce"><summary>Ayce<span class="tag">See &amp; grow</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-ayce"><summary>Ayce<span class="tag">See &amp; grow</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“SkySlope's real estate coach helps agents stay on track and hit income targets, using generative AI.”</p>
         <p><b>What:</b> AI coaching app (iOS): agent sets an income goal; Ayce breaks it into daily tasks with scripts and templates, plus real-estate Q&amp;A. Selectable coaching tones. Launched 2026. <b>Who:</b> Agents at any level; brokerages wanting scalable coaching.</p>
         <p><b>Content angles:</b> the NAR income-gap stat from its launch PR (median $78,900 for 16+ years' experience vs $8,100 for ≤2 years) is strong Index-style material · “coaching at scale without sacrificing the human touch.”</p>
-      </div></div>
-      <div class="card" id="pp-pilot"><summary>Pilot<span class="tag red">Pre-launch — waitlist only</span><span class="chev">▶</span></summary><div class="body">
+      </div></details>
+      <details class="card" id="pp-pilot"><summary>Pilot<span class="tag red">Pre-launch — waitlist only</span><span class="chev">▶</span></summary><div class="body">
         <p class="tagline">“The mobile app that puts client-ready buyer estimates and seller net sheets in your pocket.”</p>
         <p><b>What:</b> Upcoming mobile app for client-ready buyer estimates and net sheets — live loan details, county tax rates, one-tap sharing. <b>Who:</b> Agents quoting numbers on the spot.</p>
         <p><b>Content angles:</b> launch-moment content when it ships; until then, waitlist-only framing. Do not screenshot or promise features beyond the announcement post.</p>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="p-smart"><summary>The AI layer: Smart Suite<span class="tag">Name the feature, never “AI” generically</span><span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="p-smart"><summary>The AI layer: Smart Suite<span class="tag">Name the feature, never “AI” generically</span><span class="chev">▶</span></summary><div class="body">
         <p>“Powerful real estate AI that's built into our full product suite.” This is the proof behind the AI-first rebrand — and the content rule is: <b>never claim “AI” generically; name the feature that does the thing.</b></p>
         <table>
           <thead><tr><th>Feature</th><th>What it does (as published)</th><th>Watch-outs</th></tr></thead>
@@ -1185,18 +1188,18 @@
             <tr><td><b>Voice</b></td><td>Hands-free offer/buyer-agreement generation by voice.</td><td><b>CA &amp; NC only.</b> Voice Assistant in the mobile app is <b>Beta</b> — say “beta.”</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="p-eco"><summary>Ecosystem &amp; partnerships<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="p-eco"><summary>Ecosystem &amp; partnerships<span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>MLS &amp; association member benefits — the distribution engine:</b> Arizona REALTORS®, C.A.R., CRMLS, Stellar MLS, Bright MLS, realMLS, OneKey (43,000 NY-metro members), Realcomp, OREF/Oregon, Florida REALTORS®, TRREB and OREA in Canada, and more. Partner announcements are LinkedIn-first.</li>
           <li><b>Integrations:</b> QuickBooks and Payload.co (Books), Utility Connect, DepositLink, Updater, RealSatisfied, Cloze, Rocket Advance, CRM partners (Wise Agent, CINC, Real Geeks, Rechat), API + SSO.</li>
           <li><b>Premier Partner programs:</b> title &amp; escrow (“more than 70% of SkySlope agents want to open escrow while working in SkySlope”) and home warranty (American Home Shield).</li>
           <li><b>Canada:</b> OREA Standard Forms, conveyance workflows, two-tiered commissions (BC/Alberta), localized terminology. Sutton Group is the anchor testimonial.</li>
         </ul>
-      </div></div>
+      </div></details>
 
-      <div class="card" id="p-personas"><summary>Who cares about what (personas × products)<span class="chev">▶</span></summary><div class="body">
+      <details class="card" id="p-personas"><summary>Who cares about what (personas × products)<span class="chev">▶</span></summary><div class="body">
         <table>
           <thead><tr><th>Persona</th><th>Leads with</th><th>Also touches</th></tr></thead>
           <tbody>
@@ -1206,9 +1209,9 @@
             <tr><td><b>Carmen</b> — compliance / ops manager</td><td>Quick Audit, Smart Assist, audit trails, Books controls</td><td>Broker Libraries; role-based permissions; security content</td></tr>
           </tbody>
         </table>
-      </div></div>
+      </div></details>
 
-      <div class="card" open id="p-facts"><summary>Numbers safe to use (August 2026)<span class="chev">▶</span></summary><div class="body">
+      <details class="card" open id="p-facts"><summary>Numbers safe to use (August 2026)<span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>900,000+</b> real estate professionals (U.S. + Canada) · <b>~3 million</b> transactions managed annually.</li>
           <li>Founded <b>2011 in Sacramento</b> by Tyler Smith, a former REALTOR®. Acquired by Fidelity National Financial (FNF).</li>
@@ -1217,9 +1220,9 @@
           <li>2025–26 accolades: RE Transaction Management Software Company of the Year, Inman Best of PropTech winner, T3Sixty Tech 200, CEO on the Swanepoel Power 200.</li>
         </ul>
         <div class="warnbox"><h3>Stale-number warning</h3>Older press releases still online say “300,000 users,” “650,000 professionals,” or “2.7 million transactions.” Never copy boilerplate from an old PR — use the figures above.</div>
-      </div></div>
+      </div></details>
 
-      <div class="card warn" id="p-watch"><summary>⚠ Accuracy watch-outs (caption-error insurance)<span class="chev">▶</span></summary><div class="body">
+      <details class="card warn" id="p-watch"><summary>⚠ Accuracy watch-outs (caption-error insurance)<span class="chev">▶</span></summary><div class="body">
         <ul>
           <li><b>SkyTC is a human service, not software.</b> DigiSign is the e-signature product; Forms is the forms platform — don't swap them.</li>
           <li><b>Breeze pricing differs by state</b> — never quote one state's price nationally.</li>
@@ -1229,7 +1232,7 @@
           <li><b>$340/month is “starting at,” for the Suite</b> — DigiSign and Books are add-ons; don't present it as all-inclusive.</li>
           <li><b>Quote testimonials verbatim with name + brokerage</b>, and QA that the caption matches the person in the video (the “Johnny” rule).</li>
         </ul>
-      </div></div>
+      </div></details>
     </section>
 
     <!-- ========== ASSET LIBRARY ========== -->
@@ -1321,9 +1324,28 @@
       var el = document.getElementById(jump);
       if(el){ el.open = true; setTimeout(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 60); }
     } else { window.scrollTo({top:0}); }
+    try{ localStorage.setItem('sshub_view', view); }catch(e){}
   }
+  // reopen where you left off
+  try{
+    var __lastView = localStorage.getItem('sshub_view');
+    if(__lastView && __lastView !== 'overview' && document.getElementById('view-'+__lastView)){
+      views.forEach(function(v){ v.classList.toggle('active', v.id === 'view-'+__lastView); });
+      links.forEach(function(l){ l.classList.toggle('active', l.dataset.view === __lastView && !l.dataset.jump); });
+    }
+  }catch(e){}
   links.forEach(function(l){
-    l.addEventListener('click', function(){ show(l.dataset.view, l.dataset.jump); });
+    l.addEventListener('click', function(){
+      show(l.dataset.view, l.dataset.jump);
+      document.getElementById('sidebar').classList.remove('open');
+      var mt=document.getElementById('menuToggle'); if(mt) mt.setAttribute('aria-expanded','false');
+    });
+  });
+  var mt=document.getElementById('menuToggle');
+  if(mt) mt.addEventListener('click', function(){
+    var sb=document.getElementById('sidebar');
+    var open=sb.classList.toggle('open');
+    mt.setAttribute('aria-expanded', open?'true':'false');
   });
   document.querySelectorAll('[data-goto]').forEach(function(a){
     a.addEventListener('click', function(e){ e.preventDefault(); show(a.dataset.goto); });
@@ -1711,16 +1733,16 @@ try{
     var t=document.getElementById('studioTools'); if(!t) return;
     t.innerHTML='<span class="note-strip">Bulk:</span>';
     function btn(label,fn){ var b=document.createElement('button'); b.className='fbtn'; b.textContent=label; b.onclick=fn; t.appendChild(b); return b; }
-    btn(studioView==='list'?'🗓 Calendar view':'📋 List view', function(){ studioView=studioView==='list'?'cal':'list'; sync(); });
-    btn('☑ Select shown', function(){ ccPosts.forEach(function(p){ if(visible(p)) p.sel=true; }); sync(); showToast(selCount()+' selected'); });
-    btn('☐ Clear selection', function(){ ccPosts.forEach(function(p){ delete p.sel; }); sync(); });
-    btn('⤒ Selected to top', function(){
+    btn(studioView==='list'?'Calendar view':'List view', function(){ studioView=studioView==='list'?'cal':'list'; sync(); });
+    btn('Select shown', function(){ ccPosts.forEach(function(p){ if(visible(p)) p.sel=true; }); sync(); showToast(selCount()+' selected'); });
+    btn('Clear selection', function(){ ccPosts.forEach(function(p){ delete p.sel; }); sync(); });
+    btn('Selected to top', function(){
       var sel=ccPosts.filter(function(p){return p.sel;}), rest=ccPosts.filter(function(p){return !p.sel;});
       if(!sel.length) return showToast('Nothing selected — tick a card first');
       ccPosts.length=0; sel.concat(rest).forEach(function(p){ccPosts.push(p);});
       studioView='list'; sync(); showToast(sel.length+' post(s) moved to top');
     });
-    btn('⬇ Export selected ('+selCount()+')', function(){
+    btn('Export selected ('+selCount()+')', function(){
       var sel=ccPosts.filter(function(p){return p.sel;});
       if(!sel.length) return showToast('Nothing selected — tick a card first');
       var ta=document.getElementById('ioArea');
@@ -1752,7 +1774,7 @@ try{
         '<span class="fmt">'+p.platform+'</span><span class="fmt">'+p.format+'</span>'+sel+'</div>'+
         '<div class="ptitle" contenteditable="true">'+p.title+'</div>'+
         '<div class="pcap" contenteditable="true">'+p.cap+'</div>'+
-        (p.note?'<div class="cnote">📌 '+p.note+'</div>':'');
+        (p.note?'<div class="cnote">Note: '+p.note+'</div>':'');
       mid.querySelector('select').onchange=function(e){p.status=e.target.value;tiles();showToast('Status → '+p.status);};
       mid.querySelector('.ptitle').onblur=function(e){p.title=e.target.textContent;};
       mid.querySelector('.pcap').onblur=function(e){p.cap=e.target.innerText;};
