@@ -240,6 +240,7 @@
   .cs b{font-size:13.5px;color:var(--ink);font-variant-numeric:tabular-nums}
   .cs b[contenteditable]{outline:none;border-radius:4px;padding:0 3px;display:inline-block;min-width:24px}
   .cs b[contenteditable]:focus{background:var(--surface);box-shadow:0 0 0 1px var(--blue)}
+  .cs .csd{display:block;font-size:8.5px;color:var(--muted);margin-top:1px;white-space:nowrap}
   /* ---- v2.2: studio selection + calendar ---- */
   .psel{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
   .psel input{accent-color:var(--s1);margin:0}
@@ -367,7 +368,7 @@
         <div class="tile"><div class="v">900K+</div><div class="l">Real estate professionals on SkySlope</div></div>
         <div class="tile"><div class="v">3M+</div><div class="l">Transactions managed annually</div></div>
         <div class="tile crit"><div class="v">3.9★</div><div class="l">Capterra rating — lowest of competitive set</div></div>
-        <div class="tile crit"><div class="v">0</div><div class="l">Comments on sampled IG posts (June audit)</div></div>
+        <div class="tile crit"><div class="v" id="ovComments">0</div><div class="l" id="ovCommentsLabel">Comments on sampled IG posts (June audit)</div></div>
         <div class="tile"><div class="v">5,560</div><div class="l">Monthly TC-keyword searches SkySlope barely appears in</div></div>
         <div class="tile"><div class="v">13</div><div class="l">#1 AI-overview placements on broker terms</div></div>
       </div>
@@ -674,7 +675,7 @@
         </div>
       </div>
 
-      <div class="note-card"><b>Why feeds here aren't live:</b> LinkedIn and Meta don't allow feed pulls into a standalone page without authenticated API apps, so this hub tracks posts through the editable feed below (pre-loaded with the June audit sample — the baseline every new post is measured against). Live numbers stay one click away in each channel's console above; Click Shift updates this feed with each month's posts as part of the reporting rhythm. <b>Follower counts</b> in the cards above are typed in by hand during the monthly analytics pull (click the number to edit — it saves in this browser); <b>posts-per-month</b> counts itself from the tracker below, so it stays correct as posts get logged.</div>
+      <div class="note-card"><b>Why feeds here aren't live:</b> LinkedIn and Meta don't allow feed pulls into a standalone page without authenticated API apps, so this hub tracks posts through the editable feed below (pre-loaded with the June audit sample — the baseline every new post is measured against). Live numbers stay one click away in each channel's console above; Click Shift updates this feed with each month's posts as part of the reporting rhythm. <b>Follower counts</b> above are pre-loaded from each channel's public profile (Aug 12, 2026) — click a number to update it during the monthly analytics pull; the "updated" stamp refreshes automatically and edits save in this browser. <b>Posts-per-month</b> counts itself from the tracker below, so it stays correct as posts get logged.</div>
 
       <h2>Engagement at a glance</h2>
       <div class="tiles" id="tiles2"></div>
@@ -2051,6 +2052,18 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
   tiles(); filters(); render();
 })();
 
+// ---------- Overview comments tile: computed from the tracker, not hardcoded ----------
+(function(){
+  var el=document.getElementById('ovComments'); if(!el) return;
+  var total=POSTS.reduce(function(a,p){ return a+(p.comments||0); },0);
+  el.textContent=total;
+  var fresh=POSTS.filter(function(p){ return !p.baseline; });
+  if(fresh.length){
+    var lbl=document.getElementById('ovCommentsLabel');
+    if(lbl) lbl.textContent='Comments across tracked posts (June audit baseline: 0)';
+  }
+})();
+
 // ---------- Channel stat tiles (followers manual · posts auto-counted) ----------
 var CH_STATS = {};
 (function(){
@@ -2064,16 +2077,40 @@ var CH_STATS = {};
   function count(chn, prefix){ return POSTS.filter(function(p){ return p.channel===chn && (p.date||'').indexOf(prefix)===0; }).length; }
   Array.prototype.forEach.call(document.querySelectorAll('[data-postcount-cur]'), function(e){ e.textContent=count(e.getAttribute('data-postcount-cur'), ym(cur)); e.title='Counted from the tracker below'; });
   Array.prototype.forEach.call(document.querySelectorAll('[data-postcount-last]'), function(e){ e.textContent=count(e.getAttribute('data-postcount-last'), ym(last)); e.title='Counted from the tracker below'; });
+  // Baseline counts pulled from each channel's public profile — Naomi's monthly
+  // edits (saved in this browser) override them, and the date restamps itself.
+  var CH_DEFAULTS={
+    LinkedIn:{followers:'5,147',updated:'2026-08-12'},
+    Instagram:{followers:'1,991',updated:'2026-08-12'},
+    Facebook:{followers:'9.9K',updated:'2026-08-12'},
+    YouTube:{followers:'1.16K',updated:'2026-08-12'},
+    X:{followers:'1,385',updated:'2026-08-12'},
+    TikTok:{followers:'—',updated:''}
+  };
   try{
     var st=JSON.parse(localStorage.getItem('sshub_state')||'null');
     if(st&&st.channels) CH_STATS=st.channels;
   }catch(e){}
+  function fmtDate(iso){
+    if(!iso) return 'not launched';
+    var p=iso.split('-'); if(p.length<3) return iso;
+    return 'updated '+MN[parseInt(p[1],10)-1]+' '+parseInt(p[2],10);
+  }
   Array.prototype.forEach.call(document.querySelectorAll('.cs b[contenteditable]'), function(b){
     var chn=b.getAttribute('data-ch');
-    if(CH_STATS[chn]&&CH_STATS[chn].followers) b.textContent=CH_STATS[chn].followers;
+    var rec=(CH_STATS[chn]&&CH_STATS[chn].followers)?CH_STATS[chn]:(CH_DEFAULTS[chn]||{});
+    if(rec.followers) b.textContent=rec.followers;
+    var d=document.createElement('small'); d.className='csd';
+    d.textContent=fmtDate(rec.updated);
+    b.parentNode.appendChild(d);
     b.addEventListener('blur', function(){
+      var v=b.textContent.trim()||'—';
+      var prev=(CH_STATS[chn]&&CH_STATS[chn].followers)||(CH_DEFAULTS[chn]||{}).followers;
       CH_STATS[chn]=CH_STATS[chn]||{};
-      CH_STATS[chn].followers=b.textContent.trim()||'—';
+      CH_STATS[chn].followers=v;
+      if(v!==prev){ CH_STATS[chn].updated=ym(now)+'-'+('0'+now.getDate()).slice(-2); }
+      else if(!CH_STATS[chn].updated){ CH_STATS[chn].updated=(CH_DEFAULTS[chn]||{}).updated||''; }
+      d.textContent=fmtDate(CH_STATS[chn].updated);
     });
   });
 })();
