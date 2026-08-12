@@ -45,6 +45,21 @@ WHAT'S IN HERE
    competitive analysis and the hub's Keyword Explorer (215 keywords,
    SkySlope vs Dotloop vs Paperless Pipeline vs BoldTrail)
 
+HOSTING & DEPLOY (added Aug 12 2026)
+------------------------------------
+The hub is live at https://skyslope.soldonsocial.com — password-gated
+(ask Dave for the team password; "Remember me" keeps you signed in 30
+days). Hosting: GitHub Pages on github.com/davebussell/skyslope, serving
+the gh-pages branch, which contains ONLY an AES-256-encrypted build of
+the hub (StatiCrypt). This main branch is the working folder.
+
+To publish hub changes: edit SkySlope-Social-Hub.html, run deploy.ps1
+(it prompts for the site password — enter the current one unless you're
+rotating it), then commit + push main as usual so sources stay versioned.
+
+NOTE: the GitHub repo itself is public — the Word/Excel/CSV sources on
+main are readable there even though the live site is gated.
+
 THE ONE-PARAGRAPH BRIEF
 -----------------------
 Engagement is a content problem, not a frequency problem (June audit).
