@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkySlope — Brand &amp; Style Guidelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ===== Core brand ===== */
+  --ss-blue:#0059DA;          /* Science Blue — primary action & logo mark */
+  --ss-blue-deep:#1537BB;     /* Deep Orbit — hover / emphasis */
+  --ss-blue-bright:#079EFF;   /* Signal Sky — gradients, glows, large accents */
+  --ss-blue-alt:#007EFF;      /* Sky Bright — secondary accent */
+  --ss-sky-soft:#4EAFFF;      /* Day Sky — illustration accent */
+  --ss-sky:#87C6FF;           /* Light Sky — links & accents on dark */
+  --ss-spindle:#A7C2E7;       /* Spindle — soft brand tint */
+  --ss-sky-wash:#DCEEFF;      /* Sky Wash — pale fills */
+  --ss-sky-mist:#E1F1FF;      /* Sky Mist — pale fills, chips */
+  --ss-slate:#3F5B77;         /* Slope Slate — wordmark & supporting text */
+  --ss-slate-400:#637D97;
+  --ss-slate-300:#98AEC3;
+  --ss-navy:#0A2642;          /* Midnight Sky — editorial headlines, dark panels */
+  --ss-space:#151A27;         /* Mirage — space-scene backgrounds */
+  --ss-space-alt:#161B28;
+  --ss-ink:#212529;           /* Ink — default body text */
+  /* ===== Neutrals ===== */
+  --ss-gray-800:#343A40; --ss-gray-700:#495057; --ss-gray-600:#696969;
+  --ss-gray-500:#6C757D; --ss-gray-400:#ADB5BD; --ss-gray-300:#DEE2E6;
+  --ss-cloud:#DEE5ED; --ss-frost:#EBF1F6; --ss-gray-100:#F8F9FA;
+  --ss-gray-bg:#F4F4F4; --ss-white:#FFFFFF;
+  /* ===== Functional ===== */
+  --ss-success:#28A745; --ss-danger:#DC3545; --ss-warning:#FFC107; --ss-info:#17A2B8;
+  /* ===== Gradients ===== */
+  --ss-grad-space:linear-gradient(180deg,#161B28 58%,#1A6AAC 100%);
+  --ss-grad-ai:linear-gradient(117deg,#533DB1 0%,#079EFF 100%);
+  /* ===== Type ===== */
+  --ss-font-sans:proxima-nova,"Proxima Nova","Helvetica Neue",Helvetica,Arial,-apple-system,"Segoe UI",sans-serif;
+  --ss-font-serif:"Libre Baskerville",Georgia,"Times New Roman",serif;
+  --ss-font-mono:"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  /* ===== Shape & motion ===== */
+  --ss-radius-pill:20px; --ss-radius-card:12px; --ss-radius-input:8px;
+  --ss-shadow-card:0 10px 30px rgba(21,26,39,.08);
+  --ss-focus-ring:0 0 0 3px rgba(0,89,218,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--ss-font-sans);font-size:17px;line-height:1.55;letter-spacing:.16px;color:var(--ss-ink);background:var(--ss-white)}
+/* ---------- layout ---------- */
+.layout{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid var(--ss-frost);padding:28px 22px;background:#fff}
+aside .logo{width:160px;display:block;margin:2px 0 26px}
+aside nav a{display:block;padding:7px 10px;border-radius:8px;color:var(--ss-slate);text-decoration:none;font-size:14.5px;font-weight:500}
+aside nav a:hover{background:var(--ss-sky-mist);color:var(--ss-blue)}
+aside nav a.active{background:var(--ss-sky-mist);color:var(--ss-blue);font-weight:700}
+aside nav a span{display:inline-block;width:26px;color:var(--ss-slate-300);font-weight:700;font-size:12px}
+aside .aside-foot{margin-top:26px;padding-top:16px;border-top:1px solid var(--ss-frost);font-size:12px;color:var(--ss-gray-500);line-height:1.5}
+main{min-width:0}
+.wrap{max-width:1000px;margin:0 auto;padding:0 44px}
+section.block{padding:72px 0 26px;border-bottom:1px solid var(--ss-frost)}
+section.block:last-of-type{border-bottom:0}
+/* ---------- headings ---------- */
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--ss-gray-600);margin-bottom:10px}
+.eyebrow b{color:var(--ss-blue);margin-right:8px}
+h2.title{font-size:40px;line-height:1.15;font-weight:700;color:var(--ss-ink);margin-bottom:14px}
+h3.sub{font-size:22px;font-weight:700;color:var(--ss-navy);margin:38px 0 12px}
+p.lede{font-size:19px;line-height:28px;color:var(--ss-slate);max-width:70ch;margin-bottom:10px}
+p.note,li.note{font-size:15px;color:var(--ss-gray-500)}
+.content p{max-width:76ch;margin-bottom:12px}
+.content ul{margin:0 0 14px 20px}
+.content li{margin-bottom:6px}
+a{color:var(--ss-blue)}
+/* ---------- cover ---------- */
+.cover{background:var(--ss-grad-space);position:relative;overflow:hidden;color:#fff;padding:88px 0 96px}
+.cover .stars,.cover .stars2{position:absolute;inset:0;background-repeat:repeat;pointer-events:none}
+.cover .stars{background-image:radial-gradient(1.4px 1.4px at 30px 40px,rgba(255,255,255,.9) 50%,transparent 51%),radial-gradient(1px 1px at 140px 90px,rgba(255,255,255,.65) 50%,transparent 51%),radial-gradient(1.2px 1.2px at 230px 160px,rgba(255,255,255,.8) 50%,transparent 51%),radial-gradient(.9px .9px at 320px 60px,rgba(255,255,255,.55) 50%,transparent 51%);background-size:380px 220px}
+.cover .stars2{background-image:radial-gradient(1px 1px at 80px 130px,rgba(167,194,231,.7) 50%,transparent 51%),radial-gradient(1.6px 1.6px at 260px 30px,rgba(135,198,255,.8) 50%,transparent 51%),radial-gradient(.8px .8px at 180px 200px,rgba(255,255,255,.5) 50%,transparent 51%);background-size:340px 260px}
+.cover .wrap{position:relative;z-index:2}
+.cover .logo-white{width:238px;margin-bottom:34px;display:block}
+.cover h1{font-size:64px;line-height:1.06;font-weight:700;letter-spacing:.2px;max-width:13ch}
+.cover p.tag{font-size:20px;line-height:1.5;margin-top:18px;color:#DCEEFF;max-width:52ch}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.chip{border:1.5px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 16px;font-size:13.5px;font-weight:700;letter-spacing:.4px;color:#fff;background:rgba(255,255,255,.06)}
+.disclaimer{margin-top:34px;max-width:72ch;font-size:13.5px;line-height:1.55;color:#98AEC3;border-left:3px solid var(--ss-blue-bright);padding-left:14px}
+/* ---------- swatches ---------- */
+.swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px;margin:18px 0 6px}
+.swatch{border:1px solid var(--ss-frost);border-radius:var(--ss-radius-card);overflow:hidden;background:#fff;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+.swatch:hover{transform:translateY(-2px);box-shadow:var(--ss-shadow-card)}
+.swatch .chipc{height:86px;display:flex;align-items:flex-end;padding:8px 10px;font-size:11px;font-weight:700;letter-spacing:.5px}
+.swatch .meta{padding:10px 12px 12px}
+.swatch .meta b{display:block;font-size:14.5px;color:var(--ss-ink)}
+.swatch .meta code{font-family:var(--ss-font-mono);font-size:12.5px;color:var(--ss-blue);font-weight:600}
+.swatch .meta small{display:block;font-size:12px;color:var(--ss-gray-500);margin-top:4px;line-height:1.45}
+.swatch.big .chipc{height:130px}
+.grad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin:18px 0}
+.grad{border-radius:var(--ss-radius-card);overflow:hidden;border:1px solid var(--ss-frost)}
+.grad .chipc{height:120px}
+.grad .meta{padding:12px 14px;font-size:13.5px}
+.grad .meta code{font-family:var(--ss-font-mono);font-size:12px;color:var(--ss-slate)}
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14.5px}
+th{text-align:left;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ss-gray-600);border-bottom:2px solid var(--ss-cloud);padding:10px 12px}
+td{border-bottom:1px solid var(--ss-frost);padding:11px 12px;vertical-align:top}
+tr:hover td{background:var(--ss-gray-100)}
+td code,li code,p code{font-family:var(--ss-font-mono);font-size:13px;background:var(--ss-frost);border-radius:4px;padding:1.5px 6px;color:var(--ss-navy)}
+.badge{display:inline-block;border-radius:999px;padding:2.5px 10px;font-size:11.5px;font-weight:700;letter-spacing:.4px}
+.badge.aaa{background:#E4F5E9;color:#1E7E34}.badge.aa{background:#E1F1FF;color:#0053C7}
+.badge.large{background:#FFF3CD;color:#8A6D00}.badge.fail{background:#FBE7E9;color:#B02A37}
+/* ---------- do / don't ---------- */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.dd .card{border-radius:var(--ss-radius-card);border:1px solid var(--ss-frost);overflow:hidden}
+.dd .card .hd{font-size:12.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;padding:9px 16px}
+.dd .do .hd{background:#E4F5E9;color:#1E7E34}.dd .dont .hd{background:#FBE7E9;color:#B02A37}
+.dd .card ul{margin:12px 16px 14px 32px;font-size:14.5px}
+.dd .card li{margin-bottom:7px}
+/* ---------- demo panels ---------- */
+.panel{border:1px solid var(--ss-frost);border-radius:var(--ss-radius-card);padding:30px;margin:16px 0;background:#fff}
+.panel.dark{background:var(--ss-grad-space);border:0}
+.panel.navy{background:var(--ss-navy);border:0}
+.panel .row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.panel-label{font-size:11.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--ss-gray-500);margin-bottom:16px}
+.panel.dark .panel-label,.panel.navy .panel-label{color:var(--ss-slate-300)}
+/* ---------- brand components (the spec, live) ---------- */
+.btn{display:inline-block;font-family:var(--ss-font-sans);font-size:16px;font-weight:700;line-height:1;border-radius:var(--ss-radius-pill);padding:12px 24px;text-decoration:none;cursor:pointer;border:0;transition:background .15s ease,color .15s ease,box-shadow .15s ease}
+.btn:focus-visible{outline:none;box-shadow:var(--ss-focus-ring)}
+.btn-primary{background:var(--ss-blue);color:#fff}
+.btn-primary:hover{background:var(--ss-blue-deep)}
+.btn-outline{background:transparent;color:var(--ss-blue);border:3px solid var(--ss-blue);padding:9px 27px}
+.btn-outline:hover{background:var(--ss-blue);color:#fff}
+.btn-ghost{background:transparent;color:#fff;border:2px solid #fff;padding:10px 26px}
+.btn-ghost:hover{background:rgba(255,255,255,.14)}
+.textlink{font-weight:700;color:var(--ss-blue);text-decoration:none}
+.textlink:hover{text-decoration:underline}
+.textlink::after{content:" →"}
+.eyebrow-demo{font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ss-gray-600)}
+.card-demo{background:#fff;border-radius:var(--ss-radius-card);box-shadow:var(--ss-shadow-card);padding:28px;max-width:360px}
+.card-demo .eyebrow-demo{margin-bottom:8px}
+.card-demo h4{font-size:21px;color:var(--ss-ink);margin-bottom:8px}
+.card-demo p{font-size:15px;color:var(--ss-slate);margin-bottom:14px}
+.input-demo{display:block;width:100%;max-width:340px;font-family:var(--ss-font-sans);font-size:16px;padding:11px 14px;border:1px solid var(--ss-gray-300);border-radius:var(--ss-radius-input);color:var(--ss-ink)}
+.input-demo:focus{outline:none;border-color:var(--ss-blue);box-shadow:var(--ss-focus-ring)}
+label.demo{display:block;font-size:13.5px;font-weight:700;color:var(--ss-slate);margin-bottom:6px}
+/* ---------- type specimens ---------- */
+.spec{border-left:3px solid var(--ss-sky-mist);padding:6px 0 6px 22px;margin:22px 0}
+.spec .render{color:var(--ss-ink)}
+.spec .meta{font-family:var(--ss-font-mono);font-size:12.5px;color:var(--ss-gray-500);margin-top:8px}
+/* ---------- code ---------- */
+pre{background:var(--ss-space);color:#DCEEFF;border-radius:var(--ss-radius-card);padding:20px 22px;overflow-x:auto;font-family:var(--ss-font-mono);font-size:13px;line-height:1.6;margin:14px 0;position:relative}
+pre .copy,.swatch-copy-hint{user-select:none}
+pre .copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:6px;font-size:11.5px;font-weight:700;padding:5px 10px;cursor:pointer}
+pre .copy:hover{background:var(--ss-blue)}
+.callout{border:1px solid var(--ss-cloud);border-left:4px solid var(--ss-blue);background:var(--ss-gray-100);border-radius:8px;padding:14px 18px;font-size:14.5px;color:var(--ss-slate);margin:16px 0;max-width:86ch}
+.callout b{color:var(--ss-navy)}
+/* ---------- logo section ---------- */
+.logo-stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.logo-tile{border:1px solid var(--ss-frost);border-radius:var(--ss-radius-card);padding:38px 24px;display:flex;align-items:center;justify-content:center;min-height:150px}
+.logo-tile.dark{background:var(--ss-grad-space);border:0}
+.logo-tile.blue{background:var(--ss-blue);border:0}
+.logo-tile.gray{background:var(--ss-gray-bg)}
+.logo-tile figure{text-align:center}
+.logo-tile figcaption{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:16px;color:var(--ss-gray-500)}
+.logo-tile.dark figcaption,.logo-tile.blue figcaption{color:rgba(255,255,255,.75)}
+.logo-white{--logo-mark:#fff;--logo-word:#fff}
+.clearspace{position:relative;display:inline-block;border:1.5px dashed var(--ss-sky-soft);padding:25px;margin-top:6px}
+.clearspace::after{content:"clear space = height of the “S” mark";position:absolute;bottom:-24px;left:0;font-size:12px;color:var(--ss-gray-500)}
+footer.doc{padding:44px;background:var(--ss-gray-100);border-top:1px solid var(--ss-frost);font-size:13.5px;color:var(--ss-gray-500);line-height:1.6}
+footer.doc .wrap{padding:0}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:relative;height:auto}.cover h1{font-size:42px}.dd,.logo-stage{grid-template-columns:1fr}.wrap{padding:0 22px}}
+@media print{aside{display:none}.layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ss-logo" viewBox="0 0 153 25">
+            <path d="M31.8214059,16.4730902 C32.9218046,17.693805 34.6820338,18.7684539 36.9561134,18.7684539 C39.5966032,18.7684539 40.5259131,17.4255801 40.5259131,16.2532624 C40.5259131,14.5442033 38.6675852,14.0558591 36.5894111,13.5188262 C33.972862,12.8351443 30.9411453,12.0782836 30.9411453,8.75754279 C30.9411453,6.07179526 33.3127396,4.11841832 36.7117425,4.11841832 C39.2299009,4.11841832 41.2105603,4.92425919 42.6531366,6.38900035 L41.2350849,8.19572825 C39.9878301,6.87734459 38.2763583,6.29162306 36.516129,6.29162306 C34.7065585,6.29162306 33.4595957,7.21933133 33.4595957,8.58669519 C33.4595957,10.0517279 35.2201168,10.515582 37.2495336,11.0284164 C39.9145481,11.7362969 43.0198388,12.5666278 43.0198388,16.0340177 C43.0198388,18.5731162 41.2593176,20.941367 36.8580147,20.941367 C33.9486293,20.941367 31.8214059,19.8917914 30.4275869,18.3532884 L31.8214059,16.4730902 Z" id="Fill-1" style="fill:var(--logo-word,#3F5B77)"></path>
+            <polygon id="Fill-3" style="fill:var(--logo-word,#3F5B77)" points="50.8090794 13.567544 49.2686964 15.3013847 49.2686964 20.6483897 46.8235281 20.6483897 46.8235281 4.36276536 49.2686964 4.36276536 49.2686964 12.444498 56.090351 4.36276536 59.1223597 4.36276536 52.3985118 12.0783127 59.6601508 20.6483897 56.628434 20.6483897"></polygon>
+            <polygon id="Fill-5" style="fill:var(--logo-word,#3F5B77)" points="67.1902474 13.8360313 60.808577 4.36273621 63.6204476 4.36273621 68.4126855 11.638628 73.1561661 4.36273621 75.9925613 4.36273621 69.6354157 13.8360313 69.6354157 20.6483605 67.1902474 20.6483605"></polygon>
+            <path d="M78.5905125,16.4730902 C79.6909113,17.693805 81.4511405,18.7684539 83.72522,18.7684539 C86.3660018,18.7684539 87.2950198,17.4255801 87.2950198,16.2532624 C87.2950198,14.5442033 85.4366918,14.0558591 83.3585178,13.5188262 C80.7422606,12.8351443 77.7102519,12.0782836 77.7102519,8.75754279 C77.7102519,6.07179526 80.0818462,4.11841832 83.4808492,4.11841832 C85.9990076,4.11841832 87.9796669,4.92425919 89.4225352,6.38900035 L88.0041916,8.19572825 C86.7572287,6.87734459 85.0454649,6.29162306 83.2852357,6.29162306 C81.4756652,6.29162306 80.2287023,7.21933133 80.2287023,8.58669519 C80.2287023,10.0517279 81.9892235,10.515582 84.0186402,11.0284164 C86.6836547,11.7362969 89.7889455,12.5666278 89.7889455,16.0340177 C89.7889455,18.5731162 88.0284243,20.941367 83.6274133,20.941367 C80.717736,20.941367 78.5905125,19.8917914 77.1966936,18.3532884 L78.5905125,16.4730902 Z" id="Fill-7" style="fill:var(--logo-word,#3F5B77)"></path>
+            <polygon id="Fill-9" style="fill:var(--logo-word,#3F5B77)" points="93.5926931 4.36270705 96.0378614 4.36270705 96.0378614 18.4996167 103.446356 18.4996167 103.446356 20.6483313 93.5926931 20.6483313"></polygon>
+            <path d="M113.475225,6.26701634 C109.978708,6.26701634 107.778202,8.92856531 107.778202,12.517531 C107.778202,16.0825897 109.978708,18.7683372 113.475225,18.7683372 C116.922986,18.7683372 119.17254,16.0825897 119.17254,12.517531 C119.17254,8.92856531 116.922986,6.26701634 113.475225,6.26701634 M113.475225,4.0938116 C118.341037,4.0938116 121.690991,7.68306885 121.690991,12.517531 C121.690991,17.3522847 118.341037,20.9412504 113.475225,20.9412504 C108.609413,20.9412504 105.259752,17.3522847 105.259752,12.517531 C105.259752,7.68306885 108.609413,4.0938116 113.475225,4.0938116" id="Fill-11" style="fill:var(--logo-word,#3F5B77)"></path>
+            <path d="M132.181507,6.5111593 L128.073917,6.5111593 L128.073917,12.2246411 L132.181507,12.2246411 C133.942029,12.2246411 135.188991,11.077105 135.188991,9.36804597 C135.188991,7.65898692 133.942029,6.5111593 132.181507,6.5111593 L132.181507,6.5111593 Z M125.628748,4.36273621 L132.499452,4.36273621 C135.849406,4.36273621 137.707442,6.65780835 137.707442,9.36804597 C137.707442,12.0782836 135.824589,14.3733557 132.499452,14.3733557 L128.073917,14.3733557 L128.073917,20.6483605 L125.628748,20.6483605 L125.628748,4.36273621 Z" id="Fill-13" style="fill:var(--logo-word,#3F5B77)"></path>
+            <polygon id="Fill-15" style="fill:var(--logo-word,#3F5B77)" points="140.865344 4.36270705 151.819406 4.36270705 151.819406 6.51113014 143.310512 6.51113014 143.310512 11.2724136 151.648317 11.2724136 151.648317 13.4211282 143.310512 13.4211282 143.310512 18.4996167 151.819406 18.4996167 151.819406 20.6483313 140.865344 20.6483313"></polygon>
+            <path d="M0.834247636,2.53140159 C2.13171964,0.510676874 4.99731092,0.0660649576 7.37416051,0.385019342 C14.3896769,1.32730506 19.0487809,6.10141662 19.0487809,6.10141662 C19.0487809,6.10141662 13.4145291,2.42177924 9.35978316,3.14482026 C8.29471164,3.33520163 7.12687005,3.82850219 6.45039781,4.77224565 C5.61831069,5.93290141 5.64575496,7.45128755 6.05508344,8.79095428 C6.46499583,10.1317872 7.64363995,12.5119916 11.454307,16.0344842 C12.8317762,17.3073862 12.132531,18.5604629 9.60386205,17.497476 C8.69761698,17.1164217 6.8655655,16.0787996 4.74476518,14.1085128 C1.25788217,10.8696972 -1.42844543,6.05476881 0.834247636,2.53140159" id="Fill-17" style="fill:var(--logo-mark,#0059DA)"></path>
+            <path d="M21.4345644,22.5279756 C20.1370924,24.5487003 17.2715011,24.9936038 14.8946516,24.6743579 C7.87942717,23.7320721 3.22032317,18.9582521 3.22032317,18.9582521 C3.22032317,18.9582521 8.85428293,22.6375979 12.9090289,21.9145569 C13.9738085,21.7244671 15.141942,21.230875 15.8184143,20.2871315 C16.6505014,19.1267673 16.6192616,17.6092558 16.2137286,16.2687145 C15.6257204,14.3255417 14.6254641,12.5473856 10.814505,9.02518458 C9.43732784,7.75228253 10.136281,6.4992058 12.66495,7.56219272 C13.5711951,7.94324699 15.4032466,8.98086917 17.5240469,10.9508644 C21.0109299,14.18968 23.6972575,19.0048999 21.4345644,22.5279756" id="Fill-20" style="fill:var(--logo-mark,#0059DA)"></path>
+        </symbol><symbol id="ss-mark" viewBox="-0.7 -0.2 24.9 25.4"><path d="M0.834247636,2.53140159 C2.13171964,0.510676874 4.99731092,0.0660649576 7.37416051,0.385019342 C14.3896769,1.32730506 19.0487809,6.10141662 19.0487809,6.10141662 C19.0487809,6.10141662 13.4145291,2.42177924 9.35978316,3.14482026 C8.29471164,3.33520163 7.12687005,3.82850219 6.45039781,4.77224565 C5.61831069,5.93290141 5.64575496,7.45128755 6.05508344,8.79095428 C6.46499583,10.1317872 7.64363995,12.5119916 11.454307,16.0344842 C12.8317762,17.3073862 12.132531,18.5604629 9.60386205,17.497476 C8.69761698,17.1164217 6.8655655,16.0787996 4.74476518,14.1085128 C1.25788217,10.8696972 -1.42844543,6.05476881 0.834247636,2.53140159" id="Fill-17" style="fill:var(--logo-mark,#0059DA)"></path><path d="M21.4345644,22.5279756 C20.1370924,24.5487003 17.2715011,24.9936038 14.8946516,24.6743579 C7.87942717,23.7320721 3.22032317,18.9582521 3.22032317,18.9582521 C3.22032317,18.9582521 8.85428293,22.6375979 12.9090289,21.9145569 C13.9738085,21.7244671 15.141942,21.230875 15.8184143,20.2871315 C16.6505014,19.1267673 16.6192616,17.6092558 16.2137286,16.2687145 C15.6257204,14.3255417 14.6254641,12.5473856 10.814505,9.02518458 C9.43732784,7.75228253 10.136281,6.4992058 12.66495,7.56219272 C13.5711951,7.94324699 15.4032466,8.98086917 17.5240469,10.9508644 C21.0109299,14.18968 23.6972575,19.0048999 21.4345644,22.5279756" id="Fill-20" style="fill:var(--logo-mark,#0059DA)"></path></symbol></svg>
+<div class="layout">
+<aside>
+  <svg class="logo" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
+  <nav id="toc">
+    <a href="#glance"><span>01</span>Brand at a glance</a>
+    <a href="#logo"><span>02</span>Logo</a>
+    <a href="#color"><span>03</span>Color</a>
+    <a href="#type"><span>04</span>Typography</a>
+    <a href="#space"><span>05</span>Spacing &amp; shape</a>
+    <a href="#components"><span>06</span>UI components</a>
+    <a href="#imagery"><span>07</span>Imagery &amp; illustration</a>
+    <a href="#icons"><span>08</span>Iconography</a>
+    <a href="#voice"><span>09</span>Voice &amp; tone</a>
+    <a href="#writing"><span>10</span>Writing style</a>
+    <a href="#a11y"><span>11</span>Accessibility</a>
+    <a href="#tokens"><span>12</span>Design tokens</a>
+    <a href="#sources"><span>13</span>Sources</a>
+  </nav>
+  <div class="aside-foot">Reference edition v1.0<br>Compiled Aug 12, 2026 from skyslope.com<br><br>Unofficial — see §13</div>
+</aside>
+<main>
+
+<div class="cover">
+  <div class="stars"></div><div class="stars2"></div>
+  <div class="wrap">
+    <svg class="logo-white" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
+    <h1>Brand &amp; Style Guidelines</h1>
+    <p class="tag">A working reference for designing and building brand-compliant SkySlope experiences — sites, product UI, decks, and campaigns.</p>
+    <div class="chips">
+      <span class="chip">Version 1.0</span>
+      <span class="chip">August 2026</span>
+      <span class="chip">Digital-first</span>
+    </div>
+    <p class="disclaimer"><b>Provenance note:</b> This is an independently compiled reference, reconstructed from SkySlope’s live public web properties (skyslope.com and subpages) on August 12, 2026 — not an official SkySlope publication. Values marked “observed” were extracted directly from the site’s CSS and assets; values marked “derived” are recommended conventions inferred from consistent usage. For canonical assets and approvals, contact SkySlope’s marketing team.</p>
+  </div>
+</div>
+
+<div class="wrap content">
+
+<section class="block" id="glance">
+  <div class="eyebrow"><b>01</b>Brand at a glance</div>
+  <h2 class="title">Who SkySlope is</h2>
+  <p class="lede">SkySlope builds transaction management software for real estate brokerages — one intelligent platform that runs from contract to payout. Founded in 2011 in Sacramento, CA (part of the Fidelity National Financial family since 2017), SkySlope serves 900,000+ real estate professionals across the U.S. and Canada.</p>
+  <h3 class="sub">Positioning</h3>
+  <p>The current masthead: <b>“The AI-first way to run a brokerage.”</b> Supporting line: <i>“SkySlope brings intelligent automation to every transaction—so teams move faster with less risk.”</i> The brand promise pairs intelligence (AI, automation, anticipation) with trust (compliance, 24/7 award-winning support, scale).</p>
+  <h3 class="sub">Messaging pillars</h3>
+  <table>
+    <tr><th>Pillar</th><th>What it means</th><th>Proof language (from site)</th></tr>
+    <tr><td><b>One intelligent platform</b></td><td>Everything from contract to payout lives in one connected suite.</td><td>“One intelligent platform from contract to payout”</td></tr>
+    <tr><td><b>AI that works like your team</b></td><td>The software learns, anticipates, and keeps deals moving.</td><td>“…learns how your agents work, anticipates what’s next, and keeps everything moving forward.”</td></tr>
+    <tr><td><b>Speed with less risk</b></td><td>Automation accelerates work while compliance keeps pace.</td><td>“Auditors move forward faster, and compliance keeps pace.”</td></tr>
+    <tr><td><b>Humans, 24/7</b></td><td>Award-winning support is part of the product.</td><td>“With 24/7 award-winning support, SkySlope streamlines workflows across desktop and mobile.”</td></tr>
+    <tr><td><b>Trusted at scale</b></td><td>The engine behind the industry’s top brokerages.</td><td>“The trusted engine behind real estate’s most successful brokerages”</td></tr>
+  </table>
+  <h3 class="sub">Product family</h3>
+  <p>The suite (always set in this capitalization): <b>SkySlope</b> (transaction management), <b>Forms</b>, <b>DigiSign</b>, <b>Offers</b>, <b>Books</b>, <b>Breeze</b>, <b>SkyTC</b>, <b>SkySight</b> (mobile app), <b>Ayce</b> (AI coaching), and the <b>Smart Suite</b> of AI features. The company blog is called <b>SkyHigh</b>.</p>
+  <h3 class="sub">Personality</h3>
+  <ul>
+    <li><b>Confident pilot</b> — assured, in command, never arrogant.</li>
+    <li><b>Plain-spoken</b> — short sentences, concrete benefits, zero enterprise jargon.</li>
+    <li><b>Energetic</b> — momentum verbs: move, launch, streamline, keep pace.</li>
+    <li><b>Obsessed with customers</b> — support is a feature, people are the point.</li>
+    <li><b>A little cosmic</b> — the space motif adds wonder, used deliberately and sparingly.</li>
+  </ul>
+</section>
+
+<section class="block" id="logo">
+  <div class="eyebrow"><b>02</b>Logo</div>
+  <h2 class="title">The mark of momentum</h2>
+  <p class="lede">The SkySlope lockup pairs the “S” swoosh mark — two strokes suggesting sky and slope in motion — with an all-caps wordmark. The mark is always Science Blue; the wordmark is Slope Slate on light backgrounds and white on dark.</p>
+
+  <h3 class="sub">Approved variants</h3>
+  <div class="logo-stage">
+    <div class="logo-tile"><figure>
+      <svg width="220" viewBox="0 0 153 25" role="img" aria-label="SkySlope logo, two-color"><use href="#ss-logo"/></svg>
+      <figcaption>Primary · on white &amp; light tints</figcaption>
+    </figure></div>
+    <div class="logo-tile dark"><figure>
+      <svg class="logo-white" width="220" viewBox="0 0 153 25" role="img" aria-label="SkySlope logo, white"><use href="#ss-logo"/></svg>
+      <figcaption>Reversed (all white) · on Space &amp; Navy</figcaption>
+    </figure></div>
+    <div class="logo-tile blue"><figure>
+      <svg class="logo-white" width="220" viewBox="0 0 153 25" role="img" aria-label="SkySlope logo, white on blue"><use href="#ss-logo"/></svg>
+      <figcaption>Reversed · on Science Blue</figcaption>
+    </figure></div>
+    <div class="logo-tile gray"><figure>
+      <svg width="66" viewBox="-0.7 -0.2 24.9 25.4" role="img" aria-label="SkySlope S mark"><use href="#ss-mark"/></svg>
+      <figcaption>Mark only · avatars, favicons, tight spaces</figcaption>
+    </figure></div>
+  </div>
+
+  <h3 class="sub">Clear space &amp; minimum size</h3>
+  <p>Keep a protective zone equal to the <b>height of the “S” mark</b> on all four sides — nothing enters it: no type, no imagery, no edges. <i>(Derived convention; the site consistently floats the logo in generous space.)</i></p>
+  <div class="clearspace">
+    <svg width="190" viewBox="0 0 153 25" aria-hidden="true"><use href="#ss-logo"/></svg>
+  </div>
+  <p style="margin-top:38px">Minimum sizes (derived): full lockup <b>≥ 120 px wide</b> on screen / 30 mm in print; mark-only <b>≥ 20 px</b>. Below these, letterforms and the swoosh strokes lose definition. The site renders the header lockup at 190 × 31 px.</p>
+
+  <h3 class="sub">Color rules</h3>
+  <table>
+    <tr><th>Background</th><th>Mark</th><th>Wordmark</th></tr>
+    <tr><td>White / Frost / Sky Mist</td><td>Science Blue <code>#0059DA</code></td><td>Slope Slate <code>#3F5B77</code></td></tr>
+    <tr><td>Mirage / Midnight Sky / space gradients</td><td>White</td><td>White</td></tr>
+    <tr><td>Science Blue / saturated brand color</td><td>White</td><td>White</td></tr>
+    <tr><td>Photography</td><td colspan="2">White, only over a dark or scrimmed area that keeps contrast ≥ 4.5:1</td></tr>
+  </table>
+
+  <div class="dd">
+    <div class="card do"><div class="hd">Do</div><ul>
+      <li>Use the provided SVG assets at native proportions (153 : 25).</li>
+      <li>Default to the two-color lockup on white.</li>
+      <li>Switch to the all-white reverse on Space, Navy, or Science Blue.</li>
+      <li>Use the mark alone at small sizes (app icons, social avatars).</li>
+    </ul></div>
+    <div class="card dont"><div class="hd">Don’t</div><ul>
+      <li>Recolor, gradient-fill, outline, or add effects to the logo.</li>
+      <li>Stretch, condense, rotate, or crop it.</li>
+      <li>Set the wordmark in a different typeface or re-space the lockup.</li>
+      <li>Place the two-color version on dark or busy backgrounds.</li>
+      <li>Pair the blue mark with Space Navy (contrast is only 2.85 : 1).</li>
+    </ul></div>
+  </div>
+
+  <h3 class="sub">Canonical assets</h3>
+  <table>
+    <tr><th>Asset</th><th>Source</th></tr>
+    <tr><td>Primary lockup (SVG, 153×25)</td><td><code>skyslope.com/wp-content/uploads/2021/03/logo-skyslope-2x.svg</code></td></tr>
+    <tr><td>Favicon</td><td><code>skyslope.com/wp-content/themes/skyslope/favicon.ico</code></td></tr>
+  </table>
+  <p class="note">The lockup and mark rendered throughout this document are inlined from the canonical SVG, so this file works offline.</p>
+</section>
+
+<section class="block" id="color">
+  <div class="eyebrow"><b>03</b>Color</div>
+  <h2 class="title">Blue, from daylight to deep space</h2>
+  <p class="lede">One hue family carries the brand: an electric action blue against deep space navies, supported by slate mid-tones and generous white. Click any swatch to copy its hex.</p>
+
+  <h3 class="sub">Core palette (observed)</h3>
+  <div class="swatch-grid">
+    <div class="swatch big" data-hex="#0059DA"><div class="chipc" style="background:#0059DA;color:#fff">AA on white · 6.1:1</div><div class="meta"><b>Science Blue</b><code>#0059DA</code><small>rgb(0 89 218) · Primary actions, links, logo mark. The brand’s signature.</small></div></div>
+    <div class="swatch big" data-hex="#3F5B77"><div class="chipc" style="background:#3F5B77;color:#fff">AAA on white · 7.1:1</div><div class="meta"><b>Slope Slate</b><code>#3F5B77</code><small>rgb(63 91 119) · Wordmark, supporting copy, secondary UI.</small></div></div>
+    <div class="swatch big" data-hex="#151A27"><div class="chipc" style="background:#151A27;color:#fff">White on it · 17.4:1</div><div class="meta"><b>Mirage</b><code>#151A27</code><small>rgb(21 26 39) · Space-scene backgrounds, hero sections, code blocks.</small></div></div>
+    <div class="swatch big" data-hex="#0A2642"><div class="chipc" style="background:#0A2642;color:#fff">White on it · 15.3:1</div><div class="meta"><b>Midnight Sky</b><code>#0A2642</code><small>rgb(10 38 66) · Editorial headlines (serif), dark panels, blog header.</small></div></div>
+    <div class="swatch big" data-hex="#212529"><div class="chipc" style="background:#212529;color:#fff">AAA on white · 15.4:1</div><div class="meta"><b>Ink</b><code>#212529</code><small>rgb(33 37 41) · Default body text and headings on light.</small></div></div>
+  </div>
+
+  <h3 class="sub">Sky range — accents &amp; tints (observed)</h3>
+  <div class="swatch-grid">
+    <div class="swatch" data-hex="#1537BB"><div class="chipc" style="background:#1537BB;color:#fff"></div><div class="meta"><b>Deep Orbit</b><code>#1537BB</code><small>Hover / pressed states, emphasis.</small></div></div>
+    <div class="swatch" data-hex="#007EFF"><div class="chipc" style="background:#007EFF;color:#fff"></div><div class="meta"><b>Sky Bright</b><code>#007EFF</code><small>Secondary accent; large text or graphics only on white.</small></div></div>
+    <div class="swatch" data-hex="#079EFF"><div class="chipc" style="background:#079EFF;color:#fff"></div><div class="meta"><b>Signal Sky</b><code>#079EFF</code><small>Gradient end, glows, data accents. Not for text on white.</small></div></div>
+    <div class="swatch" data-hex="#4EAFFF"><div class="chipc" style="background:#4EAFFF;color:#151A27"></div><div class="meta"><b>Day Sky</b><code>#4EAFFF</code><small>Illustration accent.</small></div></div>
+    <div class="swatch" data-hex="#87C6FF"><div class="chipc" style="background:#87C6FF;color:#151A27"></div><div class="meta"><b>Light Sky</b><code>#87C6FF</code><small>Links &amp; accents on dark (AAA on Mirage).</small></div></div>
+    <div class="swatch" data-hex="#A7C2E7"><div class="chipc" style="background:#A7C2E7;color:#151A27"></div><div class="meta"><b>Spindle</b><code>#A7C2E7</code><small>Soft brand tint; secondary text on dark.</small></div></div>
+    <div class="swatch" data-hex="#DCEEFF"><div class="chipc" style="background:#DCEEFF;color:#0A2642"></div><div class="meta"><b>Sky Wash</b><code>#DCEEFF</code><small>Pale fills, subhead text on dark.</small></div></div>
+    <div class="swatch" data-hex="#E1F1FF"><div class="chipc" style="background:#E1F1FF;color:#0A2642"></div><div class="meta"><b>Sky Mist</b><code>#E1F1FF</code><small>Chips, highlights, selected states.</small></div></div>
+  </div>
+
+  <h3 class="sub">Slate &amp; neutral ramp (observed)</h3>
+  <div class="swatch-grid">
+    <div class="swatch" data-hex="#637D97"><div class="chipc" style="background:#637D97;color:#fff"></div><div class="meta"><b>Slate 400</b><code>#637D97</code><small>Muted UI text.</small></div></div>
+    <div class="swatch" data-hex="#98AEC3"><div class="chipc" style="background:#98AEC3;color:#151A27"></div><div class="meta"><b>Slate 300</b><code>#98AEC3</code><small>Captions on dark, dividers.</small></div></div>
+    <div class="swatch" data-hex="#696969"><div class="chipc" style="background:#696969;color:#fff"></div><div class="meta"><b>Gray 600</b><code>#696969</code><small>Eyebrow labels, meta text (AA).</small></div></div>
+    <div class="swatch" data-hex="#ADB5BD"><div class="chipc" style="background:#ADB5BD;color:#151A27"></div><div class="meta"><b>Gray 400</b><code>#ADB5BD</code><small>Disabled states, placeholders.</small></div></div>
+    <div class="swatch" data-hex="#DEE2E6"><div class="chipc" style="background:#DEE2E6;color:#0A2642"></div><div class="meta"><b>Gray 300</b><code>#DEE2E6</code><small>Borders, inputs.</small></div></div>
+    <div class="swatch" data-hex="#DEE5ED"><div class="chipc" style="background:#DEE5ED;color:#0A2642"></div><div class="meta"><b>Cloud</b><code>#DEE5ED</code><small>Cool borders, table rules.</small></div></div>
+    <div class="swatch" data-hex="#EBF1F6"><div class="chipc" style="background:#EBF1F6;color:#0A2642"></div><div class="meta"><b>Frost</b><code>#EBF1F6</code><small>Section tints, hairlines.</small></div></div>
+    <div class="swatch" data-hex="#F8F9FA"><div class="chipc" style="background:#F8F9FA;color:#0A2642;border-bottom:1px solid #EBF1F6"></div><div class="meta"><b>Gray 100</b><code>#F8F9FA</code><small>Alternate section background.</small></div></div>
+  </div>
+
+  <h3 class="sub">Functional colors (observed — Bootstrap-derived system)</h3>
+  <div class="swatch-grid">
+    <div class="swatch" data-hex="#28A745"><div class="chipc" style="background:#28A745;color:#fff"></div><div class="meta"><b>Success</b><code>#28A745</code><small>Confirmation, complete states.</small></div></div>
+    <div class="swatch" data-hex="#DC3545"><div class="chipc" style="background:#DC3545;color:#fff"></div><div class="meta"><b>Danger</b><code>#DC3545</code><small>Errors, destructive actions.</small></div></div>
+    <div class="swatch" data-hex="#FFC107"><div class="chipc" style="background:#FFC107;color:#151A27"></div><div class="meta"><b>Warning</b><code>#FFC107</code><small>Caution; always with dark text.</small></div></div>
+    <div class="swatch" data-hex="#17A2B8"><div class="chipc" style="background:#17A2B8;color:#fff"></div><div class="meta"><b>Info</b><code>#17A2B8</code><small>Neutral notices.</small></div></div>
+  </div>
+  <div class="callout"><b>Framework note:</b> the site’s underlying CSS is Bootstrap-based, so generic links inherit Bootstrap blue <code>#007BFF</code>. Brand surfaces consistently override actions to Science Blue <code>#0059DA</code> — prefer it for anything you build. <code>#007BFF</code> is only 3.98 : 1 on white, so if it appears at all, reserve it for large text or graphics.</div>
+
+  <h3 class="sub">Gradients (observed)</h3>
+  <div class="grad-grid">
+    <div class="grad"><div class="chipc" style="background:linear-gradient(180deg,#161B28 58%,#1A6AAC 100%)"></div><div class="meta"><b>Space</b> — hero &amp; dark sections<br><code>linear-gradient(180deg, #161B28 58%, #1A6AAC 100%)</code></div></div>
+    <div class="grad"><div class="chipc" style="background:linear-gradient(117deg,#533DB1 0%,#079EFF 100%)"></div><div class="meta"><b>Smart Suite (AI)</b> — AI features &amp; campaign moments<br><code>linear-gradient(117deg, #533DB1 0%, #079EFF 100%)</code></div></div>
+  </div>
+  <p class="note">Illustrations extend these with neon violet, magenta, and cyan glows — see §07. Reserve the AI gradient for Smart Suite / AI-related surfaces so it keeps its meaning.</p>
+
+  <h3 class="sub">Proportions</h3>
+  <p>Compositions on the site hold roughly to <b>60 / 30 / 10</b>: ~60% white and light neutrals (content zones), ~30% space navies (hero and feature moments), ~10% Science Blue and sky accents (actions and highlights). Science Blue is an <i>accent with authority</i> — when everything is blue, nothing is.</p>
+</section>
+
+<section class="block" id="type">
+  <div class="eyebrow"><b>04</b>Typography</div>
+  <h2 class="title">Proxima Nova does the work,<br>Libre Baskerville tells the stories</h2>
+  <p class="lede">One geometric sans carries everything from 88-px heroes to form labels; a bookish serif is reserved for editorial moments. Both are observed live on skyslope.com.</p>
+
+  <h3 class="sub">Families</h3>
+  <table>
+    <tr><th>Role</th><th>Family</th><th>Weights in use</th><th>Served via</th></tr>
+    <tr><td><b>Primary — UI &amp; marketing</b></td><td>Proxima Nova</td><td>500 Medium (body) · 700 Bold (headings, buttons)</td><td>Adobe Fonts (site kit <code>use.typekit.net/fsc4kla.css</code>)</td></tr>
+    <tr><td><b>Editorial — blog “SkyHigh”</b></td><td>Libre Baskerville</td><td>400 · 500 · 600 · 700 + italics</td><td>Google Fonts (open license)</td></tr>
+    <tr><td>Code / specs</td><td>System mono stack</td><td>—</td><td>Local</td></tr>
+  </table>
+  <div class="callout"><b>Licensing:</b> Proxima Nova is a commercial face — load it through your own Adobe Fonts (or Fontspring) license; don’t hotlink SkySlope’s kit. Fallback stack: <code>proxima-nova, "Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif</code>. (If this page renders in the fallback, specimens are still dimensionally accurate.)</div>
+
+  <h3 class="sub">Scale — desktop (observed values marked ●, interpolated steps ○)</h3>
+  <table>
+    <tr><th>Style</th><th>Size / line</th><th>Weight</th><th>Color on light</th><th>Use</th></tr>
+    <tr><td>● Display</td><td>88 / 88 px</td><td>700</td><td>White (on Space)</td><td>Homepage-class heroes only</td></tr>
+    <tr><td>○ H1</td><td>64 / 70 px</td><td>700</td><td>Ink <code>#212529</code></td><td>Page titles</td></tr>
+    <tr><td>● H2</td><td>48 / 56 px</td><td>700</td><td>Ink</td><td>Section headlines</td></tr>
+    <tr><td>○ H3</td><td>32 / 40 px</td><td>700</td><td>Ink / Navy</td><td>Sub-sections</td></tr>
+    <tr><td>○ H4</td><td>24 / 32 px</td><td>700</td><td>Ink / Navy</td><td>Card titles</td></tr>
+    <tr><td>● H5 / widget</td><td>22 / 28 px</td><td>600</td><td>Gray 600</td><td>Minor headings</td></tr>
+    <tr><td>● Eyebrow</td><td>14 / 20 px · uppercase · +1.5 px tracking</td><td>700</td><td>Gray 600 <code>#696969</code></td><td>Kickers above headlines (“EXPERIENCE SKYSLOPE”)</td></tr>
+    <tr><td>● Body L (default)</td><td>19 / 28 px · +0.16 px tracking</td><td>500</td><td>Ink; Slate for supporting</td><td>Marketing body copy</td></tr>
+    <tr><td>○ Body</td><td>16 / 24 px</td><td>500</td><td>Ink</td><td>Product UI, dense layouts</td></tr>
+    <tr><td>● Small / UI</td><td>14 / 20 px</td><td>500–700</td><td>Slate / Gray 600</td><td>Nav, meta, captions</td></tr>
+    <tr><td>● Serif editorial</td><td>40 / 52 px</td><td>500</td><td>Midnight Sky <code>#0A2642</code></td><td>Blog headlines &amp; pull quotes</td></tr>
+  </table>
+
+  <h3 class="sub">Specimens</h3>
+  <div class="spec"><div class="render" style="font-size:56px;line-height:1;font-weight:700">The AI-first way to run a brokerage</div><div class="meta">Proxima Nova Bold · display/H1 · sentence case</div></div>
+  <div class="spec"><div class="render" style="font-size:34px;line-height:1.18;font-weight:700">All-in-one brokerage software, enhanced with built-in intelligence.</div><div class="meta">Proxima Nova Bold · H2–H3 · sentence case</div></div>
+  <div class="spec"><div class="render"><span class="eyebrow-demo">Experience SkySlope</span></div><div class="meta">Eyebrow · 14px · 700 · uppercase · +1.5px tracking · Gray 600</div></div>
+  <div class="spec"><div class="render" style="font-size:19px;line-height:28px;font-weight:500;color:var(--ss-slate);max-width:60ch">SkySlope brings intelligent automation to every transaction—so teams move faster with less risk. Monitor your transactions in real time from a single dashboard.</div><div class="meta">Proxima Nova Medium 19/28 · body · Slate for supporting copy</div></div>
+  <div class="spec"><div class="render" style="font-family:var(--ss-font-serif);font-size:32px;line-height:1.3;font-weight:500;color:var(--ss-navy)">Clearer numbers, better decisions — stories from SkyHigh.</div><div class="meta">Libre Baskerville 500 · editorial headlines only · Midnight Sky</div></div>
+
+  <h3 class="sub">Typesetting rules</h3>
+  <ul>
+    <li><b>Sentence case</b> for headlines and buttons’ surrounding copy; <b>Title Case</b> only for product names and CTA labels (“Request Demo”).</li>
+    <li>Two weights are enough: Medium for reading, Bold for hierarchy. Don’t introduce Light or Black.</li>
+    <li>Keep headline measure ≤ 14 words; body measure 60–76 characters.</li>
+    <li>The serif never appears in product UI, buttons, or forms — editorial surfaces only.</li>
+    <li>Em dashes without spaces (“transaction—so teams…”), matching site copy.</li>
+  </ul>
+</section>
+
+<section class="block" id="space">
+  <div class="eyebrow"><b>05</b>Spacing &amp; shape</div>
+  <h2 class="title">Room to breathe, corners that smile</h2>
+  <p class="lede">Layouts are airy and centered, with big vertical rhythm between sections and soft radii on everything interactive. (Derived from consistent site usage.)</p>
+  <table>
+    <tr><th>Token</th><th>Value</th><th>Notes</th></tr>
+    <tr><td>Base unit</td><td><code>8 px</code></td><td>All spacing steps in multiples of 8 (4 for fine UI)</td></tr>
+    <tr><td>Content container</td><td><code>1140–1200 px</code></td><td>Bootstrap-era grid, 12 columns, centered</td></tr>
+    <tr><td>Section padding</td><td><code>96–120 px</code> vertical</td><td>Hero sections run larger</td></tr>
+    <tr><td>Card padding</td><td><code>24–32 px</code></td><td></td></tr>
+    <tr><td>Radius — pills</td><td><code>20 px</code> (observed)</td><td>Buttons are fully rounded pills</td></tr>
+    <tr><td>Radius — cards &amp; media</td><td><code>8–12 px</code></td><td>Product screenshots sit in rounded frames</td></tr>
+    <tr><td>Radius — inputs</td><td><code>8 px</code></td><td></td></tr>
+    <tr><td>Card shadow</td><td><code>0 10px 30px rgba(21,26,39,.08)</code></td><td>Soft, cool, never harsh</td></tr>
+  </table>
+</section>
+
+<section class="block" id="components">
+  <div class="eyebrow"><b>06</b>UI components</div>
+  <h2 class="title">Pills, cards, and confident CTAs</h2>
+  <p class="lede">Live, to-spec renderings of the core interactive patterns. All values observed on skyslope.com unless marked derived.</p>
+
+  <h3 class="sub">Buttons</h3>
+  <div class="panel"><div class="panel-label">On light backgrounds</div>
+    <div class="row">
+      <a class="btn btn-primary" href="#components" onclick="return false">Request Demo</a>
+      <a class="btn btn-outline" href="#components" onclick="return false">Learn More</a>
+      <a class="textlink" href="#components" onclick="return false">Read More</a>
+    </div>
+  </div>
+  <div class="panel dark"><div class="panel-label">On Space &amp; Navy</div>
+    <div class="row">
+      <a class="btn btn-ghost" href="#components" onclick="return false">Request Demo</a>
+      <a class="btn btn-primary" href="#components" onclick="return false">Experience the Intelligence</a>
+    </div>
+  </div>
+  <table>
+    <tr><th>Variant</th><th>Spec</th><th>States</th></tr>
+    <tr><td><b>Primary</b> (observed)</td><td>Science Blue fill · white text · Proxima 700 · 16 px · padding 10–12 × 24 · radius 20 px (pill)</td><td>Hover/active: Deep Orbit <code>#1537BB</code> (derived) · Focus: 3 px ring <code>rgba(0,89,218,.35)</code></td></tr>
+    <tr><td><b>Secondary / outline</b> (observed)</td><td>3 px Science Blue border · Science Blue text · padding 10 × 30 · radius 20 px</td><td>Hover: fills Science Blue, text white</td></tr>
+    <tr><td><b>Ghost on dark</b> (observed)</td><td>2 px white border · white text · transparent</td><td>Hover: <code>rgba(255,255,255,.14)</code> fill</td></tr>
+    <tr><td><b>Text link</b></td><td>Science Blue · 700 · trailing arrow “Read More →”</td><td>Hover: underline</td></tr>
+  </table>
+  <ul>
+    <li>CTA labels are Title Case, 1–3 words: <b>Request Demo · Learn More · Watch Video · Explore Forms</b>.</li>
+    <li>One primary button per view section; support it with outline or text links.</li>
+    <li>Never square off the pills — the 20 px full-round radius is a brand signature.</li>
+  </ul>
+
+  <h3 class="sub">Cards</h3>
+  <div class="panel" style="background:var(--ss-gray-100)"><div class="panel-label">Feature / blog card</div>
+    <div class="card-demo">
+      <div class="eyebrow-demo">Broker Dashboard</div>
+      <h4>Complete visibility into your transactions</h4>
+      <p>Monitor your transactions in real time from a single dashboard. It’s like having a personal assistant.</p>
+      <a class="textlink" href="#components" onclick="return false">Read More</a>
+    </div>
+  </div>
+  <p>White fill, 12 px radius, soft cool shadow, 24–32 px padding. Cards carry an eyebrow, a bold title, supporting Slate copy, and a single link or button. Product screenshots sit inside rounded frames with the same shadow, often overlapping section boundaries.</p>
+
+  <h3 class="sub">Forms</h3>
+  <div class="panel"><div class="panel-label">Input</div>
+    <label class="demo" for="demo-email">Work email</label>
+    <input class="input-demo" id="demo-email" type="text" placeholder="you@brokerage.com">
+  </div>
+  <p>1 px Gray 300 border, 8 px radius, 16 px text, labels in bold Slate 13–14 px. Focus swaps the border to Science Blue with the standard ring. Errors use Danger <code>#DC3545</code> with a plain-language message.</p>
+
+  <h3 class="sub">Navigation (observed)</h3>
+  <ul>
+    <li>White header, sticky; logo at 190 px; links in Slate 14–15 px Medium.</li>
+    <li>Right side: “Login” as a Science Blue text link + “Request Demo” as the lone primary pill.</li>
+    <li>Dark sections invert to the white logo and white/Sky links.</li>
+  </ul>
+</section>
+
+<section class="block" id="imagery">
+  <div class="eyebrow"><b>07</b>Imagery &amp; illustration</div>
+  <h2 class="title">Real estate, set in a friendly cosmos</h2>
+  <p class="lede">SkySlope’s most distinctive visual asset is its space world: astronauts, UFOs, shooting stars, and moonlit mountain ranges rendered in flat vector with neon glows — always in service of a product story.</p>
+
+  <h3 class="sub">The space world (hero &amp; feature illustrations)</h3>
+  <ul>
+    <li><b>Setting:</b> deep-space backdrops on Mirage/space gradients with starfields and shooting-star streaks.</li>
+    <li><b>Cast:</b> friendly astronaut characters, UFOs beaming up documents, crystals/gems, moons and mountains — tech doing the heavy lifting with a wink.</li>
+    <li><b>Light:</b> neon glows in violet <code>#533DB1</code>, magenta-pink, and cyan/sky <code>#079EFF</code>–<code>#4EAFFF</code>; a single strong light source (beams, halos).</li>
+    <li><b>Style:</b> flat vector with soft gradient shading — no outlines, no 3-D renders, no gritty texture.</li>
+    <li><b>Purpose:</b> the illustration always dramatizes a product action (e.g., a UFO beaming signatures onto a contract for DigiSign).</li>
+  </ul>
+
+  <h3 class="sub">Product UI imagery</h3>
+  <ul>
+    <li>Real screenshots, framed in white cards with 8–12 px radius and the soft cool shadow; often floating over dark scenes or overlapping section edges.</li>
+    <li>Screenshots are current, legible, and staged with realistic data — never blurred or skewed into deep perspective.</li>
+  </ul>
+
+  <h3 class="sub">People &amp; photography</h3>
+  <ul>
+    <li>Editorial/blog surfaces use warm, natural photography of agents, homes, and teams — candid over corporate.</li>
+    <li>Flat-vector people illustrations (blue-dominant wardrobe) appear in feature stories and social cards.</li>
+  </ul>
+
+  <div class="dd">
+    <div class="card do"><div class="hd">Do</div><ul>
+      <li>Keep space scenes on dark gradients; keep daylight scenes on white.</li>
+      <li>Use one hero illustration per page; let white space carry the rest.</li>
+      <li>Tie every illustration to a concrete product benefit.</li>
+      <li>Keep glows in the violet–cyan family.</li>
+    </ul></div>
+    <div class="card dont"><div class="hd">Don’t</div><ul>
+      <li>Drop space illustrations onto white backgrounds without their scene.</li>
+      <li>Mix in stock 3-D blobs, isometric office clip-art, or photo-collage.</li>
+      <li>Add red/orange sci-fi menace — this cosmos is optimistic.</li>
+      <li>Let decoration outshine the product story.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section class="block" id="icons">
+  <div class="eyebrow"><b>08</b>Iconography</div>
+  <h2 class="title">Simple, rounded, monochrome</h2>
+  <p class="lede">Icons are functional wayfinding, not decoration. The site ships Font Awesome (solid/brands) plus simple custom glyphs.</p>
+  <ul>
+    <li>Style: solid or 2 px-stroke line icons with rounded terminals; geometric, no detail noise.</li>
+    <li>Color: single color only — Slope Slate or Science Blue on light; white or Light Sky on dark.</li>
+    <li>Sizing: 16 / 20 / 24 px grid; optical centering inside 40–48 px tap targets.</li>
+    <li>Checkmarks introduce list items in feature copy (observed pattern), set in Science Blue or Success green.</li>
+    <li>Don’t mix icon families in one view, and never use emoji as UI icons.</li>
+  </ul>
+</section>
+
+<section class="block" id="voice">
+  <div class="eyebrow"><b>09</b>Voice &amp; tone</div>
+  <h2 class="title">Confident, plain-spoken, in motion</h2>
+  <p class="lede">SkySlope writes like a great transaction coordinator talks: sure of the process, allergic to fluff, and always moving the deal forward.</p>
+
+  <h3 class="sub">Voice principles</h3>
+  <table>
+    <tr><th>Principle</th><th>In practice</th><th>Straight from the site</th></tr>
+    <tr><td><b>Lead with the benefit</b></td><td>Outcome first, feature second.</td><td>“…so teams move faster with less risk.”</td></tr>
+    <tr><td><b>Keep it concrete</b></td><td>Verbs and specifics over abstractions.</td><td>“Monitor your transactions in real time from a single dashboard.”</td></tr>
+    <tr><td><b>Sound human</b></td><td>Contractions, warmth, the odd wink.</td><td>“It’s like having a personal assistant.” · “Made with ♥ in Sacramento, CA.”</td></tr>
+    <tr><td><b>Show momentum</b></td><td>Move, launch, streamline, keep pace, forward.</td><td>“Auditors move forward faster, and compliance keeps pace.”</td></tr>
+    <tr><td><b>Back it up</b></td><td>Scale and support as proof, not boasting.</td><td>“Empowering over 900,000 real estate professionals across the U.S. and Canada.”</td></tr>
+  </table>
+
+  <h3 class="sub">Tone by surface</h3>
+  <table>
+    <tr><th>Surface</th><th>Tone dial</th><th>Notes</th></tr>
+    <tr><td>Marketing site &amp; campaigns</td><td>Bold, aspirational</td><td>Space metaphors welcome; big claims earn proof points.</td></tr>
+    <tr><td>Product UI</td><td>Calm, instructive</td><td>Short imperative sentences; no drama in empty states or errors.</td></tr>
+    <tr><td>Support &amp; help</td><td>Warm, patient</td><td>24/7 support is a brand pillar — sound like it.</td></tr>
+    <tr><td>Legal / compliance</td><td>Plain, precise</td><td>No metaphors, no exclamation points.</td></tr>
+    <tr><td>Internal culture</td><td>Unfiltered, driven</td><td>Rally cries like “Get. Shit. Done.” and “If it’s good, let’s make it great” live in careers/culture content — <b>never</b> customer-facing.</td></tr>
+  </table>
+
+  <h3 class="sub">Before → after</h3>
+  <table>
+    <tr><th>Off-brand</th><th>On-brand</th></tr>
+    <tr><td>“Our best-in-class synergistic solution leverages cutting-edge AI paradigms to optimize workflows.”</td><td>“SkySlope learns how your agents work, anticipates what’s next, and keeps everything moving forward.”</td></tr>
+    <tr><td>“Users may experience enhanced auditing efficiencies.”</td><td>“Auditors move forward faster, and compliance keeps pace.”</td></tr>
+    <tr><td>“Download our mobile application for on-the-go productivity!”</td><td>“The SkySlope app — your office in your pocket.”</td></tr>
+  </table>
+
+  <h3 class="sub">Boilerplate (assembled from site copy)</h3>
+  <div class="callout">SkySlope is an industry leader in real estate transaction management, combining best-in-class technology with award-winning customer service. Founded in 2011 and headquartered in Sacramento, California, SkySlope is part of the Fidelity National Financial family and serves more than 900,000 real estate professionals across the U.S. and Canada — one intelligent platform from contract to payout.</div>
+</section>
+
+<section class="block" id="writing">
+  <div class="eyebrow"><b>10</b>Writing style</div>
+  <h2 class="title">The mechanics</h2>
+  <h3 class="sub">Naming &amp; capitalization</h3>
+  <table>
+    <tr><th>Term</th><th>Rule</th></tr>
+    <tr><td><b>SkySlope</b></td><td>One word, two capitals. Never “Skyslope,” “SkySlope’s platform” is fine.</td></tr>
+    <tr><td><b>DigiSign</b>, <b>SkyTC</b>, <b>SkySight</b>, <b>SkyHigh</b></td><td>Internal capitals exactly as shown.</td></tr>
+    <tr><td><b>Forms, Offers, Books, Breeze, Ayce</b></td><td>Capitalized as product names; pair with SkySlope on first mention (“SkySlope Forms”).</td></tr>
+    <tr><td><b>Smart Suite</b></td><td>Two words, both capitalized.</td></tr>
+    <tr><td>real estate, brokerage, transaction management</td><td>Lowercase generic terms.</td></tr>
+    <tr><td>agents, brokers, TCs, auditors</td><td>Lowercase; “TC” = transaction coordinator, spell out on first use in long-form.</td></tr>
+  </table>
+  <h3 class="sub">Conventions</h3>
+  <ul>
+    <li>Headlines and UI copy in <b>sentence case</b>; CTA button labels in <b>Title Case</b> (1–3 words).</li>
+    <li>Numerals for stats and counts: “900,000+ professionals,” “24/7 support,” “founded in 2011.”</li>
+    <li>Em dash with no surrounding spaces for emphasis breaks — exactly like this.</li>
+    <li>Second person by default (“your agents,” “your transactions”); first-person plural for the company (“we’re obsessed with our customers”).</li>
+    <li>Avoid: solution(s), synergy, leverage (as a verb), robust, seamless, revolutionary, “simply.”</li>
+    <li>Exclamation points: at most one per page, ideally zero.</li>
+  </ul>
+</section>
+
+<section class="block" id="a11y">
+  <div class="eyebrow"><b>11</b>Accessibility</div>
+  <h2 class="title">Compliant experiences are accessible ones</h2>
+  <p class="lede">Target WCAG 2.1 AA minimum (SkySlope publishes its own accessibility commitment at skyslope.com/accessibility). Ratios below are computed from the observed palette.</p>
+  <h3 class="sub">Contrast matrix (computed)</h3>
+  <table>
+    <tr><th>Pairing</th><th>Ratio</th><th>Verdict</th><th>Guidance</th></tr>
+    <tr><td>Ink <code>#212529</code> on white</td><td>15.43 : 1</td><td><span class="badge aaa">AAA</span></td><td>Default body text.</td></tr>
+    <tr><td>Slope Slate <code>#3F5B77</code> on white</td><td>7.06 : 1</td><td><span class="badge aaa">AAA</span></td><td>Supporting copy.</td></tr>
+    <tr><td>Science Blue <code>#0059DA</code> on white</td><td>6.10 : 1</td><td><span class="badge aa">AA</span></td><td>Links, buttons, any size.</td></tr>
+    <tr><td>Deep Orbit <code>#1537BB</code> on white</td><td>9.15 : 1</td><td><span class="badge aaa">AAA</span></td><td>Hover states stay compliant.</td></tr>
+    <tr><td>Gray 600 <code>#696969</code> on white</td><td>5.49 : 1</td><td><span class="badge aa">AA</span></td><td>Eyebrows, meta text.</td></tr>
+    <tr><td>White on Mirage <code>#151A27</code></td><td>17.37 : 1</td><td><span class="badge aaa">AAA</span></td><td>Hero type on space scenes.</td></tr>
+    <tr><td>White on Midnight Sky <code>#0A2642</code></td><td>15.34 : 1</td><td><span class="badge aaa">AAA</span></td><td>Dark panels.</td></tr>
+    <tr><td>White on violet <code>#533DB1</code></td><td>7.86 : 1</td><td><span class="badge aaa">AAA</span></td><td>AI-gradient start is safe for text.</td></tr>
+    <tr><td>Light Sky <code>#87C6FF</code> on Mirage</td><td>9.56 : 1</td><td><span class="badge aaa">AAA</span></td><td>Links/accents on dark.</td></tr>
+    <tr><td>Signal Sky <code>#079EFF</code> on Mirage</td><td>6.07 : 1</td><td><span class="badge aa">AA</span></td><td>Accent text on dark.</td></tr>
+    <tr><td>Bootstrap link <code>#007BFF</code> on white</td><td>3.98 : 1</td><td><span class="badge large">AA large only</span></td><td>Avoid for body links — use Science Blue.</td></tr>
+    <tr><td>White on Signal Sky <code>#079EFF</code></td><td>2.86 : 1</td><td><span class="badge fail">Fail</span></td><td>Never white text on bright sky fills.</td></tr>
+    <tr><td>Science Blue on Mirage</td><td>2.85 : 1</td><td><span class="badge fail">Fail</span></td><td>On dark, switch actions to white or Light Sky.</td></tr>
+  </table>
+  <h3 class="sub">Practice</h3>
+  <ul>
+    <li>Body text ≥ 16 px (the site’s default is 19 px); never grayer than Gray 600 on white.</li>
+    <li>Visible focus on everything interactive: 3 px ring <code>rgba(0,89,218,.35)</code>.</li>
+    <li>Never encode meaning in color alone — pair status colors with icons or labels.</li>
+    <li>Alt text tells the product story of an illustration (“Astronaut reviewing a checklist”), or is empty for pure decoration.</li>
+    <li>Respect <code>prefers-reduced-motion</code>: starfields and floating animations must settle.</li>
+    <li>Pill buttons keep ≥ 44 px touch height on mobile.</li>
+  </ul>
+</section>
+
+<section class="block" id="tokens">
+  <div class="eyebrow"><b>12</b>Design tokens</div>
+  <h2 class="title">Copy-paste the brand</h2>
+  <p class="lede">Drop-in CSS custom properties (this page runs on them), plus the same values as JSON for design-tool or build pipelines.</p>
+  <pre><button class="copy" type="button">Copy CSS</button><code>:root{
+  /* core */
+  --ss-blue:#0059DA;         /* Science Blue — primary actions, links, logo mark */
+  --ss-blue-deep:#1537BB;    /* hover / pressed */
+  --ss-blue-bright:#079EFF;  /* gradients, glows — not text on white */
+  --ss-blue-alt:#007EFF;
+  --ss-sky-soft:#4EAFFF;
+  --ss-sky:#87C6FF;          /* links & accents on dark */
+  --ss-spindle:#A7C2E7;
+  --ss-sky-wash:#DCEEFF;
+  --ss-sky-mist:#E1F1FF;
+  --ss-slate:#3F5B77;        /* wordmark, supporting text */
+  --ss-slate-400:#637D97;
+  --ss-slate-300:#98AEC3;
+  --ss-navy:#0A2642;         /* editorial headlines, dark panels */
+  --ss-space:#151A27;        /* Mirage — space backgrounds */
+  --ss-space-alt:#161B28;
+  --ss-ink:#212529;          /* body text */
+  /* neutrals */
+  --ss-gray-800:#343A40; --ss-gray-700:#495057; --ss-gray-600:#696969;
+  --ss-gray-500:#6C757D; --ss-gray-400:#ADB5BD; --ss-gray-300:#DEE2E6;
+  --ss-cloud:#DEE5ED; --ss-frost:#EBF1F6;
+  --ss-gray-100:#F8F9FA; --ss-gray-bg:#F4F4F4; --ss-white:#FFFFFF;
+  /* functional */
+  --ss-success:#28A745; --ss-danger:#DC3545;
+  --ss-warning:#FFC107; --ss-info:#17A2B8;
+  /* gradients */
+  --ss-grad-space:linear-gradient(180deg,#161B28 58%,#1A6AAC 100%);
+  --ss-grad-ai:linear-gradient(117deg,#533DB1 0%,#079EFF 100%);
+  /* typography */
+  --ss-font-sans:proxima-nova,"Proxima Nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --ss-font-serif:"Libre Baskerville",Georgia,serif;
+  --ss-text-body:500 19px/28px var(--ss-font-sans);
+  --ss-tracking-body:.16px;
+  --ss-tracking-eyebrow:1.5px;
+  /* shape & elevation */
+  --ss-radius-pill:20px;
+  --ss-radius-card:12px;
+  --ss-radius-input:8px;
+  --ss-shadow-card:0 10px 30px rgba(21,26,39,.08);
+  --ss-focus-ring:0 0 0 3px rgba(0,89,218,.35);
+}</code></pre>
+  <pre><button class="copy" type="button">Copy JSON</button><code>{
+  "color": {
+    "brand":   { "blue":"#0059DA","blueDeep":"#1537BB","blueBright":"#079EFF","blueAlt":"#007EFF",
+                 "skySoft":"#4EAFFF","sky":"#87C6FF","spindle":"#A7C2E7","skyWash":"#DCEEFF","skyMist":"#E1F1FF",
+                 "slate":"#3F5B77","slate400":"#637D97","slate300":"#98AEC3",
+                 "navy":"#0A2642","space":"#151A27","spaceAlt":"#161B28","ink":"#212529" },
+    "neutral": { "800":"#343A40","700":"#495057","600":"#696969","500":"#6C757D","400":"#ADB5BD",
+                 "300":"#DEE2E6","cloud":"#DEE5ED","frost":"#EBF1F6","100":"#F8F9FA","bg":"#F4F4F4","white":"#FFFFFF" },
+    "functional": { "success":"#28A745","danger":"#DC3545","warning":"#FFC107","info":"#17A2B8" }
+  },
+  "gradient": {
+    "space": { "angle":180,"stops":[["#161B28",0.58],["#1A6AAC",1]] },
+    "ai":    { "angle":117,"stops":[["#533DB1",0],["#079EFF",1]] }
+  },
+  "font": {
+    "sans":  { "family":"Proxima Nova","weights":[500,700],"source":"Adobe Fonts" },
+    "serif": { "family":"Libre Baskerville","weights":[400,500,600,700],"source":"Google Fonts" }
+  },
+  "type": {
+    "display":{"size":88,"line":88,"weight":700}, "h1":{"size":64,"line":70,"weight":700},
+    "h2":{"size":48,"line":56,"weight":700},      "h3":{"size":32,"line":40,"weight":700},
+    "h4":{"size":24,"line":32,"weight":700},
+    "eyebrow":{"size":14,"line":20,"weight":700,"case":"upper","tracking":1.5},
+    "bodyL":{"size":19,"line":28,"weight":500,"tracking":0.16},
+    "body":{"size":16,"line":24,"weight":500},    "small":{"size":14,"line":20,"weight":500},
+    "serifEditorial":{"size":40,"line":52,"weight":500}
+  },
+  "radius": { "pill":20,"card":12,"input":8 },
+  "shadow": { "card":"0 10px 30px rgba(21,26,39,0.08)" },
+  "focus":  { "ring":"0 0 0 3px rgba(0,89,218,0.35)" }
+}</code></pre>
+</section>
+
+<section class="block" id="sources">
+  <div class="eyebrow"><b>13</b>Sources &amp; provenance</div>
+  <h2 class="title">Where every value came from</h2>
+  <p class="lede">Compiled August 12, 2026 by direct inspection of SkySlope’s live public properties. “Observed” values were read from rendered pages, stylesheets, and assets; “derived” items are conventions inferred from consistent usage and standard practice.</p>
+  <table>
+    <tr><th>Evidence</th><th>What it provided</th></tr>
+    <tr><td><code>skyslope.com</code> (homepage, rendered)</td><td>Positioning copy, hero type scale (88/88, 48/56, 19/28), button specs (pill 20 px, #0059DA), color frequency census, space gradient, footer credo</td></tr>
+    <tr><td><code>/wp-content/themes/skyslope/dist/style.css</code></td><td>Palette hexes (#0059DA, #3F5B77, #151A27, #0A2642, sky tints, neutrals), font-family declarations, functional colors, Bootstrap base</td></tr>
+    <tr><td><code>logo-skyslope-2x.svg</code> (canonical logo)</td><td>Exact logo geometry and fills: mark #0059DA, wordmark #3F5B77 (inlined in this document)</td></tr>
+    <tr><td>Adobe Fonts kit <code>use.typekit.net/fsc4kla.css</code> + loaded-font census</td><td>Proxima Nova 500/700 as the primary face</td></tr>
+    <tr><td>Google Fonts request + <code>/blog/</code> (SkyHigh)</td><td>Libre Baskerville, editorial usage at 40 px/500 in #0A2642</td></tr>
+    <tr><td><code>/company/</code></td><td>Mission, values, culture voice, stats (founded 2011, Sacramento, FNF 2017)</td></tr>
+    <tr><td><code>/smart-suite/</code></td><td>AI gradient (117°, #533DB1→#079EFF), reversed logo usage, UFO illustration style</td></tr>
+    <tr><td><code>/products-services/skyslope/</code></td><td>Product tone examples, CTA vocabulary, screenshot framing</td></tr>
+    <tr><td>Brandfetch (skyslope.com)</td><td>Corroborated names: Science Blue, Spindle, Mirage</td></tr>
+    <tr><td>WCAG 2.1 relative-luminance formula</td><td>All contrast ratios in §11 (computed, not estimated)</td></tr>
+  </table>
+  <div class="callout"><b>Honest limits:</b> SkySlope may hold an official internal brand book with rules this reference can’t see (print specs, co-branding, mascot names). Treat this document as the best public reconstruction — accurate to what ships on skyslope.com today — and defer to SkySlope marketing where they conflict. Logo files and product screenshots remain SkySlope’s property; Proxima Nova requires your own license.</div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer class="doc">
+  <div class="wrap">
+    <b>SkySlope Brand &amp; Style Guidelines — Reference edition v1.0</b> · Compiled August 12, 2026 · Independently reconstructed from public SkySlope web properties; not an official SkySlope publication. SkySlope, DigiSign, Breeze, SkyTC, SkySight, Ayce and related marks are trademarks of SkySlope, Inc. (a Fidelity National Financial company). This document is for internal design/development reference only.
+  </div>
+</footer>
+
+</main>
+</div><!-- /layout -->
+
+<script>
+// copy-to-clipboard for swatches and code blocks (in-memory only)
+function copyText(t,el){
+  const done=()=>{if(!el)return;const o=el.dataset.label||el.textContent;el.dataset.label=o;el.textContent='Copied!';setTimeout(()=>{el.textContent=el.dataset.label;},900);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(()=>{});}
+}
+document.addEventListener('click',e=>{
+  const sw=e.target.closest('.swatch');
+  if(sw&&sw.dataset.hex){copyText(sw.dataset.hex);const b=sw.querySelector('code');if(b){const o=b.textContent;b.textContent='copied!';setTimeout(()=>b.textContent=o,850);}}
+  const cp=e.target.closest('pre .copy');
+  if(cp){copyText(cp.parentElement.querySelector('code').innerText,cp);}
+});
+// scrollspy
+const links=[...document.querySelectorAll('#toc a')];
+const secs=links.map(a=>document.querySelector(a.hash)).filter(Boolean);
+const spy=()=>{let cur=secs[0];for(const s of secs){if(s.getBoundingClientRect().top<140)cur=s;}links.forEach(a=>a.classList.toggle('active',a.hash==='#'+cur.id));};
+document.addEventListener('scroll',spy,{passive:true});spy();
+</script>
+</body>
+</html>

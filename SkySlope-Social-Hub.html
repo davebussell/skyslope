@@ -4,25 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SkySlope Social Hub — Click Shift</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
   :root{
     color-scheme: light;
-    --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
-    --grid:#e1e0d9; --baseline:#c3c2b7; --ring:rgba(11,11,11,.10);
-    --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
-    --navy:#1f3864; --blue:#2e74b5; --crit:#d03b3b; --warnbg:#fdf3f2; --warnborder:#d03b3b;
-    --accentwash:rgba(42,120,214,.08);
+    /* SkySlope brand tokens — see the Brand Guidelines section (values observed on skyslope.com) */
+    --page:#F8F9FA; --surface:#FFFFFF; --ink:#212529; --ink-2:#3F5B77; --muted:#696969;
+    --grid:#DEE5ED; --baseline:#ADB5BD; --ring:rgba(0,89,218,.35);
+    --s1:#0059DA; --s2:#17A2B8; --s3:#28A745; --s4:#FFC107;
+    --navy:#0A2642; --blue:#0059DA; --crit:#DC3545; --warnbg:#FBE7E9; --warnborder:#DC3545;
+    --accentwash:#E1F1FF;
+    --shadow:0 10px 30px rgba(21,26,39,.08);
+    --logo-mark:#0059DA; --logo-word:#3F5B77;
+    --font-sans:proxima-nova,"Proxima Nova","Helvetica Neue",Helvetica,Arial,-apple-system,"Segoe UI",sans-serif;
   }
   :root[data-theme="dark"]{
     color-scheme: dark;
-    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
-    --grid:#2c2c2a; --baseline:#383835; --ring:rgba(255,255,255,.10);
-    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
-    --navy:#8fb3e8; --blue:#6da7ec; --crit:#e66767; --warnbg:#2a1717; --warnborder:#e66767;
-    --accentwash:rgba(57,135,229,.12);
+    /* Mirage / Midnight Sky world — logo reverses to all white per brand rules */
+    --page:#151A27; --surface:#1C2433; --ink:#FFFFFF; --ink-2:#A7C2E7; --muted:#98AEC3;
+    --grid:#2A3345; --baseline:#3E4B66; --ring:rgba(135,198,255,.40);
+    --s1:#4EAFFF; --s2:#3EC6DE; --s3:#41C46A; --s4:#FFCD39;
+    --navy:#DCEEFF; --blue:#87C6FF; --crit:#F0707C; --warnbg:#33191E; --warnborder:#E4606D;
+    --accentwash:rgba(0,126,255,.16);
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --logo-mark:#FFFFFF; --logo-word:#FFFFFF;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--page);color:var(--ink);font-size:15px;line-height:1.55}
+  body{margin:0;font-family:var(--font-sans);background:var(--page);color:var(--ink);font-size:15px;line-height:1.55;letter-spacing:.1px}
   a{color:var(--blue)}
   .layout{display:flex;min-height:100vh}
   /* ---------- Sidebar ---------- */
@@ -169,11 +177,13 @@
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       color-scheme: dark;
-      --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
-      --grid:#2c2c2a; --baseline:#383835; --ring:rgba(255,255,255,.10);
-      --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
-      --navy:#8fb3e8; --blue:#6da7ec; --crit:#e66767; --warnbg:#2a1717; --warnborder:#e66767;
-      --accentwash:rgba(57,135,229,.12);
+      --page:#151A27; --surface:#1C2433; --ink:#FFFFFF; --ink-2:#A7C2E7; --muted:#98AEC3;
+      --grid:#2A3345; --baseline:#3E4B66; --ring:rgba(135,198,255,.40);
+      --s1:#4EAFFF; --s2:#3EC6DE; --s3:#41C46A; --s4:#FFCD39;
+      --navy:#DCEEFF; --blue:#87C6FF; --crit:#F0707C; --warnbg:#33191E; --warnborder:#E4606D;
+      --accentwash:rgba(0,126,255,.16);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --logo-mark:#FFFFFF; --logo-word:#FFFFFF;
     }
   }
   /* ---- v2 components ---- */
@@ -232,15 +242,54 @@
   @keyframes flashcard{0%{box-shadow:0 0 0 3px var(--s4)}100%{box-shadow:0 0 0 1px transparent}}
   @media(prefers-reduced-motion:reduce){.pcard.flash{animation:none}}
   @media(max-width:700px){.calday{min-height:64px}.calchip{font-size:9px}}
+  /* ---- v3: SkySlope brand skin ---- */
+  .btn,.cbtn,.tbtn{border-radius:999px}
+  .card,.chartwrap,.ch,.pcard{box-shadow:var(--shadow)}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[contenteditable]:focus-visible{outline:none;box-shadow:0 0 0 3px var(--ring)}
+  .sslogo{width:150px;display:block;margin:2px 0 8px 2px}
+  .gt{letter-spacing:.1em}
+  /* brand guidelines section */
+  .swgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0}
+  .sw{border:1px solid var(--grid);border-radius:10px;overflow:hidden;background:var(--surface)}
+  .sw .swc{height:42px}
+  .sw .swm{padding:6px 9px;font-size:11.5px;color:var(--ink-2);line-height:1.4}
+  .sw .swm b{display:block;color:var(--ink);font-size:12px}
+  .sw .swm code{font-size:10.5px;background:none;padding:0;color:var(--blue)}
+  .logo-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0}
+  .logo-tile{border:1px solid var(--grid);border-radius:12px;min-height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px}
+  .logo-tile figcaption{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .logo-tile.on-white{background:#FFFFFF}
+  .logo-tile.on-white figcaption{color:#696969}
+  .logo-tile.on-space{background:linear-gradient(180deg,#161B28 58%,#1A6AAC 100%);border:0}
+  .logo-tile.on-blue{background:#0059DA;border:0}
+  .logo-tile.on-space figcaption,.logo-tile.on-blue figcaption{color:rgba(255,255,255,.75)}
+  .logo-fixed{--logo-mark:#0059DA;--logo-word:#3F5B77}
+  .logo-allwhite{--logo-mark:#FFFFFF;--logo-word:#FFFFFF}
+  .tokenpre{background:#151A27;color:#DCEEFF;border-radius:12px;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.6;margin:10px 0}
+  .gradrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0}
+  .gradrow .g{border-radius:10px;height:56px;display:flex;align-items:flex-end;padding:8px 10px;color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em}
 </style>
 </head>
 <body>
 <script>try{var __t=localStorage.getItem('sshub_theme');if(__t)document.documentElement.setAttribute('data-theme',__t);}catch(e){}</script>
 <button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device">⎋ Log out</button>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ss-logo" viewBox="0 0 153 25">
+            <path d="M31.8214059,16.4730902 C32.9218046,17.693805 34.6820338,18.7684539 36.9561134,18.7684539 C39.5966032,18.7684539 40.5259131,17.4255801 40.5259131,16.2532624 C40.5259131,14.5442033 38.6675852,14.0558591 36.5894111,13.5188262 C33.972862,12.8351443 30.9411453,12.0782836 30.9411453,8.75754279 C30.9411453,6.07179526 33.3127396,4.11841832 36.7117425,4.11841832 C39.2299009,4.11841832 41.2105603,4.92425919 42.6531366,6.38900035 L41.2350849,8.19572825 C39.9878301,6.87734459 38.2763583,6.29162306 36.516129,6.29162306 C34.7065585,6.29162306 33.4595957,7.21933133 33.4595957,8.58669519 C33.4595957,10.0517279 35.2201168,10.515582 37.2495336,11.0284164 C39.9145481,11.7362969 43.0198388,12.5666278 43.0198388,16.0340177 C43.0198388,18.5731162 41.2593176,20.941367 36.8580147,20.941367 C33.9486293,20.941367 31.8214059,19.8917914 30.4275869,18.3532884 L31.8214059,16.4730902 Z" id="Fill-1" style="fill:var(--logo-word,#3F5B77)"></path>
+            <polygon id="Fill-3" style="fill:var(--logo-word,#3F5B77)" points="50.8090794 13.567544 49.2686964 15.3013847 49.2686964 20.6483897 46.8235281 20.6483897 46.8235281 4.36276536 49.2686964 4.36276536 49.2686964 12.444498 56.090351 4.36276536 59.1223597 4.36276536 52.3985118 12.0783127 59.6601508 20.6483897 56.628434 20.6483897"></polygon>
+            <polygon id="Fill-5" style="fill:var(--logo-word,#3F5B77)" points="67.1902474 13.8360313 60.808577 4.36273621 63.6204476 4.36273621 68.4126855 11.638628 73.1561661 4.36273621 75.9925613 4.36273621 69.6354157 13.8360313 69.6354157 20.6483605 67.1902474 20.6483605"></polygon>
+            <path d="M78.5905125,16.4730902 C79.6909113,17.693805 81.4511405,18.7684539 83.72522,18.7684539 C86.3660018,18.7684539 87.2950198,17.4255801 87.2950198,16.2532624 C87.2950198,14.5442033 85.4366918,14.0558591 83.3585178,13.5188262 C80.7422606,12.8351443 77.7102519,12.0782836 77.7102519,8.75754279 C77.7102519,6.07179526 80.0818462,4.11841832 83.4808492,4.11841832 C85.9990076,4.11841832 87.9796669,4.92425919 89.4225352,6.38900035 L88.0041916,8.19572825 C86.7572287,6.87734459 85.0454649,6.29162306 83.2852357,6.29162306 C81.4756652,6.29162306 80.2287023,7.21933133 80.2287023,8.58669519 C80.2287023,10.0517279 81.9892235,10.515582 84.0186402,11.0284164 C86.6836547,11.7362969 89.7889455,12.5666278 89.7889455,16.0340177 C89.7889455,18.5731162 88.0284243,20.941367 83.6274133,20.941367 C80.717736,20.941367 78.5905125,19.8917914 77.1966936,18.3532884 L78.5905125,16.4730902 Z" id="Fill-7" style="fill:var(--logo-word,#3F5B77)"></path>
+            <polygon id="Fill-9" style="fill:var(--logo-word,#3F5B77)" points="93.5926931 4.36270705 96.0378614 4.36270705 96.0378614 18.4996167 103.446356 18.4996167 103.446356 20.6483313 93.5926931 20.6483313"></polygon>
+            <path d="M113.475225,6.26701634 C109.978708,6.26701634 107.778202,8.92856531 107.778202,12.517531 C107.778202,16.0825897 109.978708,18.7683372 113.475225,18.7683372 C116.922986,18.7683372 119.17254,16.0825897 119.17254,12.517531 C119.17254,8.92856531 116.922986,6.26701634 113.475225,6.26701634 M113.475225,4.0938116 C118.341037,4.0938116 121.690991,7.68306885 121.690991,12.517531 C121.690991,17.3522847 118.341037,20.9412504 113.475225,20.9412504 C108.609413,20.9412504 105.259752,17.3522847 105.259752,12.517531 C105.259752,7.68306885 108.609413,4.0938116 113.475225,4.0938116" id="Fill-11" style="fill:var(--logo-word,#3F5B77)"></path>
+            <path d="M132.181507,6.5111593 L128.073917,6.5111593 L128.073917,12.2246411 L132.181507,12.2246411 C133.942029,12.2246411 135.188991,11.077105 135.188991,9.36804597 C135.188991,7.65898692 133.942029,6.5111593 132.181507,6.5111593 L132.181507,6.5111593 Z M125.628748,4.36273621 L132.499452,4.36273621 C135.849406,4.36273621 137.707442,6.65780835 137.707442,9.36804597 C137.707442,12.0782836 135.824589,14.3733557 132.499452,14.3733557 L128.073917,14.3733557 L128.073917,20.6483605 L125.628748,20.6483605 L125.628748,4.36273621 Z" id="Fill-13" style="fill:var(--logo-word,#3F5B77)"></path>
+            <polygon id="Fill-15" style="fill:var(--logo-word,#3F5B77)" points="140.865344 4.36270705 151.819406 4.36270705 151.819406 6.51113014 143.310512 6.51113014 143.310512 11.2724136 151.648317 11.2724136 151.648317 13.4211282 143.310512 13.4211282 143.310512 18.4996167 151.819406 18.4996167 151.819406 20.6483313 140.865344 20.6483313"></polygon>
+            <path d="M0.834247636,2.53140159 C2.13171964,0.510676874 4.99731092,0.0660649576 7.37416051,0.385019342 C14.3896769,1.32730506 19.0487809,6.10141662 19.0487809,6.10141662 C19.0487809,6.10141662 13.4145291,2.42177924 9.35978316,3.14482026 C8.29471164,3.33520163 7.12687005,3.82850219 6.45039781,4.77224565 C5.61831069,5.93290141 5.64575496,7.45128755 6.05508344,8.79095428 C6.46499583,10.1317872 7.64363995,12.5119916 11.454307,16.0344842 C12.8317762,17.3073862 12.132531,18.5604629 9.60386205,17.497476 C8.69761698,17.1164217 6.8655655,16.0787996 4.74476518,14.1085128 C1.25788217,10.8696972 -1.42844543,6.05476881 0.834247636,2.53140159" id="Fill-17" style="fill:var(--logo-mark,#0059DA)"></path>
+            <path d="M21.4345644,22.5279756 C20.1370924,24.5487003 17.2715011,24.9936038 14.8946516,24.6743579 C7.87942717,23.7320721 3.22032317,18.9582521 3.22032317,18.9582521 C3.22032317,18.9582521 8.85428293,22.6375979 12.9090289,21.9145569 C13.9738085,21.7244671 15.141942,21.230875 15.8184143,20.2871315 C16.6505014,19.1267673 16.6192616,17.6092558 16.2137286,16.2687145 C15.6257204,14.3255417 14.6254641,12.5473856 10.814505,9.02518458 C9.43732784,7.75228253 10.136281,6.4992058 12.66495,7.56219272 C13.5711951,7.94324699 15.4032466,8.98086917 17.5240469,10.9508644 C21.0109299,14.18968 23.6972575,19.0048999 21.4345644,22.5279756" id="Fill-20" style="fill:var(--logo-mark,#0059DA)"></path>
+        </symbol><symbol id="ss-mark" viewBox="-0.7 -0.2 24.9 25.4"><path d="M0.834247636,2.53140159 C2.13171964,0.510676874 4.99731092,0.0660649576 7.37416051,0.385019342 C14.3896769,1.32730506 19.0487809,6.10141662 19.0487809,6.10141662 C19.0487809,6.10141662 13.4145291,2.42177924 9.35978316,3.14482026 C8.29471164,3.33520163 7.12687005,3.82850219 6.45039781,4.77224565 C5.61831069,5.93290141 5.64575496,7.45128755 6.05508344,8.79095428 C6.46499583,10.1317872 7.64363995,12.5119916 11.454307,16.0344842 C12.8317762,17.3073862 12.132531,18.5604629 9.60386205,17.497476 C8.69761698,17.1164217 6.8655655,16.0787996 4.74476518,14.1085128 C1.25788217,10.8696972 -1.42844543,6.05476881 0.834247636,2.53140159" id="Fill-17" style="fill:var(--logo-mark,#0059DA)"></path><path d="M21.4345644,22.5279756 C20.1370924,24.5487003 17.2715011,24.9936038 14.8946516,24.6743579 C7.87942717,23.7320721 3.22032317,18.9582521 3.22032317,18.9582521 C3.22032317,18.9582521 8.85428293,22.6375979 12.9090289,21.9145569 C13.9738085,21.7244671 15.141942,21.230875 15.8184143,20.2871315 C16.6505014,19.1267673 16.6192616,17.6092558 16.2137286,16.2687145 C15.6257204,14.3255417 14.6254641,12.5473856 10.814505,9.02518458 C9.43732784,7.75228253 10.136281,6.4992058 12.66495,7.56219272 C13.5711951,7.94324699 15.4032466,8.98086917 17.5240469,10.9508644 C21.0109299,14.18968 23.6972575,19.0048999 21.4345644,22.5279756" id="Fill-20" style="fill:var(--logo-mark,#0059DA)"></path></symbol></svg>
 <div class="layout">
   <!-- ================= SIDEBAR ================= -->
   <nav class="sidebar">
-    <div class="brand">SkySlope Social Hub<small>Command Center v2 · Operator: Naomi Pinkston · Click Shift · Aug 2026</small></div>
+    <svg class="sslogo" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
+    <div class="brand">Social Hub<small>Command Center v2 · Operator: Naomi Pinkston · Click Shift · Aug 2026</small></div>
     <input class="search" id="searchBox" type="search" placeholder="Search sections…  ( / )" aria-label="Search sections">
     <div class="navgroup"><div class="gt">Portal</div>
       <button class="navlink active" data-view="overview" data-terms="overview dashboard summary stats">⌂ Overview</button>
@@ -257,6 +306,10 @@
       <button class="navlink" data-view="ops" data-terms="weekly rhythm operations roles roadmap naomi cadence">🔁 Weekly Rhythm</button>
     </div>
     <div class="navgroup"><div class="gt">Brand Reference</div>
+      <button class="navlink" data-view="brand" data-terms="brand guidelines style guide logo colors palette typography tokens components imagery accessibility science blue slate mirage">🎨 Brand Guidelines</button>
+      <button class="navlink sub" data-view="brand" data-jump="b-logo" data-terms="logo lockup mark clear space reversed white">Logo rules</button>
+      <button class="navlink sub" data-view="brand" data-jump="b-color" data-terms="color palette swatches hex science blue gradients">Color</button>
+      <button class="navlink sub" data-view="brand" data-jump="b-tokens" data-terms="design tokens css variables copy paste">Design tokens</button>
       <button class="navlink" data-view="voice" data-terms="voice tone brand writing style register wink guardian attributes quotes dials">🗣 Voice &amp; Tone</button>
       <button class="navlink sub" data-view="voice" data-jump="v-names" data-terms="product names exact spellings digisign skytc ayce skysight capitals">Exact spellings</button>
       <button class="navlink sub" data-view="voice" data-jump="v-check" data-terms="voice checklist pre-publish qa draft">Pre-publish checklist</button>
@@ -341,6 +394,7 @@
 
       <h2>Reference shelf</h2>
       <div class="grid2">
+        <div class="ccard"><h3>🎨 Brand Guidelines</h3>The visual identity — logo rules, the blue-to-deep-space palette, typography, components, and copy-paste design tokens. This hub now runs on them. <a href="#" data-goto="brand">Open →</a></div>
         <div class="ccard"><h3>🗣 Voice &amp; Tone</h3>Five voice attributes, six tone dials, exact product spellings, and the pre-publish voice checklist — distilled from the full site + YouTube crawl. <a href="#" data-goto="voice">Open →</a></div>
         <div class="ccard"><h3>📦 Product Guide</h3>All ten products with pricing, the Smart Suite AI claims, and the accuracy watch-outs that prevent caption errors. <a href="#" data-goto="products">Open →</a></div>
         <div class="ccard"><h3>🎬 Asset Library</h3>255 YouTube videos, 46 embedded videos, 765 site images — searchable, so pillars can launch on footage SkySlope already owns. <a href="#" data-goto="assets">Open →</a></div>
@@ -789,6 +843,128 @@
           <tr><td><b>3 — Scale</b></td><td>Index publishing calendar synced to quarterly reports, employee-advocacy share kit distribution, automated reporting aggregation.</td></tr>
         </tbody>
       </table>
+    </section>
+
+    <!-- ========== BRAND GUIDELINES ========== -->
+    <section class="view" id="view-brand">
+      <h1>Brand Guidelines</h1>
+      <div class="sub">SkySlope's visual identity, reconstructed from the live site (Aug 12, 2026) — this hub itself now runs on these tokens. <a href="brand-guidelines.html" target="_blank" rel="noopener"><b>Open the full interactive guide ↗</b></a> (13 sections incl. imagery, components, and the complete accessibility matrix; same password as this site when opened from the live link). Unofficial reference — defer to SkySlope marketing where they conflict. For how the brand <i>sounds</i>, see <a href="#" data-goto="voice">Voice &amp; Tone</a>.</div>
+
+      <div class="card" open id="b-logo"><summary>Logo — the mark of momentum<span class="chev">▶</span></summary><div class="body">
+        <p>The lockup pairs the Science Blue “S” swoosh with a Slope Slate all-caps wordmark. The mark is always Science Blue on light; <b>everything goes white on dark or saturated backgrounds</b> (the blue mark fails contrast on navy — 2.85:1).</p>
+        <div class="logo-row">
+          <div class="logo-tile on-white"><svg class="logo-fixed" width="170" viewBox="0 0 153 25" role="img" aria-label="SkySlope logo, two-color"><use href="#ss-logo"/></svg><figcaption>Primary · white &amp; light tints</figcaption></div>
+          <div class="logo-tile on-space"><svg class="logo-allwhite" width="170" viewBox="0 0 153 25" role="img" aria-label="SkySlope logo, white"><use href="#ss-logo"/></svg><figcaption>Reversed · Space &amp; Navy</figcaption></div>
+          <div class="logo-tile on-blue"><svg class="logo-allwhite" width="170" viewBox="0 0 153 25" role="img" aria-label="SkySlope logo, white on blue"><use href="#ss-logo"/></svg><figcaption>Reversed · Science Blue</figcaption></div>
+          <div class="logo-tile on-white"><svg class="logo-fixed" width="52" viewBox="-0.7 -0.2 24.9 25.4" role="img" aria-label="SkySlope S mark"><use href="#ss-mark"/></svg><figcaption>Mark only · avatars, favicons</figcaption></div>
+        </div>
+        <ul>
+          <li><b>Clear space</b> = height of the “S” mark on all four sides. <b>Minimum sizes:</b> lockup ≥ 120px wide on screen; mark-only ≥ 20px.</li>
+          <li><b>Never</b> recolor, gradient-fill, outline, stretch, rotate, crop, re-space, or set the wordmark in another face.</li>
+          <li>On photography: white only, over a dark or scrimmed area keeping ≥ 4.5:1 contrast.</li>
+          <li>Canonical SVG: <code>skyslope.com/wp-content/uploads/2021/03/logo-skyslope-2x.svg</code> (inlined in this hub, so it works offline).</li>
+        </ul>
+      </div></div>
+
+      <div class="card" open id="b-color"><summary>Color — blue, from daylight to deep space<span class="chev">▶</span></summary><div class="body">
+        <p><b>Proportions ~60/30/10:</b> white &amp; light neutrals for content, space navies for hero moments, Science Blue and sky accents for actions. Science Blue is an <i>accent with authority</i> — when everything is blue, nothing is.</p>
+        <p><b>Core:</b></p>
+        <div class="swgrid">
+          <div class="sw"><div class="swc" style="background:#0059DA"></div><div class="swm"><b>Science Blue</b><code>#0059DA</code> actions, links, logo mark · AA on white</div></div>
+          <div class="sw"><div class="swc" style="background:#3F5B77"></div><div class="swm"><b>Slope Slate</b><code>#3F5B77</code> wordmark, supporting copy · AAA</div></div>
+          <div class="sw"><div class="swc" style="background:#151A27"></div><div class="swm"><b>Mirage</b><code>#151A27</code> space backgrounds, heroes</div></div>
+          <div class="sw"><div class="swc" style="background:#0A2642"></div><div class="swm"><b>Midnight Sky</b><code>#0A2642</code> editorial headlines, dark panels</div></div>
+          <div class="sw"><div class="swc" style="background:#212529"></div><div class="swm"><b>Ink</b><code>#212529</code> body text · AAA</div></div>
+        </div>
+        <p><b>Sky range &amp; tints:</b></p>
+        <div class="swgrid">
+          <div class="sw"><div class="swc" style="background:#1537BB"></div><div class="swm"><b>Deep Orbit</b><code>#1537BB</code> hover / pressed</div></div>
+          <div class="sw"><div class="swc" style="background:#079EFF"></div><div class="swm"><b>Signal Sky</b><code>#079EFF</code> gradients, glows — never text on white</div></div>
+          <div class="sw"><div class="swc" style="background:#4EAFFF"></div><div class="swm"><b>Day Sky</b><code>#4EAFFF</code> illustration accent</div></div>
+          <div class="sw"><div class="swc" style="background:#87C6FF"></div><div class="swm"><b>Light Sky</b><code>#87C6FF</code> links on dark · AAA on Mirage</div></div>
+          <div class="sw"><div class="swc" style="background:#A7C2E7"></div><div class="swm"><b>Spindle</b><code>#A7C2E7</code> secondary text on dark</div></div>
+          <div class="sw"><div class="swc" style="background:#E1F1FF"></div><div class="swm"><b>Sky Mist</b><code>#E1F1FF</code> chips, selected states</div></div>
+        </div>
+        <p><b>Functional</b> (pair with icons/labels, never color alone):</p>
+        <div class="swgrid">
+          <div class="sw"><div class="swc" style="background:#28A745"></div><div class="swm"><b>Success</b><code>#28A745</code></div></div>
+          <div class="sw"><div class="swc" style="background:#DC3545"></div><div class="swm"><b>Danger</b><code>#DC3545</code></div></div>
+          <div class="sw"><div class="swc" style="background:#FFC107"></div><div class="swm"><b>Warning</b><code>#FFC107</code> dark text only</div></div>
+          <div class="sw"><div class="swc" style="background:#17A2B8"></div><div class="swm"><b>Info</b><code>#17A2B8</code></div></div>
+        </div>
+        <div class="gradrow">
+          <div class="g" style="background:linear-gradient(180deg,#161B28 58%,#1A6AAC 100%)">Space — heroes &amp; dark sections</div>
+          <div class="g" style="background:linear-gradient(117deg,#533DB1 0%,#079EFF 100%)">AI gradient — Smart Suite surfaces only</div>
+        </div>
+      </div></div>
+
+      <div class="card" id="b-type"><summary>Typography<span class="chev">▶</span></summary><div class="body">
+        <table>
+          <thead><tr><th>Role</th><th>Family</th><th>Weights</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><b>UI &amp; marketing</b></td><td>Proxima Nova</td><td>500 body · 700 headings/buttons</td><td>Commercial face (Adobe Fonts) — license it yourself, never hotlink SkySlope's kit. This hub uses the approved fallback stack (Helvetica/Arial).</td></tr>
+            <tr><td><b>Editorial (SkyHigh blog)</b></td><td>Libre Baskerville</td><td>400–700 + italics</td><td>Editorial surfaces only — never product UI, buttons, or forms.</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><b>Scale highlights (desktop):</b> Display 88/88 · H2 48/56 · eyebrows 14px uppercase +1.5px tracking · body 19/28 (marketing) or 16/24 (UI).</li>
+          <li><b>Sentence case</b> headlines; <b>Title Case</b> only for CTA labels (“Request Demo”) and product names.</li>
+          <li>Two weights are enough — Medium for reading, Bold for hierarchy. No Light, no Black.</li>
+          <li>Em dashes without surrounding spaces—matching site copy. Headline measure ≤ 14 words; body 60–76 characters.</li>
+        </ul>
+      </div></div>
+
+      <div class="card" id="b-shape"><summary>Spacing, shape &amp; components<span class="chev">▶</span></summary><div class="body">
+        <table>
+          <thead><tr><th>Token</th><th>Value</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Base spacing unit</td><td>8px</td><td>All steps in multiples of 8 (4 for fine UI)</td></tr>
+            <tr><td>Buttons</td><td>pill, radius 20px</td><td><b>Never square off the pills</b> — a brand signature. Science Blue fill, white text, Proxima 700; hover → Deep Orbit.</td></tr>
+            <tr><td>Cards</td><td>radius 12px · shadow <code>0 10px 30px rgba(21,26,39,.08)</code></td><td>White fill, eyebrow + bold title + Slate copy + one link.</td></tr>
+            <tr><td>Inputs</td><td>radius 8px · 1px Gray 300 border</td><td>Focus: Science Blue border + 3px ring <code>rgba(0,89,218,.35)</code></td></tr>
+            <tr><td>CTA labels</td><td>Title Case, 1–3 words</td><td>Request Demo · Learn More · Watch Video. One primary button per section.</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <div class="card" id="b-img"><summary>Imagery &amp; iconography<span class="chev">▶</span></summary><div class="body">
+        <ul>
+          <li><b>The space world:</b> astronauts, UFOs, starfields on Mirage gradients — flat vector, neon violet/cyan glows, always dramatizing a product action. Keep space scenes on dark; never drop them onto white without their scene. No red/orange menace — this cosmos is optimistic.</li>
+          <li><b>Product imagery:</b> real, legible screenshots in white rounded frames with the soft cool shadow. Never blurred or skewed.</li>
+          <li><b>Photography:</b> warm, candid agents/homes/teams on editorial surfaces.</li>
+          <li><b>Icons:</b> simple, rounded, monochrome (Slate or Science Blue on light; white or Light Sky on dark). 16/20/24px grid. Don't mix icon families; never emoji as UI icons.</li>
+        </ul>
+      </div></div>
+
+      <div class="card" id="b-a11y"><summary>Accessibility essentials<span class="chev">▶</span></summary><div class="body">
+        <p>Target WCAG 2.1 AA minimum. Key computed ratios:</p>
+        <ul>
+          <li><span class="ok">✔</span> Science Blue on white 6.1:1 (AA, any size) · Slate on white 7.1:1 (AAA) · Light Sky on Mirage 9.6:1 (AAA)</li>
+          <li><span class="no">✘</span> White on Signal Sky #079EFF (2.9:1) · Science Blue on Mirage (2.9:1) — on dark, actions go white or Light Sky</li>
+          <li>Body ≥ 16px · never grayer than Gray 600 on white · visible 3px focus ring on everything interactive · status colors always paired with icons/labels · starfield animations respect <code>prefers-reduced-motion</code> · pills keep ≥ 44px touch height.</li>
+        </ul>
+      </div></div>
+
+      <div class="card" id="b-tokens"><summary>Design tokens — copy-paste the brand<span class="chev">▶</span></summary><div class="body">
+        <p>The same tokens this hub now runs on. JSON version in the <a href="brand-guidelines.html" target="_blank" rel="noopener">full guide ↗</a>.</p>
+<pre class="tokenpre">:root{
+  --ss-blue:#0059DA;         /* Science Blue — actions, links, logo mark */
+  --ss-blue-deep:#1537BB;    /* hover / pressed */
+  --ss-blue-bright:#079EFF;  /* gradients, glows — not text on white */
+  --ss-sky:#87C6FF;          /* links &amp; accents on dark */
+  --ss-spindle:#A7C2E7;  --ss-sky-mist:#E1F1FF;
+  --ss-slate:#3F5B77;    --ss-navy:#0A2642;  --ss-space:#151A27;
+  --ss-ink:#212529;      --ss-cloud:#DEE5ED; --ss-frost:#EBF1F6;
+  --ss-success:#28A745;  --ss-danger:#DC3545;
+  --ss-warning:#FFC107;  --ss-info:#17A2B8;
+  --ss-grad-space:linear-gradient(180deg,#161B28 58%,#1A6AAC 100%);
+  --ss-grad-ai:linear-gradient(117deg,#533DB1 0%,#079EFF 100%);
+  --ss-font-sans:proxima-nova,"Proxima Nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --ss-radius-pill:20px; --ss-radius-card:12px; --ss-radius-input:8px;
+  --ss-shadow-card:0 10px 30px rgba(21,26,39,.08);
+  --ss-focus-ring:0 0 0 3px rgba(0,89,218,.35);
+}</pre>
+      </div></div>
     </section>
 
     <!-- ========== VOICE & TONE ========== -->
@@ -1403,10 +1579,10 @@ var POSTS = [
 // "Export state" hands updated JSON back to Click Shift to bake in.
 // =====================================================================
 var PILLARS = {
-  'Data & Index':   {color:'#2a78d6'},
-  'Testimonial':    {color:'#7a5fd0'},
-  'Zero-CTA':       {color:'#eb6834'},
-  'Education':      {color:'#1baf7a'}
+  'Data & Index':   {color:'#0059DA'},
+  'Testimonial':    {color:'#533DB1'},
+  'Zero-CTA':       {color:'#17A2B8'},
+  'Education':      {color:'#28A745'}
 };
 var STATUSES = ['Idea','Drafted','Approved','Scheduled','Published'];
 var COMPOSERS = {

@@ -44,6 +44,12 @@ WHAT'S IN HERE
 8. Semrush-Position-Tracking-Aug4-10-2026.csv — the ranking data behind the
    competitive analysis and the hub's Keyword Explorer (215 keywords,
    SkySlope vs Dotloop vs Paperless Pipeline vs BoldTrail)
+9. brand-guidelines.html — the full interactive SkySlope Brand & Style
+   Guidelines (13 sections). The hub's own styling runs on these tokens
+   (Science Blue / Slope Slate / Mirage, official logo, pill buttons), a
+   condensed version lives in the hub under Brand Reference, and the full
+   doc ships password-gated on the live site at /brand-guidelines.html.
+   favicon.svg is the official "S" mark, used as the site icon.
 
 HOSTING & DEPLOY (added Aug 12 2026)
 ------------------------------------
