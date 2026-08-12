@@ -20,11 +20,10 @@ WHAT'S IN HERE
    - NEW · Brand Reference: Voice & Tone (five attributes, six tone dials,
      exact product spellings, pre-publish voice checklist) and the Product
      Guide (all 10 products, pricing, Smart Suite AI, accuracy watch-outs)
-   - NEW · Asset Library: all 255 YouTube videos searchable/filterable
+   - NEW · Asset Library: 930 assets in one searchable catalog with
+     thumbnails — every YouTube video, page embed, and brand image
      (remember: the back catalogs are UNLISTED — link playlists, not the
-     channel), plus image-inventory summary
-   - NEW · Keyword Explorer: all 215 Semrush keywords with SkySlope vs
-     competitor positions, gap/TC-cluster/AI-overview filters
+     channel). Semrush keyword data lives in the CSV + Doc 2.
    - Action Tracker for the Rob meeting
 
    NOTE: text edits, statuses, follow-list rows and checkboxes now
