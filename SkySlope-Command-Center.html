@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkySlope Social Command Center — Click Shift</title>
+<style>
+  :root{
+    color-scheme: light;
+    --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --ring:rgba(11,11,11,.10);
+    --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+    --navy:#1f3864; --blue:#2e74b5; --crit:#d03b3b; --warnbg:#fdf3f2; --warnborder:#d03b3b;
+    --accentwash:rgba(42,120,214,.08);
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --baseline:#383835; --ring:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --navy:#8fb3e8; --blue:#6da7ec; --crit:#e66767; --warnbg:#2a1717; --warnborder:#e66767;
+    --accentwash:rgba(57,135,229,.12);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--page);color:var(--ink);font-size:15px;line-height:1.55}
+  a{color:var(--blue)}
+  .layout{display:flex;min-height:100vh}
+  /* ---------- Sidebar ---------- */
+  .sidebar{width:270px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--grid);padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .brand{font-weight:700;font-size:17px;color:var(--navy);margin-bottom:2px}
+  .brand small{display:block;font-weight:400;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .search{width:100%;margin:14px 0 10px;padding:7px 10px;border:1px solid var(--grid);border-radius:8px;background:var(--page);color:var(--ink);font-size:13px}
+  .navgroup{margin-top:12px}
+  .navgroup>.gt{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 6px 4px;font-weight:600}
+  .navlink{display:block;padding:6px 10px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-size:13.5px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+  .navlink:hover{background:var(--accentwash)}
+  .navlink.active{background:var(--accentwash);color:var(--ink);font-weight:600}
+  .navlink.sub{padding-left:22px;font-size:12.8px}
+  .navlink.hidden{display:none}
+  .mode-toggle{margin-top:18px;width:100%;padding:7px;border:1px solid var(--grid);border-radius:8px;background:var(--page);color:var(--ink-2);cursor:pointer;font-size:12.5px;font-family:inherit}
+  /* ---------- Main ---------- */
+  .main{flex:1;padding:28px 40px 80px;max-width:1000px}
+  .view{display:none}
+  .view.active{display:block}
+  h1{color:var(--navy);font-size:26px;margin:6px 0 4px}
+  .sub{color:var(--ink-2);font-size:14px;margin-bottom:22px}
+  h2{color:var(--navy);font-size:19px;margin:26px 0 10px}
+  /* cards / accordions */
+  .card{background:var(--surface);border:1px solid var(--grid);border-radius:12px;margin-bottom:14px;overflow:hidden}
+  .card summary{list-style:none;cursor:pointer;padding:14px 18px;font-weight:600;font-size:15.5px;color:var(--ink);display:flex;align-items:center;gap:10px}
+  .card summary::-webkit-details-marker{display:none}
+  .card summary .chev{margin-left:auto;color:var(--muted);transition:transform .15s;font-size:12px}
+  .card[open] summary .chev{transform:rotate(90deg)}
+  .card .body{padding:2px 20px 18px;color:var(--ink-2)}
+  .card.warn{border:1.5px solid var(--warnborder);background:var(--warnbg)}
+  .card.warn summary{color:var(--crit)}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:var(--accentwash);color:var(--blue)}
+  .tag.red{background:rgba(208,59,59,.12);color:var(--crit)}
+  ul{margin:8px 0;padding-left:20px}
+  li{margin-bottom:6px}
+  b,strong{color:var(--ink)}
+  /* stat tiles */
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0}
+  .tile{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:14px 16px}
+  .tile .v{font-size:26px;font-weight:700;color:var(--ink)}
+  .tile .l{font-size:12px;color:var(--muted);margin-top:2px}
+  .tile.crit{border-color:var(--warnborder)}
+  .tile.crit .v{color:var(--crit)}
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+  th{text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--baseline);padding:7px 8px;font-size:12px}
+  td{padding:7px 8px;border-bottom:1px solid var(--grid);color:var(--ink-2);vertical-align:top}
+  td b{color:var(--ink)}
+  tr.crit td{color:var(--crit)}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
+  /* chart */
+  .chartwrap{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:16px 18px;margin:14px 0}
+  .chart-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .chart-head h3{margin:0;font-size:15px;color:var(--ink)}
+  .chart-head .note{font-size:12px;color:var(--muted)}
+  .tbtn{margin-left:auto;font-size:12px;border:1px solid var(--grid);background:var(--page);color:var(--ink-2);border-radius:7px;padding:4px 10px;cursor:pointer;font-family:inherit}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 4px;font-size:12.5px;color:var(--ink-2)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  #chartTable{display:none}
+  .tooltip{position:fixed;pointer-events:none;background:var(--surface);border:1px solid var(--grid);border-radius:8px;padding:8px 10px;font-size:12.5px;color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.12);opacity:0;transition:opacity .1s;z-index:50}
+  .tooltip .t-title{font-weight:600;margin-bottom:2px}
+  .tooltip .t-val{color:var(--ink-2)}
+  /* journey */
+  .stage{display:flex;gap:14px;margin-bottom:10px}
+  .stage .num{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--accentwash);color:var(--blue);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13.5px;margin-top:2px}
+  .stage .sc{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:12px 16px;flex:1}
+  .stage .sc .st{font-weight:600;color:var(--ink);font-size:14.5px}
+  .stage .sc .sd{font-size:13px;color:var(--ink-2);margin-top:3px}
+  .stage .sc .sj{font-size:12.5px;margin-top:6px;color:var(--blue)}
+  /* checklist */
+  .check{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:11px 14px;margin-bottom:8px;cursor:pointer}
+  .check input{margin-top:3px;accent-color:var(--s1)}
+  .check.done .ct{text-decoration:line-through;color:var(--muted)}
+  .ct{font-size:13.5px;color:var(--ink-2)}
+  .ct b{display:block;color:var(--ink);font-size:14px;margin-bottom:1px}
+  .note-strip{font-size:12px;color:var(--muted);margin-top:6px}
+  mark{background:rgba(237,161,0,.35);color:inherit;border-radius:3px;padding:0 1px}
+  .persona{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
+  .kbd{font-size:11px;border:1px solid var(--grid);border-radius:4px;padding:1px 5px;color:var(--muted)}
+  /* ---- social hub components ---- */
+  .channels{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:12px}
+  .ch{background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+  .ch .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff}
+  .ch .nm{font-weight:700;font-size:15px;color:var(--ink)}
+  .ch .role{font-size:12px;color:var(--muted);min-height:32px}
+  .ch .cad{font-size:11.5px;color:var(--ink-2);background:var(--accentwash);border-radius:6px;padding:3px 8px;align-self:flex-start}
+  .btnrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .btn{font-size:12px;text-decoration:none;border:1px solid var(--grid);border-radius:7px;padding:5px 10px;color:var(--ink-2);background:var(--page)}
+  .btn.primary{background:var(--accentwash);border-color:transparent;color:var(--blue);font-weight:600}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 14px}
+  .fbtn{font-size:12.5px;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:20px;padding:5px 14px;cursor:pointer;font-family:inherit}
+  .fbtn.on{background:var(--accentwash);color:var(--blue);border-color:transparent;font-weight:600}
+  .feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+  .post{background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+  .post .top{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+  .chip{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:20px;color:#fff}
+  .fmt{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--accentwash);color:var(--blue)}
+  .post .cap{font-size:13.5px;color:var(--ink);font-weight:600;line-height:1.4}
+  .post .desc{font-size:12.5px;color:var(--ink-2)}
+  .stats{display:flex;gap:14px;font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--grid);padding-top:8px;margin-top:auto}
+  .stats b{color:var(--ink);font-size:14px}
+  .stats .zero b{color:var(--crit)}
+  .stats .best b{color:#0ca30c}
+  .post .open{font-size:12px;margin-left:auto}
+  .note-card{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--ink-2);margin:12px 0}
+  .note-card b{color:var(--ink)}
+  details.howto{background:var(--surface);border:1px dashed var(--baseline);border-radius:12px;margin:12px 0}
+  details.howto summary{cursor:pointer;padding:12px 16px;font-size:13px;font-weight:600;color:var(--ink-2)}
+  details.howto .hb{padding:0 18px 14px;font-size:12.5px;color:var(--ink-2)}
+  code{background:var(--accentwash);border-radius:4px;padding:1px 5px;font-size:12px}
+  #chartTable2{display:none}
+  /* ---- command center components ---- */
+  .plist{display:flex;flex-direction:column;gap:12px}
+  .pcard{background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:100px 1fr auto;gap:14px}
+  .pcard .img{width:100px;height:100px;border-radius:10px;background:var(--accentwash);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;text-align:center;cursor:pointer;overflow:hidden;border:1px dashed var(--baseline)}
+  .pcard .img img{width:100%;height:100%;object-fit:cover}
+  .pmeta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+  .pill{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 9px;border-radius:20px;color:#fff}
+  select.status{font-size:11.5px;border:1px solid var(--grid);border-radius:6px;background:var(--page);color:var(--ink-2);padding:2px 5px;font-family:inherit}
+  .ptitle{font-weight:700;font-size:14.5px;outline:none;border-radius:4px;padding:1px 3px;color:var(--ink)}
+  .pcap{font-size:13px;color:var(--ink-2);white-space:pre-wrap;outline:none;border-radius:6px;padding:4px 6px;border:1px solid transparent;min-height:40px}
+  .ptitle:focus,.pcap:focus{border:1px solid var(--blue);background:var(--page)}
+  .cnote{font-size:11.5px;color:var(--muted);margin-top:4px}
+  .pctrl{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
+  .cbtn{font-size:11.5px;border:1px solid var(--grid);background:var(--page);color:var(--ink-2);border-radius:7px;padding:4px 9px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .cbtn.push{background:var(--accentwash);color:var(--blue);border-color:transparent;font-weight:600}
+  .ordr{display:flex;gap:4px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+  .ccard{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:14px 17px;font-size:13px;color:var(--ink-2)}
+  .ccard b{color:var(--ink)}
+  .ccard h3{margin:0 0 8px;font-size:14px;color:var(--navy)}
+  .warnbox{background:var(--warnbg);border:1.5px solid var(--warnborder);border-radius:12px;padding:14px 18px;margin:12px 0;font-size:13px}
+  .warnbox h3{color:var(--crit);margin:0 0 8px;font-size:15px}
+  .ok{color:#0ca30c;font-weight:700}
+  .no{color:var(--crit);font-weight:700}
+  textarea.io{width:100%;height:130px;font-family:ui-monospace,monospace;font-size:11px;border:1px solid var(--grid);border-radius:8px;background:var(--surface);color:var(--ink-2);padding:8px}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--page);border-radius:8px;padding:8px 16px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+  input[type=file]{display:none}
+  @media(max-width:700px){.pcard{grid-template-columns:1fr}.pcard .img{width:100%;height:140px}.pctrl{flex-direction:row;flex-wrap:wrap;align-items:center}}
+  @media (max-width:820px){.layout{flex-direction:column}.sidebar{width:100%;height:auto;position:relative}.main{padding:20px 18px 60px}}
+  @media print{.sidebar,.mode-toggle,.tbtn{display:none}.view{display:block!important}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <!-- ================= SIDEBAR ================= -->
+  <nav class="sidebar">
+    <div class="brand">SkySlope Command Center<small>Operator: Naomi Pinkston · Click Shift · Aug 2026</small></div>
+    <input class="search" id="searchBox" type="search" placeholder="Search sections…  ( / )" aria-label="Search sections">
+    <div class="navgroup"><div class="gt">Portal</div>
+      <button class="navlink active" data-view="overview" data-terms="overview dashboard summary stats">⌂ Overview</button>
+      <button class="navlink" data-view="social" data-terms="social channels access hub linkedin instagram facebook youtube tiktok x feeds engagement posts tracker analytics consoles">📡 Channels &amp; Feeds</button>
+      <button class="navlink" data-view="next" data-terms="next steps actions checklist rob decisions">✓ Action Tracker</button>
+    </div>
+    <div class="navgroup"><div class="gt">Operate (Naomi)</div>
+      <button class="navlink" data-view="studio" data-terms="content studio posts backlog drafts captions queue publish compose edit reorder images pillars">📝 Content Studio</button>
+      <button class="navlink" data-view="inspo" data-terms="inspiration hooks formulas accounts study examples ideas">💡 Inspiration</button>
+      <button class="navlink" data-view="growth" data-terms="follow unfollow lists accounts partners press tc community growth">📈 Follow / Unfollow</button>
+      <button class="navlink" data-view="auto" data-terms="automation policy dm bots scheduling rules tos compliance">🤖 Automation Policy</button>
+      <button class="navlink" data-view="ops" data-terms="weekly rhythm operations roles roadmap naomi cadence">🔁 Weekly Rhythm</button>
+    </div>
+    <div class="navgroup"><div class="gt">Doc 1 · Social Media Strategy</div>
+      <button class="navlink" data-view="d1" data-terms="executive summary strategy">Executive Summary</button>
+      <button class="navlink sub" data-view="d1" data-jump="d1-audit" data-terms="june audit baseline engagement likes comments johnny qa">June Audit Baseline</button>
+      <button class="navlink sub" data-view="d1" data-jump="d1-index" data-terms="skyslope index data claims stat drop quarterly wrapped">The SkySlope Index</button>
+      <button class="navlink sub" data-view="d1" data-jump="d1-gov" data-terms="data governance pii legal anonymized thresholds">Data Governance</button>
+      <button class="navlink sub" data-view="d1" data-jump="d1-pillars" data-terms="content pillars testimonials zero-cta education">Content Pillars</button>
+      <button class="navlink sub" data-view="d1" data-jump="d1-platforms" data-terms="platforms linkedin instagram facebook tiktok cadence paid">Platforms &amp; Cadence</button>
+      <button class="navlink sub" data-view="d1" data-jump="d1-month" data-terms="monthly scope 20 hours deliverables measurement roadmap 90 days">Scope, Measurement &amp; 90 Days</button>
+    </div>
+    <div class="navgroup"><div class="gt">Doc 2 · Audience &amp; Path to Purchase</div>
+      <button class="navlink" data-view="d2" data-terms="competitive set dotloop paperless pipeline boldtrail semrush rankings">Competitive Set</button>
+      <button class="navlink sub" data-view="d2" data-jump="d2-aud" data-terms="audience definition economic buyers users ecosystem">Audience Definition</button>
+      <button class="navlink sub" data-view="d2" data-jump="d2-personas" data-terms="personas barbara tina alex carmen broker tc agent compliance">Personas</button>
+      <button class="navlink sub" data-view="d2" data-jump="d2-path" data-terms="path to purchase journey funnel stages validation referral">Path to Purchase</button>
+      <button class="navlink sub" data-view="d2" data-jump="d2-warning" data-terms="warning social proof capterra g2 reviews comparison risk">⚠ The Big Warning</button>
+      <button class="navlink sub" data-view="d2" data-jump="d2-engine" data-terms="growth engine followers engagement advocacy employee sales customers low follows">Audience Growth Engine</button>
+    </div>
+    <button class="mode-toggle" id="modeToggle">◐ Toggle dark mode</button>
+  </nav>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+
+    <!-- ========== OVERVIEW ========== -->
+    <section class="view active" id="view-overview">
+      <h1>SkySlope Social Strategy — Overview</h1>
+      <div class="sub">Two strategic documents, one engine: turn 3M+ transactions of proprietary data into the most shareable content in real estate — and build the audience to see it. Prepared for Robert Pedraza.</div>
+      <div class="tiles">
+        <div class="tile"><div class="v">900K+</div><div class="l">Real estate professionals on SkySlope</div></div>
+        <div class="tile"><div class="v">3M+</div><div class="l">Transactions managed annually</div></div>
+        <div class="tile crit"><div class="v">3.9★</div><div class="l">Capterra rating — lowest of competitive set</div></div>
+        <div class="tile crit"><div class="v">0</div><div class="l">Comments on sampled IG posts (June audit)</div></div>
+        <div class="tile"><div class="v">5,560</div><div class="l">Monthly TC-keyword searches SkySlope barely appears in</div></div>
+        <div class="tile"><div class="v">13</div><div class="l">#1 AI-overview placements on broker terms</div></div>
+      </div>
+
+      <div class="chartwrap">
+        <div class="chart-head">
+          <h3>Search footprint — SkySlope vs tracked competitors</h3>
+          <span class="note">215 keywords · Semrush, Aug 4–10 2026</span>
+          <button class="tbtn" id="tableToggle">View as table</button>
+        </div>
+        <div class="legend" id="chartLegend"></div>
+        <svg id="chart" width="100%" height="260" role="img" aria-label="Grouped bar chart of keywords ranked, top-3 positions, and AI-overview placements for SkySlope, Dotloop, Paperless Pipeline and BoldTrail"></svg>
+        <table id="chartTable">
+          <thead><tr><th>Company</th><th>Keywords ranked</th><th>Top-3 positions</th><th>AI-overview placements</th></tr></thead>
+          <tbody>
+            <tr><td><b>SkySlope</b></td><td>65</td><td>13</td><td>13</td></tr>
+            <tr><td><b>Dotloop</b></td><td>89</td><td>44</td><td>39</td></tr>
+            <tr><td><b>Paperless Pipeline</b></td><td>60</td><td>28</td><td>28</td></tr>
+            <tr><td><b>BoldTrail</b></td><td>17</td><td>13</td><td>12</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The two documents</h2>
+      <div class="card" open><summary>📘 Doc 1 — Social Media Strategy <span class="tag">What we publish</span><span class="chev">▶</span></summary>
+        <div class="body"><p>The plan Rob can green-light: the <b>SkySlope Index</b> data franchise at the center, the June audit's fixes hard-wired in (zero-CTA bucket, testimonial cadence, QA step), platform lanes per the shared engagement plan, and the 20-hour monthly scope from the July 9 proposal.</p>
+        <p><a href="#" data-goto="d1">Open Doc 1 →</a></p></div>
+      </div>
+      <div class="card" open><summary>📗 Doc 2 — Audience, Personas &amp; Path to Purchase <span class="tag">Who it's for &amp; how it grows</span><span class="chev">▶</span></summary>
+        <div class="body"><p>Built from the Semrush competitor file: the competitive set, audience definition, four personas with buyer journeys, the six-stage path to purchase — plus the <b style="color:var(--crit)">Big Warning</b> on what researching buyers see today, and the <b>Audience Growth Engine</b> for the low-follower/low-engagement problem.</p>
+        <p><a href="#" data-goto="d2">Open Doc 2 →</a></p></div>
+      </div>
+
+      <div class="card" open><summary>📝 Content Studio <span class="tag">Naomi's workspace</span><span class="chev">▶</span></summary>
+        <div class="body"><p>The editable post backlog across all four pillars — statuses, reordering, image slots, and one-click <b>Copy + Compose</b> handoff to each platform's native composer. Plus inspiration, follow/unfollow lists, the automation policy, and the weekly operating rhythm under <b>Operate</b> in the sidebar.</p>
+        <p><a href="#" data-goto="studio">Open Content Studio →</a></p></div>
+      </div>
+      <div class="card" open><summary>📡 Channels &amp; Feeds <span class="tag">Access hub</span><span class="chev">▶</span></summary>
+        <div class="body"><p>One-click access to every channel and its analytics console, cadence targets per the strategy, and the post-by-post <b>engagement tracker</b> pre-loaded with the June audit baseline (updated monthly as part of reporting).</p>
+        <p><a href="#" data-goto="social">Open Channels &amp; Feeds →</a></p></div>
+      </div>
+
+      <h2>The one-paragraph story</h2>
+      <div class="card" open><summary>How it all connects<span class="chev">▶</span></summary>
+        <div class="body"><p>The June audit proved SkySlope's channels are all ask and no give. The keyword data shows competitors own the research narrative — Paperless Pipeline owns the TC audience, Dotloop owns brand gravity — while SkySlope wins AI overviews on broker terms. The review platforms show a validation gap (3.9★ Capterra, half the review volume of rivals). The answer: publish the industry's only proprietary transaction data (the give nobody else can copy), deliver it through the personas' actual channels, activate 900K users + sales + execs as distribution, and fix the review surface in parallel. Awareness → credibility → referral, each stage reinforcing the next.</p></div>
+      </div>
+    </section>
+
+    <!-- ========== DOC 1 ========== -->
+    <section class="view" id="view-d1">
+      <h1>Doc 1 · Social Media Strategy</h1>
+      <div class="sub">Turning 3 million transactions into the most shareable data in real estate · Builds on the July 9 proposal + the shared "2026: SkySlope Social Media Engagement" plan</div>
+
+      <div class="card" open id="d1-exec"><summary>Executive Summary<span class="chev">▶</span></summary><div class="body">
+        <ul>
+          <li><b>Core services stand</b> (July 9 proposal): content strategy, creation, publishing, community management across LinkedIn, Facebook, Instagram — 20 hrs/month.</li>
+          <li><b>The audit's bottom line frames everything:</b> engagement is a content problem, not frequency or paid spend. Channels have been a press-release feed — every post an ask, none a give.</li>
+          <li><b>What's new:</b> SkySlope sits on one of the largest proprietary datasets in residential real estate ops — 900K+ professionals, 3M+ transactions/yr. Zillow/Redfin own the consumer-data narrative; <b>nobody owns the transaction-process narrative.</b></li>
+          <li><b>Recommendation:</b> launch <b>The SkySlope Index</b> — a recurring data franchise converting anonymized aggregate data into headline-grabbing claims that earn links, press, and shares — compounding the SEO and AI-citation work already under way.</li>
+        </ul>
+      </div></div>
+
+      <div class="card" id="d1-audit"><summary>Where We're Starting: The June Audit<span class="tag">Baseline</span><span class="chev">▶</span></summary><div class="body">
+        <ul>
+          <li><b>Flat baseline</b> — sampled IG posts: 2–9 likes, zero comments; account reads as a press-release channel.</li>
+          <li><b>Testimonials win</b> — the two customer Spotlight videos (Century 21 Judge Fite, NextHome) beat every static post. Human voice is the one proven lever.</li>
+          <li><b>All ask, no give</b> — 100% of sampled posts end in a CTA; captions written like landing pages.</li>
+          <li><b>QA gaps</b> — the "Johnny" caption on the Davi Bryce video; a lightweight review step fixes this cheaply.</li>
+          <li><b>Hashtags/paid aren't the lever</b> — generic tags don't drive discovery; boosting flat content buys impressions nobody reacts to.</li>
+        </ul>
+        <p>Success = engagement rate (likes + comments + shares / reach) vs this baseline, month over month — not reach or follower count.</p>
+      </div></div>
+
+      <div class="card" id="d1-index"><summary>The Big Idea: The SkySlope Index<span class="tag">Hero franchise</span><span class="chev">▶</span></summary><div class="body">
+        <ul>
+          <li><b>Monthly Stat Drop</b> — one bold, counterintuitive number as a shareable graphic.</li>
+          <li><b>Quarterly "State of the Transaction"</b> — 5–8 stats with charts; carousel + blog + email; pitched to Inman, HousingWire, RISMedia.</li>
+          <li><b>Annual "Your Year in Closings"</b> — Wrapped-style industry recap; phase 2: personalized agent stats in-product.</li>
+        </ul>
+        <p><b>Example claims</b> (illustrative — every claim validated &amp; approved before publishing):</p>
+        <ul>
+          <li>"The average closing involves [X] documents and [Y] signatures."</li>
+          <li>"Deals in Texas close [N] days faster than California — the state leaderboard."</li>
+          <li>"[X]% of transactions hit a compliance flag before closing. Top 3 culprits, ranked."</li>
+          <li>"The most common day to go under contract is Tuesday. Least common? Sunday."</li>
+        </ul>
+        <p><b>Why it wins:</b> data content compounds the SEO/interlinking work and AI-answer visibility (SkySlope already ranks #1 in some ChatGPT answers); no competitor publishes proprietary industry data; agents share stats that make their world legible.</p>
+      </div></div>
+
+      <div class="card" id="d1-gov"><summary>Data Governance (Read This First)<span class="tag red">Guardrails</span><span class="chev">▶</span></summary><div class="body">
+        <ul>
+          <li><b>No PII</b> — aggregate and anonymized only; never addresses, client/agent names, brokerage-identifiable figures, or deal-level detail.</li>
+          <li><b>Minimum thresholds</b> — no stat from a slice small enough to identify anyone.</li>
+          <li><b>Legal sign-off</b> — every claim reviewed by SkySlope legal/compliance before first publication; methodology note per recurring stat.</li>
+          <li><b>Access process</b> — SkySlope's team defines exports; Click Shift works from approved aggregates, never raw records.</li>
+        </ul>
+        <p>This is what makes the numbers press-citable — protection and credibility are the same move.</p>
+      </div></div>
+
+      <div class="card" id="d1-pillars"><summary>Content Pillars<span class="chev">▶</span></summary><div class="body">
+        <table>
+          <thead><tr><th>Pillar</th><th>What it is</th><th>Share</th></tr></thead>
+          <tbody>
+            <tr><td><b>1. Data &amp; Insights</b> (hero)</td><td>The SkySlope Index: stat drops, quarterly reports, annual recap, trend commentary.</td><td>~40%</td></tr>
+            <tr><td><b>2. Testimonials &amp; Proof</b> (proven)</td><td>Customer Spotlight videos at increased cadence — the audit's only proven performer.</td><td>~25%</td></tr>
+            <tr><td><b>3. Zero-CTA Relatable</b> (new)</td><td>Posts that exist only to be funny/relatable to agents &amp; TCs. No link, no pitch — product mention lives in a comment reply. Includes the "office hours" personality concept.</td><td>~20%</td></tr>
+            <tr><td><b>4. Education &amp; Product</b></td><td>Feature content rewritten for the feed: short, pain-point-first, no feature bullet-lists.</td><td>~15%</td></tr>
+          </tbody>
+        </table>
+        <p class="note-strip">The corporate-satire direction was considered and set aside as high-risk for SaaS sales; "relatable office hours" gets the para-social benefit without punching at our own users.</p>
+      </div></div>
+
+      <div class="card" id="d1-platforms"><summary>Platforms &amp; Cadence<span class="chev">▶</span></summary><div class="body">
+        <ul>
+          <li><b>LinkedIn — the insight channel (6–8/mo).</b> Index stats + quarterly reports as document/carousel posts; 2–3 execs posting personally 1×/week with the Page resharing; partnership news lands here first.</li>
+          <li><b>Instagram — the end-user channel (4–6/mo).</b> Lead each week with a testimonial or relatable pain-point post before any feature content; drop generic hashtags; waitlist/launch content is paid-only.</li>
+          <li><b>Facebook — the community channel (4–6/mo).</b> Participate in 2–3 brokerage/RE-tech Groups as named humans; longer captions OK; cross-post testimonials.</li>
+          <li><b>TikTok — phase-2 test.</b> Longer-format tolerance suits office-hours; launch with intentional seeding to the right audience, no friends-and-family padding.</li>
+        </ul>
+        <p><b>Paid rule:</b> boost only formats with proven organic engagement (testimonials; Index once validated) — never waitlist/launch posts.</p>
+      </div></div>
+
+      <div class="card" id="d1-month"><summary>Monthly Scope, Measurement &amp; First 90 Days<span class="chev">▶</span></summary><div class="body">
+        <p><b>A month in 20 hours:</b> strategy meeting + calendar · 10–12 posts (incl. 1 Index drop) · 4–6 short videos · captions/graphics/scheduling · community monitoring + escalations · <b>pre-publish QA on every post</b> · monthly analytics report. Quarter-end months weight toward the State of the Transaction report.</p>
+        <p><b>Measurement:</b> engagement rate by pillar vs June baseline; shares/press/backlinks from Index content; UTM'd traffic + retargeting growth; reported in Jessica's invoice rhythm.</p>
+        <table>
+          <thead><tr><th>Month</th><th>Milestones</th></tr></thead>
+          <tbody>
+            <tr><td><b>1</b></td><td>Confirm package + kickoff · data inventory session · zero-CTA bucket live, testimonial cadence up, QA in place, hashtags dropped · first Index drop by week 4 · recruit exec posters.</td></tr>
+            <tr><td><b>2</b></td><td>Full cadence · office-hours piloted · FB Groups engaged · methodology locked for 3–5 stats · press list started · first engagement-rate read vs baseline.</td></tr>
+            <tr><td><b>3</b></td><td>First quarterly "State of the Transaction" (carousel + blog + press outreach) · pillar review · TikTok go/no-go for Q4.</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- ========== DOC 2 ========== -->
+    <section class="view" id="view-d2">
+      <h1>Doc 2 · Audience, Personas &amp; Path to Purchase</h1>
+      <div class="sub">Source: Semrush position tracking (215 keywords, Aug 4–10 2026) + public review-platform research</div>
+
+      <div class="card" open id="d2-comp"><summary>The Competitive Set<span class="tag">From the ranking data</span><span class="chev">▶</span></summary><div class="body">
+        <table>
+          <thead><tr><th>Competitor</th><th>Footprint</th><th>Identity</th></tr></thead>
+          <tbody>
+            <tr><td><b><span class="dot" style="background:var(--s2)"></span>Dotloop</b></td><td>89/215 ranked · 44 top-3 · 39 AI overviews. #1 on "transaction management," "real estate broker software."</td><td>The incumbent. Agent-familiar, branded-search gravity.</td></tr>
+            <tr><td><b><span class="dot" style="background:var(--s3)"></span>Paperless Pipeline</b></td><td>60 ranked · 28 top-3 · #1 on "real estate transaction management software" (1,000/mo; SkySlope #24). Owns the TC cluster — 5,560 combined monthly searches.</td><td>The content assassin — its comparison listicles (incl. "SkySlope vs Dotloop vs Paperless Pipeline") host the narrative prospects read.</td></tr>
+            <tr><td><b><span class="dot" style="background:var(--s4)"></span>BoldTrail BackOffice</b></td><td>17 ranked but efficient: 13 top-3, 12 AI overviews; #1 on "transaction coordinator software."</td><td>The suite play (Inside Real Estate, ex-Brokermint).</td></tr>
+            <tr><td><b><span class="dot" style="background:var(--s1)"></span>SkySlope</b></td><td>65 ranked · 13 top-3 · 13 AI-overview #1s concentrated on brokerage/back-office terms. Nearly invisible on TC keywords (3 of 12).</td><td>Compliance-first enterprise choice — winning the AI-answer layer, losing the largest human audience (TCs) and the comparison narrative.</td></tr>
+          </tbody>
+        </table>
+        <p><b>Why it matters for social:</b> intent mix is 187 informational / 49 commercial — this market researches heavily before talking to sales. Whoever owns research-stage trust wins the shortlist.</p>
+      </div></div>
+
+      <div class="card" id="d2-aud"><summary>Audience Definition<span class="chev">▶</span></summary><div class="body">
+        <ul>
+          <li><b>Economic buyers</b> — broker-owners, ops leaders, admins at mid-size→enterprise residential brokerages &amp; franchises (US/CA) who own the back-office decision.</li>
+          <li><b>Users &amp; champions</b> — TCs (in-house and independent) and agents: rarely sign the contract, but make or break adoption, renewal, word-of-mouth — and they're the largest searching audience in the data.</li>
+          <li><b>Ecosystem</b> — MLSs/associations, franchise leadership, RE-tech reviewers, TC communities, peer brokers: the referral network that validates the shortlist.</li>
+        </ul>
+        <p><b>Defining trait:</b> a small, dense, hyper-networked industry. Social here isn't broadcast media — it's the industry's group chat.</p>
+      </div></div>
+
+      <div class="card" id="d2-personas"><summary>Key Personas &amp; Buyer Journeys<span class="chev">▶</span></summary><div class="body">
+        <div class="persona">
+          <div class="tile"><b>Barbara — Broker-Owner / COO</b><div class="ct" style="margin-top:6px">Owns P&amp;L and liability: audit risk, E&amp;O, commission accuracy, agent retention. Searches the back-office cluster where SkySlope wins AI overviews.<br><br><b>Journey:</b> pain trigger → peer brokers → Google/ChatGPT → G2/Capterra → shortlist 2–3 → committee demo → trust + switching-cost math.<br><b>Social's job:</b> LinkedIn exec POV, compliance data, peer testimonials get SkySlope shortlisted before sales calls.</div></div>
+          <div class="tile"><b>Tina — Transaction Coordinator</b><div class="ct" style="margin-top:6px">15–40 files at once; cares about checklists, speed, not getting blamed. <b>Highest-volume searcher in the dataset — least visible persona to SkySlope today.</b><br><br><b>Journey:</b> discovers tools in TC Facebook groups, courses, Reddit, ex-colleagues; evaluates by watching real workflows on video.<br><b>Social's job:</b> relatable TC-life content, workflow tips, paperwork stats. The industry's most active sharer.</div></div>
+          <div class="tile"><b>Alex — Producing Agent / Team Lead</b><div class="ct" style="margin-top:6px">Uses what the brokerage provides; complains loudly when clunky. Mobile speed, e-sign UX, looking professional.<br><br><b>Journey:</b> doesn't buy TM alone, but agent sentiment drives renewals. Dotloop's brand gravity lives here.<br><b>Social's job:</b> IG/TikTok humor + day-in-the-life wins goodwill; "fast closing" content counters the compliance-tool image.</div></div>
+          <div class="tile"><b>Carmen — Compliance / Ops Manager</b><div class="ct" style="margin-top:6px">The silent evaluator on every demo: file-review queues, audit trails, state-form coverage. Small search volume, outsized veto power.<br><br><b>Social's job:</b> methodology-backed compliance stats and case studies are shareable armor she brings to the decision meeting.</div></div>
+        </div>
+      </div></div>
+
+      <div class="card" id="d2-path"><summary>Path to Purchase — Where Social Does the Work<span class="chev">▶</span></summary><div class="body">
+        <div class="stage"><div class="num">1</div><div class="sc"><div class="st">Trigger</div><div class="sd">Audit scare, admin overload, growth, franchise mandate, incumbent renewal.</div><div class="sj">Social's job: be already-known — familiarity from feed presence. → Zero-CTA content, Index drops</div></div></div>
+        <div class="stage"><div class="num">2</div><div class="sc"><div class="st">Research</div><div class="sd">Googles category terms; asks ChatGPT (AI overviews answer 92 of 215 tracked queries for somebody); reads listicles — often competitor-hosted.</div><div class="sj">Social's job: authority — data content earns the citations that feed AI answers; feeds are checked as a legitimacy signal. → Quarterly report, LinkedIn carousels</div></div></div>
+        <div class="stage"><div class="num">3</div><div class="sc"><div class="st">Validation</div><div class="sd">Checks G2/Capterra; asks peers in FB groups, Reddit, TC communities; watches real users on video; stalks the brand's socials and comments.</div><div class="sj">Social's job: credibility — deals are quietly won or lost here. See the Big Warning. → Spotlights, community presence, review responses</div></div></div>
+        <div class="stage"><div class="num">4</div><div class="sc"><div class="st">Shortlist &amp; demo</div><div class="sd">Committee demo (broker + ops + TC lead); 2–3 vendors compared; TC/agent sentiment consulted.</div><div class="sj">Social's job: champion enablement — give Tina and Carmen shareable proof for the room. → Case studies, exec POV</div></div></div>
+        <div class="stage"><div class="num">5</div><div class="sc"><div class="st">Decision &amp; onboarding</div><div class="sd">Migration fear is objection #1.</div><div class="sj">Social's job: de-risk — real onboarding stories, public support wins. → Onboarding-journey content</div></div></div>
+        <div class="stage"><div class="num">6</div><div class="sc"><div class="st">Adoption → Referral</div><div class="sd">Opinions form in week one; happy TCs and brokers recommend in the same communities stage 3 happens in.</div><div class="sj">Social's job: the referral engine — celebrate customers publicly; every Spotlight is retention + validation at once. → Spotlights, Wrapped, tag-a-colleague</div></div></div>
+        <p><b>The loop beats the funnel:</b> stage-6 content is exactly what stage-3 researchers find.</p>
+      </div></div>
+
+      <div class="card warn" open id="d2-warning"><summary>⚠ THE BIG WARNING: What Researching Buyers See Today<span class="chev">▶</span></summary><div class="body">
+        <p><b>When Barbara or Tina does stage-3 validation right now, this is the side-by-side — and it is not neutral territory:</b></p>
+        <table>
+          <thead><tr><th>Signal</th><th>SkySlope</th><th>Dotloop</th><th>Paperless Pipeline</th><th>BoldTrail</th></tr></thead>
+          <tbody>
+            <tr><td><b>G2</b></td><td>4.4★ (81 reviews)</td><td>4.3★ (175)</td><td>(low volume)</td><td>4.3★ (176)</td></tr>
+            <tr class="crit"><td><b>Capterra</b></td><td><b>3.9★ (77) — lowest of the set</b></td><td>~4.5★ (large volume)</td><td>4.8★ — highest satisfaction</td><td>4.3★-range</td></tr>
+            <tr class="crit"><td><b>Review volume</b></td><td><b>Half of Dotloop/BoldTrail — reads "smaller player" despite 900K users</b></td><td>Deep bench</td><td>Few but glowing</td><td>Deep bench</td></tr>
+            <tr><td><b>Complaint themes</b></td><td>"Built for CA residential," setup friction, extra clicks, crashes — newer users most frustrated</td><td>Low product-direction score (6.9) — perceived stagnation</td><td>Dated 90s UI</td><td>Support slowness</td></tr>
+            <tr class="crit"><td><b>Social feed found</b></td><td><b>2–9 likes, zero comments, all-CTA feed</b></td><td>Established agent brand</td><td>Minimal social — but ranks in search instead</td><td>Suite marketing machine</td></tr>
+            <tr class="crit"><td><b>Comparison narrative</b></td><td><b>Hosted by competitors</b> — Paperless Pipeline's "SkySlope vs Dotloop vs PP" pages rank on category terms</td><td>Incumbent familiarity</td><td>Writes &amp; ranks the comparisons</td><td>Controls its suite frame</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><b>The evidence gap</b> — prospects who never talk to sales meet SkySlope's weakest surfaces (3.9★ page, silent Instagram, competitor-authored comparisons) and none of its strongest evidence (900K users, 3M transactions, enterprise logos, MLS partnerships).</li>
+          <li><b>AI amplifies it</b> — review corpora increasingly feed AI answers; a thin, aging review base is a compounding liability even where SkySlope wins AI overviews today.</li>
+          <li><b>The fix is orchestrated, not organic-only</b> — review-generation program (happy enterprise customers → G2/Capterra, timed to renewals and support wins), feeds that look alive, owned comparison content, community presence. The social strategy is the delivery vehicle for all four.</li>
+        </ul>
+      </div></div>
+
+      <div class="card" id="d2-engine"><summary>The Audience Growth &amp; Engagement Engine<span class="tag">Fixing low follows</span><span class="chev">▶</span></summary><div class="body">
+        <p>Content alone won't fix a distribution problem. Follows and engagement are low relative to a 900K-user base — so the engine builds the audience deliberately:</p>
+        <ul>
+          <li><b>6.1 Convert the base you own</b> — follow prompts with a reason ("follow for the monthly Index stat") in-product, in onboarding emails, support-resolution emails, webinar end-cards, newsletter footers. Feature-to-follow flywheel: Customer Spotlights and "TC of the Month" make being featured the incentive. Annual Wrapped personal stats = the single strongest follow driver available.</li>
+          <li><b>6.2 Sales, CS &amp; leadership as the distribution layer</b> — the first 100 engagements are internal: every AE/CSM/exec shares &amp; comments within the first hour (weekly share kit, angles not scripts). Sales uses Index stats as non-pitch touches; engagers become warm signals. 2–3 execs posting weekly; the Page harvests the followers.</li>
+          <li><b>6.3 Borrow audiences</b> — MLS/franchise/integration partner co-marketing and tag exchanges; value-first participation in TC groups and Reddit as named humans; TC-educator micro-influencers walking through real workflows.</li>
+          <li><b>6.4 Engagement mechanics</b> — every post engineered for a response (polls, "tag a TC who…", first-line hooks); reply to every comment/DM in 24h; product mention in the reply, not the caption; paid only against warm audiences (customer lists, retargeting, lookalikes).</li>
+          <li><b>6.5 Targets (2 quarters)</b> — engagement rate above June baseline within 6 weeks; comments &gt;0 on 80% of posts in 90 days; follower growth tracked by % from named customer/prospect accounts; <b>+40 fresh G2/Capterra reviews in 6 months</b> (Capterra first, non-CA voices); 10 employee advocates weekly, 2 exec voices, 3 sustained community groups.</li>
+        </ul>
+      </div></div>
+    </section>
+
+    <!-- ========== SOCIAL CHANNELS & FEEDS ========== -->
+    <section class="view" id="view-social">
+      <h1>Channels &amp; Feeds</h1>
+      <div class="sub">One place to reach every channel, its analytics console, and the post-by-post engagement picture. Baseline: June 2026 engagement audit.</div>
+
+      <h2>Channel access</h2>
+      <div class="channels">
+        <div class="ch">
+          <div class="icon" style="background:#0a66c2">in</div>
+          <div class="nm">LinkedIn</div>
+          <div class="role">The insight channel — exec POV, Index carousels, partnership news first.</div>
+          <div class="cad">Target: 6–8 posts/mo</div>
+          <div class="btnrow">
+            <a class="btn primary" href="https://www.linkedin.com/company/skyslope" target="_blank">Open page ↗</a>
+            <a class="btn" href="https://www.linkedin.com/company/skyslope/admin/analytics/updates/" target="_blank">Analytics</a>
+          </div>
+        </div>
+        <div class="ch">
+          <div class="icon" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af)">ig</div>
+          <div class="nm">Instagram</div>
+          <div class="role">The end-user channel — testimonials &amp; relatable pain-point posts lead each week.</div>
+          <div class="cad">Target: 4–6 posts/mo</div>
+          <div class="btnrow">
+            <a class="btn primary" href="https://www.instagram.com/skyslope/" target="_blank">Open page ↗</a>
+            <a class="btn" href="https://business.facebook.com/latest/insights/content" target="_blank">Insights</a>
+          </div>
+        </div>
+        <div class="ch">
+          <div class="icon" style="background:#1877f2">f</div>
+          <div class="nm">Facebook</div>
+          <div class="role">The community channel — Groups participation over Page broadcasting.</div>
+          <div class="cad">Target: 4–6 posts/mo</div>
+          <div class="btnrow">
+            <a class="btn primary" href="https://www.facebook.com/SkySlope/" target="_blank">Open page ↗</a>
+            <a class="btn" href="https://business.facebook.com/latest/home" target="_blank">Business Suite</a>
+          </div>
+        </div>
+        <div class="ch">
+          <div class="icon" style="background:#ff0000">▶</div>
+          <div class="nm">YouTube</div>
+          <div class="role">Long-form home — webinars, demos, Spotlight masters that get clipped for social.</div>
+          <div class="cad">Repurposing source</div>
+          <div class="btnrow">
+            <a class="btn primary" href="https://www.youtube.com/c/SkySlope" target="_blank">Open channel ↗</a>
+            <a class="btn" href="https://studio.youtube.com" target="_blank">Studio</a>
+          </div>
+        </div>
+        <div class="ch">
+          <div class="icon" style="background:#0b0b0b;border:1px solid var(--grid)">𝕏</div>
+          <div class="nm">X (Twitter)</div>
+          <div class="role">Maintenance mode — news distribution; not a strategy priority channel.</div>
+          <div class="cad">As-needed</div>
+          <div class="btnrow">
+            <a class="btn primary" href="https://twitter.com/SkySlope" target="_blank">Open profile ↗</a>
+            <a class="btn" href="https://analytics.twitter.com" target="_blank">Analytics</a>
+          </div>
+        </div>
+        <div class="ch">
+          <div class="icon" style="background:var(--muted)">tt</div>
+          <div class="nm">TikTok</div>
+          <div class="role">Phase-2 test per strategy — office-hours format with intentional audience seeding.</div>
+          <div class="cad">Go/no-go: Month 3</div>
+          <div class="btnrow">
+            <a class="btn" style="opacity:.6;pointer-events:none">Not launched</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-card"><b>Why feeds here aren't live:</b> LinkedIn and Meta don't allow feed pulls into a standalone page without authenticated API apps, so this hub tracks posts through the editable feed below (pre-loaded with the June audit sample — the baseline every new post is measured against). Live numbers stay one click away in each channel's console above; Click Shift updates this feed with each month's posts as part of the reporting rhythm.</div>
+
+      <h2>Engagement at a glance</h2>
+      <div class="tiles" id="tiles2"></div>
+      <div class="chartwrap">
+        <div class="chart-head">
+          <h3>Engagement by post — June audit baseline</h3>
+          <span class="note">likes + comments per post · color = format</span>
+          <button class="tbtn" id="tableToggle2">View as table</button>
+        </div>
+        <div class="legend" id="legend2"><span><i class="dot" style="background:var(--s1)"></i>Video testimonial</span><span><i class="dot" style="background:var(--s2)"></i>Static / graphic</span></div>
+        <svg id="chart2" width="100%" height="240" role="img" aria-label="Bar chart of engagement per post from the June audit; testimonial videos outperform static posts"></svg>
+        <table id="chartTable2"></table>
+      </div>
+
+      <h2>Post feed &amp; engagement tracker</h2>
+      <div class="filters" id="feedFilters"></div>
+      <div class="feed" id="feedGrid"></div>
+
+      <details class="howto">
+        <summary>How to update this feed (for the Click Shift team)</summary>
+        <div class="hb">
+          All posts live in one <code>POSTS</code> array near the bottom of this file. Each entry:
+          <code>{date, channel, format, title, note, likes, comments, shares, url}</code>.
+          Add each new post as it publishes (or monthly from the analytics consoles) and the feed cards, filters,
+          summary tiles, and chart update automatically. Channels: <code>LinkedIn</code>, <code>Instagram</code>,
+          <code>Facebook</code>, <code>YouTube</code>, <code>X</code>. Formats: <code>Video testimonial</code>,
+          <code>Static / graphic</code>, <code>Carousel / document</code>, <code>Zero-CTA</code>, <code>Index stat</code>.
+          Keep <code>baseline:true</code> on audit-era posts so new posts compare against them.
+        </div>
+      </details>
+    </section>
+
+    <!-- ========== CONTENT STUDIO ========== -->
+    <section class="view" id="view-studio">
+      <h1>Content Studio</h1>
+      <div class="sub">The working backlog across all four pillars. Click any title or caption to edit · reorder with ↑↓ · click the image slot to attach a visual · <b>Copy + Compose</b> copies the caption and opens the right native composer. Use <b>Export state</b> (below) to hand edits back for baking in.</div>
+      <div class="tiles" id="studioTiles"></div>
+      <div class="filters" id="pillarFilters"></div>
+      <div class="filters" id="statusFilters"></div>
+      <div class="plist" id="plist"></div>
+      <h2>Handoff</h2>
+      <div class="ccard">
+        <b>Push-live workflow (honest version):</b> no standalone page can post directly to LinkedIn/Instagram/Facebook — that requires an authenticated publishing app. <b>Copy + Compose</b> gets you one click away: paste, attach the visual, publish. Phase 2 moves scheduling into Meta Business Suite Planner or Buffer/Metricool with an approval step; this studio stays the drafting + QA layer.
+        <div style="margin-top:8px"><b>QA before every publish (the "Johnny" rule):</b> caption matches the visual · names spelled right · zero-CTA posts have NO link (product mention goes in a comment reply) · alt text added.</div>
+        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <span class="note-strip">Edits and images are session-only — export before closing.</span></div>
+      </div>
+      <textarea class="io" id="ioArea" style="display:none" readonly></textarea>
+    </section>
+
+    <!-- ========== INSPIRATION ========== -->
+    <section class="view" id="view-inspo">
+      <h1>Inspiration</h1>
+      <div class="sub">Hook formulas per pillar (rooted in the June audit's rules) and accounts to study — not copy.</div>
+      <h2>Hook formulas</h2>
+      <div class="grid2">
+        <div class="ccard"><h3>📊 Data &amp; Index posts</h3><ul>
+          <li>"The average closing runs on <b>[number]</b>." — one stat, huge type, nothing else on the graphic.</li>
+          <li>Leaderboards: "Fastest-closing states, ranked." People argue with rankings in comments — that's the point.</li>
+          <li>Counterintuitive beats impressive: "Sunday is the rarest day to go under contract" outperforms "we processed 3M transactions."</li>
+          <li>Always end carousels with the methodology slide — credibility is the moat.</li></ul></div>
+        <div class="ccard"><h3>🎬 Testimonial / Spotlight</h3><ul>
+          <li>Open on the customer's result, not their name: "She closes 40 files a month. Here's how."</li>
+          <li>Cut a 15-sec vertical teaser from every long interview; full video to YouTube.</li>
+          <li>Caption = one quote from the video, nothing more.</li></ul></div>
+        <div class="ccard"><h3>😅 Zero-CTA relatable</h3><ul>
+          <li>POV formats: "POV: the lender says 'quick question' at 4:58pm Friday."</li>
+          <li>Tag-a-colleague: "Tag a TC who's survived a 40-document closing."</li>
+          <li>Polls: "Worst part of closing week?" — four options, all painful.</li>
+          <li>RULE: no link, no pitch, no product name in the caption. Product lives in a comment reply if anyone asks.</li></ul></div>
+        <div class="ccard"><h3>🎓 Education / product</h3><ul>
+          <li>Lead with the pain, not the feature: "Chasing signatures at 9pm?" then the 3-click answer.</li>
+          <li>Screen-record real workflows — agents trust screens, not renders.</li></ul></div>
+      </div>
+      <h2>Accounts to study (not copy)</h2>
+      <div class="grid2">
+        <div class="ccard"><h3>Data-as-content</h3>Zillow Research &amp; Redfin (data → press machine), Gong (B2B data carousels), Spotify Wrapped (personal-stats sharing loop).</div>
+        <div class="ccard"><h3>B2B personality done safely</h3>Duolingo (consistency, not chaos), Chili Piper &amp; Lavender (human-first B2B SaaS), local TC educators on IG (the community's native voice).</div>
+        <div class="ccard"><h3>Industry watch</h3>Inman, HousingWire, RISMedia (what earns trade coverage), Dotloop &amp; BoldTrail feeds (what the competition posts — and what they never post: data).</div>
+      </div>
+    </section>
+
+    <!-- ========== GROWTH LISTS ========== -->
+    <section class="view" id="view-growth">
+      <h1>Follow / Unfollow Lists</h1>
+      <div class="sub">Follow as the brand where it makes sense; exec/personal accounts follow the rest. Engagement earns visibility — following is just the ticket in. Cells are editable; export state to save.</div>
+      <h2>Strategic follow list</h2>
+      <table id="followTable">
+        <thead><tr><th>Account / who</th><th>Category</th><th>Why</th><th>Platform</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="ccard"><b>Working the list:</b> add manually in small batches (≤10/day per platform) and pair every follow with a real engagement (comment or share) the same week — a follow with no engagement is a wasted ticket.</div>
+      <h2>Unfollow review (manual, quarterly)</h2>
+      <div class="ccard">
+        <b>Flag for unfollow only if ALL are true:</b>
+        <ul>
+          <li>Not following back <b>and</b> no strategic value (not a partner, customer, prospect, press, or community voice)</li>
+          <li>Inactive 12+ months, or spam/bot pattern</li>
+          <li>Not a customer — <b>never unfollow a customer</b>, following back or not</li>
+        </ul>
+        Review quarterly, manually, ~20 at a time. Ratio matters far less than who we actually engage with — an aggressive sweep reads as vanity management and risks nicking partner relationships.
+      </div>
+    </section>
+
+    <!-- ========== AUTOMATION POLICY ========== -->
+    <section class="view" id="view-auto">
+      <h1>Automation Policy</h1>
+      <div class="warnbox">
+        <h3>⚠ Read before automating anything</h3>
+        Third-party <b>auto-DM tools and follow/unfollow bots violate the terms of service</b> of Instagram, Facebook, and LinkedIn. Platforms actively detect this (action blocks, shadow restrictions, suspensions — LinkedIn permanently bans accounts for it). For a brand rebuilding credibility, an action-blocked account or a spam-flagged DM is a far bigger setback than slow organic growth. <b>Recommendation: do not automate DMs or follow/unfollow activity with third-party tools — full stop.</b>
+      </div>
+      <h2>What we CAN automate (platform-native and allowed)</h2>
+      <table>
+        <thead><tr><th>Activity</th><th>Verdict</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td><b>Post scheduling</b></td><td class="ok">✔ Automate</td><td>Meta Business Suite Planner (IG+FB, free) · LinkedIn native scheduling · or Buffer/Metricool with an approval step for Naomi.</td></tr>
+          <tr><td><b>DM instant replies &amp; FAQs</b></td><td class="ok">✔ Automate</td><td>Meta's built-in Instant Reply + FAQ automations (official feature). Greeting + "a human replies within 24h" + support-escalation link. Nothing salesy.</td></tr>
+          <tr><td><b>Saved reply templates</b></td><td class="ok">✔ Semi-automate</td><td>Meta Business Suite saved replies; Naomi personalizes the first line. A human sends, always.</td></tr>
+          <tr><td><b>Comment/mention alerts</b></td><td class="ok">✔ Automate</td><td>Native notifications + daily Business Suite inbox sweep; support issues → SkySlope CS same day.</td></tr>
+          <tr><td><b>Reporting pulls</b></td><td class="ok">✔ Automate</td><td>Monthly console exports into the tracker; Click Shift can script the aggregation.</td></tr>
+          <tr><td><b>Cold outbound DMs</b></td><td class="no">✘ Don't automate</td><td>Manual, personal, rare — only warm (they engaged first, or a partner intro). Sequenced cold DMs = spam folder + report risk.</td></tr>
+          <tr><td><b>Follow/unfollow cycling</b></td><td class="no">✘ Don't automate</td><td>Strategic follow list, manual, ≤10/day batches. Unfollows: quarterly manual review only.</td></tr>
+          <tr><td><b>Auto-liking/commenting</b></td><td class="no">✘ Never</td><td>Engagement is the product. The employee-advocacy share kit (humans, first hour) is the compliant version.</td></tr>
+        </tbody>
+      </table>
+      <div class="ccard"><b>The compliant growth engine</b> (from Doc 2 §6): owned-channel follow prompts → employee advocacy first-hour engagement → partner tag exchanges → community participation as named humans → warm-audience paid. That set outperforms bot activity and carries zero ban risk.</div>
+    </section>
+
+    <!-- ========== OPS RHYTHM ========== -->
+    <section class="view" id="view-ops">
+      <h1>Naomi's Weekly Rhythm</h1>
+      <div class="sub">Fits the 20 hr/month scope from the July 9 proposal.</div>
+      <table>
+        <thead><tr><th>Day</th><th>Block</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr><td><b>Mon</b></td><td>60–90 min</td><td>Queue check in Content Studio → finalize this week's 2–3 posts → QA checklist → schedule via native tools. Move cards to "Scheduled."</td></tr>
+          <tr><td><b>Tue–Thu</b></td><td>20 min/day</td><td>Engagement block: reply to every comment/DM, seed first comments after publishing, engage 5–10 accounts from the follow list as the brand.</td></tr>
+          <tr><td><b>Wed</b></td><td>—</td><td>Feed anything needing Rob's sign-off into the Dave/Rob/Jessica 5:30pm meeting.</td></tr>
+          <tr><td><b>Fri</b></td><td>45 min</td><td>Log the week's posts + engagement into the tracker (Channels &amp; Feeds) · flag winners for paid boost · pull next week's drafts from the Idea column · export state to Click Shift.</td></tr>
+          <tr><td><b>Monthly</b></td><td>2–3 hrs</td><td>Analytics pull from consoles → report with Jessica's invoice rhythm · Index stat working session · follow-list additions · (quarterly) unfollow review.</td></tr>
+        </tbody>
+      </table>
+      <h2>Who does what</h2>
+      <table>
+        <thead><tr><th>Person</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td><b>Naomi</b></td><td>Operator: drafts finalized here, publishing, community engagement, DM triage, tracker upkeep.</td></tr>
+          <tr><td><b>Dave / Click Shift</b></td><td>Strategy, Index data claims + methodology, paid amplification, this app's upkeep from exported state.</td></tr>
+          <tr><td><b>Jessica</b></td><td>Reporting cadence + invoice integration.</td></tr>
+          <tr><td><b>Rob / SkySlope</b></td><td>Approvals, data access + legal sign-off, exec posters, CS escalation path.</td></tr>
+        </tbody>
+      </table>
+      <h2>Build-out roadmap</h2>
+      <table>
+        <thead><tr><th>Phase</th><th>What ships</th></tr></thead>
+        <tbody>
+          <tr><td><b>1 — Now</b></td><td>This app: strategy + channels + studio + lists + policy + rhythm. Handoff via Export state.</td></tr>
+          <tr><td><b>2 — Package confirmed</b></td><td>Scheduler integration (Meta Planner + Buffer/Metricool w/ approval), Meta FAQ/instant-reply automations, tracker fed monthly from console exports.</td></tr>
+          <tr><td><b>3 — Scale</b></td><td>Index publishing calendar synced to quarterly reports, employee-advocacy share kit distribution, automated reporting aggregation.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========== ACTION TRACKER ========== -->
+    <section class="view" id="view-next">
+      <h1>Action Tracker</h1>
+      <div class="sub">The decisions and kickoff actions across both documents. Checkboxes are session-only (they reset on reload) — use this live in the meeting with Rob.</div>
+      <h2>For Rob</h2>
+      <label class="check"><input type="checkbox"><span class="ct"><b>Confirm the social media package</b>So Jessica can fold it into the August invoice (template is ready in shared Docs).</span></label>
+      <label class="check"><input type="checkbox"><span class="ct"><b>Name a data contact + legal reviewer</b>Who pulls approved aggregate stats, and who signs off — the gate for everything Index-related.</span></label>
+      <label class="check"><input type="checkbox"><span class="ct"><b>Approve the review-generation program</b>The Big Warning is the case: Capterra 3.9★ is the weakest surface researching buyers see.</span></label>
+      <label class="check"><input type="checkbox"><span class="ct"><b>Nominate 2–3 exec/leader LinkedIn voices</b>Personal profiles carry 5–10× Page reach; the engagement plan calls for 1 post/week each.</span></label>
+      <h2>For Click Shift</h2>
+      <label class="check"><input type="checkbox"><span class="ct"><b>30-min working session</b>Shortlist the first three Index stats + cast the office-hours host.</span></label>
+      <label class="check"><input type="checkbox"><span class="ct"><b>Sales/CS advocacy kickoff</b>Launch the weekly share-kit rhythm; first-hour engagement floor.</span></label>
+      <label class="check"><input type="checkbox"><span class="ct"><b>TC-facing content into the calendar</b>Attack the Paperless Pipeline gap where the audience is largest (5,560 mo. searches).</span></label>
+      <label class="check"><input type="checkbox"><span class="ct"><b>Identify 2–3 Facebook Groups + TC communities</b>Named-human participation plan; never post-and-leave.</span></label>
+      <label class="check"><input type="checkbox"><span class="ct"><b>QA checklist live before next publish</b>Caption/video match, names, links — closes the "Johnny" gap.</span></label>
+    </section>
+  </main>
+</div>
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+(function(){
+  // ---------- Navigation ----------
+  var links = document.querySelectorAll('.navlink');
+  var views = document.querySelectorAll('.view');
+  function show(view, jump){
+    views.forEach(function(v){ v.classList.toggle('active', v.id === 'view-'+view); });
+    links.forEach(function(l){ l.classList.toggle('active', l.dataset.view === view && !l.dataset.jump); });
+    if(jump){
+      var el = document.getElementById(jump);
+      if(el){ el.open = true; setTimeout(function(){ el.scrollIntoView({behavior:'smooth', block:'start'}); }, 60); }
+    } else { window.scrollTo({top:0}); }
+  }
+  links.forEach(function(l){
+    l.addEventListener('click', function(){ show(l.dataset.view, l.dataset.jump); });
+  });
+  document.querySelectorAll('[data-goto]').forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); show(a.dataset.goto); });
+  });
+
+  // ---------- Search ----------
+  var box = document.getElementById('searchBox');
+  box.addEventListener('input', function(){
+    var q = box.value.trim().toLowerCase();
+    links.forEach(function(l){
+      var hay = (l.textContent + ' ' + (l.dataset.terms||'')).toLowerCase();
+      l.classList.toggle('hidden', q !== '' && hay.indexOf(q) === -1);
+    });
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === '/' && document.activeElement !== box){ e.preventDefault(); box.focus(); }
+  });
+
+  // ---------- Dark mode ----------
+  document.getElementById('modeToggle').addEventListener('click', function(){
+    var r = document.documentElement;
+    r.setAttribute('data-theme', r.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    drawChart();
+  });
+
+  // ---------- Checklist ----------
+  document.querySelectorAll('.check input').forEach(function(c){
+    c.addEventListener('change', function(){ c.closest('.check').classList.toggle('done', c.checked); });
+  });
+
+  // ---------- Chart ----------
+  var companies = [
+    {name:'SkySlope', varName:'--s1', data:[65,13,13]},
+    {name:'Dotloop', varName:'--s2', data:[89,44,39]},
+    {name:'Paperless Pipeline', varName:'--s3', data:[60,28,28]},
+    {name:'BoldTrail', varName:'--s4', data:[17,13,12]}
+  ];
+  var metrics = ['Keywords ranked','Top-3 positions','AI overviews'];
+  var svg = document.getElementById('chart');
+  var tooltip = document.getElementById('tooltip');
+
+  function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+  function drawChart(){
+    var W = svg.clientWidth || 900, H = 260;
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.innerHTML = '';
+    var padL = 34, padR = 10, padT = 12, padB = 30;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var maxV = 100;
+    var groupW = plotW / metrics.length;
+    var barW = Math.min(34, (groupW - 40) / companies.length);
+    var ink2 = cssVar('--ink-2'), muted = cssVar('--muted'), grid = cssVar('--grid'), base = cssVar('--baseline'), surface = cssVar('--surface');
+    function y(v){ return padT + plotH - (v/maxV)*plotH; }
+    var NS = 'http://www.w3.org/2000/svg';
+    function el(t,attrs){ var e = document.createElementNS(NS,t); for(var k in attrs) e.setAttribute(k,attrs[k]); return e; }
+    // gridlines
+    [0,25,50,75,100].forEach(function(v){
+      svg.appendChild(el('line',{x1:padL,x2:W-padR,y1:y(v),y2:y(v),stroke:v===0?base:grid,'stroke-width':1}));
+      var t = el('text',{x:padL-6,y:y(v)+4,'text-anchor':'end','font-size':10,fill:muted,'font-family':'system-ui,sans-serif'});
+      t.textContent = v; svg.appendChild(t);
+    });
+    // bars
+    metrics.forEach(function(m, mi){
+      var gx = padL + mi*groupW + (groupW - companies.length*barW - (companies.length-1)*2)/2;
+      companies.forEach(function(c, ci){
+        var v = c.data[mi];
+        var x = gx + ci*(barW+2);
+        var by = y(v), bh = padT + plotH - by;
+        var color = cssVar(c.varName);
+        var r = el('path',{d:'M'+x+' '+(by+4)+' q0 -4 4 -4 h'+(barW-8)+' q4 0 4 4 v'+(bh-4)+' h-'+barW+' Z', fill:color});
+        r.style.cursor='pointer';
+        r.addEventListener('mousemove', function(ev){
+          tooltip.innerHTML = '<div class="t-title">'+c.name+'</div><div class="t-val">'+m+': <b>'+v+'</b> of 215</div>';
+          tooltip.style.opacity = 1;
+          tooltip.style.left = (ev.clientX+14)+'px';
+          tooltip.style.top = (ev.clientY-10)+'px';
+        });
+        r.addEventListener('mouseleave', function(){ tooltip.style.opacity = 0; });
+        svg.appendChild(r);
+        var lb = el('text',{x:x+barW/2,y:by-5,'text-anchor':'middle','font-size':10.5,'font-weight':600,fill:ink2,'font-family':'system-ui,sans-serif'});
+        lb.textContent = v; svg.appendChild(lb);
+      });
+      var mt = el('text',{x:padL + mi*groupW + groupW/2, y:H-8,'text-anchor':'middle','font-size':11.5,fill:ink2,'font-family':'system-ui,sans-serif'});
+      mt.textContent = m; svg.appendChild(mt);
+    });
+  }
+  // legend
+  var lg = document.getElementById('chartLegend');
+  companies.forEach(function(c){
+    var s = document.createElement('span');
+    s.innerHTML = '<i class="dot" style="background:var('+c.varName+')"></i>'+c.name;
+    lg.appendChild(s);
+  });
+  drawChart();
+  window.addEventListener('resize', drawChart);
+
+  // table toggle
+  var tbl = document.getElementById('chartTable');
+  var btn = document.getElementById('tableToggle');
+  btn.addEventListener('click', function(){
+    var showing = tbl.style.display === 'table';
+    tbl.style.display = showing ? 'none' : 'table';
+    svg.style.display = showing ? 'block' : 'none';
+    lg.style.display = showing ? 'flex' : 'none';
+    btn.textContent = showing ? 'View as table' : 'View as chart';
+  });
+})();
+</script>
+<script>
+// =====================================================================
+// EDIT ME: the social post feed. Add new posts to the TOP of this array.
+// {date, channel, format, title, note, likes, comments, shares, url, baseline}
+// =====================================================================
+var POSTS = [
+  {date:'2026-06-24', channel:'Instagram', format:'Video testimonial', title:'Customer Spotlight — Century 21 Judge Fite', note:'Top performer of the audit sample. (Caption said "Johnny on the spot" — featured customer is Davi Bryce; QA gap logged.)', likes:9, comments:0, shares:0, url:'https://www.instagram.com/skyslope/', baseline:true},
+  {date:'2026-06-17', channel:'Instagram', format:'Video testimonial', title:'Customer Spotlight — NextHome', note:'Second video Spotlight; more than double the average static post.', likes:8, comments:0, shares:0, url:'https://www.instagram.com/skyslope/', baseline:true},
+  {date:'2026-06-10', channel:'Instagram', format:'Static / graphic', title:'SkySlope Pilot — waitlist push', note:'Launch-email-style caption ending in bio-link CTA.', likes:4, comments:0, shares:0, url:'https://www.instagram.com/skyslope/', baseline:true},
+  {date:'2026-06-05', channel:'Instagram', format:'Static / graphic', title:'Buyer Home Estimate — feature announcement', note:'Feature-first copy; link CTA.', likes:3, comments:0, shares:0, url:'https://www.instagram.com/skyslope/', baseline:true},
+  {date:'2026-05-28', channel:'Instagram', format:'Static / graphic', title:'Cloze integration announcement', note:'Press-release repost pattern.', likes:2, comments:0, shares:0, url:'https://www.instagram.com/skyslope/', baseline:true},
+  {date:'2026-05-21', channel:'Instagram', format:'Static / graphic', title:'"Closing cost tab" humor post', note:'The one attempt at humor — pivoted into a feature pitch two sentences in, undercutting the joke.', likes:5, comments:0, shares:0, url:'https://www.instagram.com/skyslope/', baseline:true},
+  {date:'2026-05-14', channel:'Instagram', format:'Static / graphic', title:'AI product year recap', note:'Company recap; CTA to press release.', likes:3, comments:0, shares:0, url:'https://www.instagram.com/skyslope/', baseline:true}
+];
+// =====================================================================
+(function(){
+  var CH_COLORS = {LinkedIn:'#0a66c2', Instagram:'#dd2a7b', Facebook:'#1877f2', YouTube:'#ff0000', X:'#555555'};
+  var tooltip = document.getElementById('tooltip');
+  function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+  function renderTiles2(){
+    var t = document.getElementById('tiles2');
+    var total = POSTS.length;
+    var likes = POSTS.reduce(function(a,p){return a+p.likes},0);
+    var comments = POSTS.reduce(function(a,p){return a+p.comments},0);
+    var vids = POSTS.filter(function(p){return p.format==='Video testimonial'});
+    var stats = POSTS.filter(function(p){return p.format!=='Video testimonial'});
+    var vAvg = vids.length? (vids.reduce(function(a,p){return a+p.likes+p.comments},0)/vids.length).toFixed(1) : '—';
+    var sAvg = stats.length? (stats.reduce(function(a,p){return a+p.likes+p.comments},0)/stats.length).toFixed(1) : '—';
+    t.innerHTML =
+      '<div class="tile"><div class="v">'+total+'</div><div class="l">Posts tracked (audit sample)</div></div>'+
+      '<div class="tile"><div class="v">'+likes+'</div><div class="l">Total likes across sample</div></div>'+
+      '<div class="tile crit"><div class="v">'+comments+'</div><div class="l">Total comments — the number to move</div></div>'+
+      '<div class="tile"><div class="v">'+vAvg+'</div><div class="l">Avg engagement, testimonial videos</div></div>'+
+      '<div class="tile"><div class="v">'+sAvg+'</div><div class="l">Avg engagement, static posts</div></div>';
+  }
+
+  var svg2 = document.getElementById('chart2');
+  function drawChart2(){
+    if(!svg2) return;
+    var W = svg2.clientWidth || 900, H = 240;
+    svg2.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg2.innerHTML='';
+    var posts = POSTS.slice().reverse();
+    var padL=30,padR=10,padT=14,padB=54;
+    var plotW=W-padL-padR, plotH=H-padT-padB;
+    var maxV = Math.max(10, Math.max.apply(null, posts.map(function(p){return p.likes+p.comments})));
+    var n = posts.length;
+    var slot = plotW/n, barW = Math.min(46, slot-14);
+    var muted=cssVar('--muted'), grid=cssVar('--grid'), base=cssVar('--baseline'), ink2=cssVar('--ink-2');
+    var NS='http://www.w3.org/2000/svg';
+    function el(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e;}
+    function y(v){return padT+plotH-(v/maxV)*plotH;}
+    [0, Math.round(maxV/2), maxV].forEach(function(v){
+      svg2.appendChild(el('line',{x1:padL,x2:W-padR,y1:y(v),y2:y(v),stroke:v===0?base:grid,'stroke-width':1}));
+      var tx=el('text',{x:padL-6,y:y(v)+4,'text-anchor':'end','font-size':10,fill:muted,'font-family':'system-ui,sans-serif'});
+      tx.textContent=v; svg2.appendChild(tx);
+    });
+    posts.forEach(function(p,i){
+      var v = p.likes+p.comments;
+      var x = padL + i*slot + (slot-barW)/2;
+      var by = y(v), bh = padT+plotH-by;
+      var color = p.format==='Video testimonial' ? cssVar('--s1') : cssVar('--s2');
+      var r = el('path',{d:'M'+x+' '+(by+4)+' q0 -4 4 -4 h'+(barW-8)+' q4 0 4 4 v'+Math.max(0,bh-4)+' h-'+barW+' Z', fill:color});
+      r.style.cursor='pointer';
+      r.addEventListener('mousemove',function(ev){
+        tooltip.innerHTML='<div class="t-title">'+p.title+'</div><div>'+p.channel+' · '+p.date+'</div><div>Likes <b>'+p.likes+'</b> · Comments <b>'+p.comments+'</b></div>';
+        tooltip.style.opacity=1; tooltip.style.left=(ev.clientX+14)+'px'; tooltip.style.top=(ev.clientY-10)+'px';
+      });
+      r.addEventListener('mouseleave',function(){tooltip.style.opacity=0;});
+      svg2.appendChild(r);
+      var lb=el('text',{x:x+barW/2,y:by-5,'text-anchor':'middle','font-size':10.5,'font-weight':600,fill:ink2,'font-family':'system-ui,sans-serif'});
+      lb.textContent=v; svg2.appendChild(lb);
+      var dt=el('text',{x:x+barW/2,y:H-38,'text-anchor':'middle','font-size':9.5,fill:muted,'font-family':'system-ui,sans-serif'});
+      dt.textContent=p.date.slice(5); svg2.appendChild(dt);
+      var short = p.title.length>18 ? p.title.slice(0,16)+'…' : p.title;
+      var tt=el('text',{x:x+barW/2,y:H-24,'text-anchor':'middle','font-size':9,fill:muted,'font-family':'system-ui,sans-serif'});
+      tt.textContent=short; svg2.appendChild(tt);
+    });
+  }
+  function renderTable2(){
+    var tbl=document.getElementById('chartTable2');
+    var rows = POSTS.map(function(p){
+      return '<tr><td>'+p.date+'</td><td>'+p.channel+'</td><td>'+p.format+'</td><td>'+p.title+'</td><td>'+p.likes+'</td><td>'+p.comments+'</td></tr>';
+    }).join('');
+    tbl.innerHTML='<thead><tr><th>Date</th><th>Channel</th><th>Format</th><th>Post</th><th>Likes</th><th>Comments</th></tr></thead><tbody>'+rows+'</tbody>';
+  }
+  var tbl2=document.getElementById('chartTable2'), tbtn2=document.getElementById('tableToggle2'), lg2=document.getElementById('legend2');
+  tbtn2.addEventListener('click',function(){
+    var showing = tbl2.style.display==='table';
+    tbl2.style.display = showing?'none':'table';
+    svg2.style.display = showing?'block':'none';
+    lg2.style.display = showing?'flex':'none';
+    tbtn2.textContent = showing?'View as table':'View as chart';
+  });
+
+  var activeCh='All';
+  function renderFilters(){
+    var chs=['All'].concat(Object.keys(POSTS.reduce(function(a,p){a[p.channel]=1;return a},{})));
+    var f=document.getElementById('feedFilters');
+    f.innerHTML='';
+    chs.forEach(function(c){
+      var b=document.createElement('button');
+      b.className='fbtn'+(c===activeCh?' on':'');
+      b.textContent=c;
+      b.addEventListener('click',function(){activeCh=c;renderFilters();renderFeed();});
+      f.appendChild(b);
+    });
+  }
+  function renderFeed(){
+    var feed=document.getElementById('feedGrid');
+    feed.innerHTML='';
+    var best=Math.max.apply(null,POSTS.map(function(p){return p.likes+p.comments}));
+    POSTS.filter(function(p){return activeCh==='All'||p.channel===activeCh}).forEach(function(p){
+      var d=document.createElement('div'); d.className='post';
+      var eng=p.likes+p.comments;
+      d.innerHTML =
+        '<div class="top"><span class="chip" style="background:'+(CH_COLORS[p.channel]||'#888')+'">'+p.channel+'</span>'+
+        '<span class="fmt">'+p.format+'</span><span>'+p.date+'</span>'+(p.baseline?'<span title="June audit baseline">· baseline</span>':'')+'</div>'+
+        '<div class="cap">'+p.title+'</div>'+
+        '<div class="desc">'+(p.note||'')+'</div>'+
+        '<div class="stats">'+
+          '<span class="'+(eng===best?'best':'')+'">👍 <b>'+p.likes+'</b></span>'+
+          '<span class="'+(p.comments===0?'zero':'')+'">💬 <b>'+p.comments+'</b></span>'+
+          '<span>↗ <b>'+p.shares+'</b></span>'+
+          '<a class="open" href="'+p.url+'" target="_blank">open ↗</a>'+
+        '</div>';
+      feed.appendChild(d);
+    });
+  }
+
+  document.getElementById('modeToggle').addEventListener('click', function(){ setTimeout(drawChart2, 0); });
+  renderTiles2(); renderFilters(); renderFeed(); renderTable2(); drawChart2();
+  window.addEventListener('resize', drawChart2);
+})();
+</script>
+<script>
+// =====================================================================
+// EDIT ME: content backlog + follow list. Naomi edits in the UI;
+// "Export state" hands updated JSON back to Click Shift to bake in.
+// =====================================================================
+var PILLARS = {
+  'Data & Index':   {color:'#2a78d6'},
+  'Testimonial':    {color:'#7a5fd0'},
+  'Zero-CTA':       {color:'#eb6834'},
+  'Education':      {color:'#1baf7a'}
+};
+var STATUSES = ['Idea','Drafted','Approved','Scheduled','Published'];
+var COMPOSERS = {
+  'LinkedIn':'https://www.linkedin.com/company/skyslope/admin/',
+  'Instagram':'https://business.facebook.com/latest/composer',
+  'Facebook':'https://business.facebook.com/latest/composer'
+};
+var ccPosts = [
+  {pillar:'Data & Index', platform:'LinkedIn', format:'Single stat graphic', status:'Idea',
+   title:'Index Drop #1 — documents per closing',
+   cap:'The average home closing runs on [X] documents and [Y] signatures.\n\nAgents on SkySlope get through them in [Z] hours.\n\n(Methodology in comments.)',
+   note:'BLOCKED on data working session + legal sign-off. Number goes huge on the graphic, nothing else.'},
+  {pillar:'Data & Index', platform:'LinkedIn', format:'Carousel / document', status:'Idea',
+   title:'State-by-state closing speed leaderboard',
+   cap:'Deals in [State A] close [N] days faster than [State B].\n\nThe full state leaderboard, from 3M+ transactions a year. Where does your market rank? 🧵',
+   note:'Rankings start arguments in comments — that is the engagement plan. End with methodology slide.'},
+  {pillar:'Data & Index', platform:'Instagram', format:'Reel / animation', status:'Idea',
+   title:'"Tuesday is contract day"',
+   cap:'The most common day to go under contract? Tuesday.\nThe rarest? Sunday.\n\nTag the agent who writes offers on Sunday anyway.',
+   note:'Counterintuitive + tag mechanic. Zero product mention.'},
+  {pillar:'Data & Index', platform:'LinkedIn', format:'Carousel / document', status:'Idea',
+   title:'Q3 State of the Transaction (quarterly report)',
+   cap:'How real estate actually closed in Q3 2026 — 5 numbers from the SkySlope Index:\n\n1) [stat]\n2) [stat]\n3) [stat]\n4) [stat]\n5) [stat]\n\nFull report + methodology: [blog link]',
+   note:'Month-3 flagship. Press outreach to Inman/HousingWire/RISMedia same week.'},
+  {pillar:'Testimonial', platform:'Instagram', format:'Video testimonial', status:'Drafted',
+   title:'Customer Spotlight — TC managing 40 files',
+   cap:'"She closes 40 files a month. Without weekends."\n\nMeet [Name], TC at [Brokerage]. ▶️',
+   note:'Proven top format (audit). QA: name in caption MUST match the person on screen.'},
+  {pillar:'Testimonial', platform:'LinkedIn', format:'Video testimonial', status:'Idea',
+   title:'Broker Spotlight — the audit that took an afternoon',
+   cap:'"Our annual audit used to take three weeks. Last year it took an afternoon."\n\n[Name], Broker-Owner, [Brokerage] — on what compliance-first back office actually means.',
+   note:'Barbara-persona proof. Clip 15s vertical for IG.'},
+  {pillar:'Testimonial', platform:'Instagram', format:'Static / graphic', status:'Idea',
+   title:'TC of the Month #1',
+   cap:'TC of the Month: [Name] 🏆\n\n[One-line win — e.g. "closed 22 files in June while training two new hires."]\n\nKnow a TC who deserves this? Nominate them in the comments.',
+   note:'Feature-to-follow flywheel — featured TCs + their brokerages share and tag.'},
+  {pillar:'Zero-CTA', platform:'Instagram', format:'Meme / static', status:'Drafted',
+   title:'POV: 4:58pm Friday',
+   cap:'POV: the lender says "quick question" at 4:58 on a Friday.',
+   note:'RULE: no link, no product, no pitch. If someone asks, product answer goes in a comment reply.'},
+  {pillar:'Zero-CTA', platform:'Instagram', format:'Static / graphic', status:'Idea',
+   title:'Tag a TC (40-document closing)',
+   cap:'Tag a TC who has survived a 40-document closing and lived to organize another file. 🫡',
+   note:'Ties to the Index stat later — same number, human first.'},
+  {pillar:'Zero-CTA', platform:'LinkedIn', format:'Poll', status:'Idea',
+   title:'Poll: worst part of closing week',
+   cap:'Worst part of closing week — be honest:\n\n🔘 Chasing signatures\n🔘 The 11th-hour lender doc\n🔘 "Can we move the date?"\n🔘 Explaining all of the above to the client',
+   note:'Polls train the algorithm cheap. Reply to every voter comment.'},
+  {pillar:'Zero-CTA', platform:'Instagram', format:'Reel / video', status:'Idea',
+   title:'Office Hours — pilot episode',
+   cap:'Office Hours ep. 1: "Compliance said no."\n\nEvery agent has been there. [Host] takes your worst file stories — drop them below. 👇',
+   note:'Jessica\'s para-social concept. Cast host in Month-2 working session before shooting.'},
+  {pillar:'Education', platform:'Instagram', format:'Screen-record reel', status:'Drafted',
+   title:'Chasing signatures at 9pm?',
+   cap:'Chasing signatures at 9pm? 😮‍💨\n\nHere\'s the 3-click version. ▶️\n\n(Sound on — it\'s 22 seconds.)',
+   note:'Pain-point-first rewrite pattern from the engagement plan. Real screen recording, not renders.'},
+  {pillar:'Education', platform:'LinkedIn', format:'Carousel / document', status:'Idea',
+   title:'The 5 compliance flags that stall closings',
+   cap:'The 5 compliance flags that stall the most closings — and the fix for each. 🧵\n\n(From file-review patterns across millions of transactions.)',
+   note:'Education + Index crossover; Carmen-persona armor. Needs data sign-off for the "millions" framing.'},
+  {pillar:'Education', platform:'Facebook', format:'Clip repurpose', status:'Idea',
+   title:'Webinar clip — buyer-rep changes',
+   cap:'"The commission conversation changed. Your paperwork should have too."\n\n90 seconds from last month\'s webinar that every broker should hear. Full session in comments.',
+   note:'Repurposing rule: every webinar → 3+ clips. Longer caption OK on FB.'}
+];
+var FOLLOWS = [
+  {who:'NextHome (corporate + leadership)', cat:'Partner', why:'Franchise partner — tag exchanges, co-branded stats', pf:'LinkedIn/IG', status:'To follow'},
+  {who:'Stellar MLS', cat:'Partner', why:'MLS partner — co-marketing reach', pf:'LinkedIn/FB', status:'To follow'},
+  {who:'Century 21 Judge Fite Co.', cat:'Customer', why:'Spotlight alumni — celebrate + reshare', pf:'All', status:'To follow'},
+  {who:'Inman', cat:'Press', why:'Quarterly report pitch target — engage before pitching', pf:'LinkedIn/X', status:'To follow'},
+  {who:'HousingWire', cat:'Press', why:'Data-story pickup target', pf:'LinkedIn/X', status:'To follow'},
+  {who:'RISMedia', cat:'Press', why:'Existing relationship (Team Tuesday) — warm press channel', pf:'LinkedIn', status:'To follow'},
+  {who:'Top TC educators / course creators', cat:'TC community', why:'Micro-influencers with dense TC audiences — future collabs', pf:'IG', status:'Research'},
+  {who:'Transaction coordinator FB groups (2–3)', cat:'TC community', why:'Where Tina validates vendors — join as named humans', pf:'FB', status:'Research'},
+  {who:'Customer brokerage exec accounts', cat:'Customer', why:'Engage their wins; warm the advocacy flywheel', pf:'LinkedIn', status:'Build list'},
+  {who:'Dotloop / BoldTrail / Paperless Pipeline', cat:'Competitive watch', why:'Track their content mix (follow from personal accounts, not brand)', pf:'All', status:'Personal accts'}
+];
+// =====================================================================
+(function(){
+  var activePillar='All', activeStatus='All';
+  var toast=document.createElement('div');toast.className='toast';document.body.appendChild(toast);
+  function showToast(m){toast.textContent=m;toast.style.opacity=1;setTimeout(function(){toast.style.opacity=0},1800);}
+
+  function tiles(){
+    var t=document.getElementById('studioTiles');
+    var by={};STATUSES.forEach(function(s){by[s]=0});
+    ccPosts.forEach(function(p){by[p.status]=(by[p.status]||0)+1});
+    t.innerHTML='<div class="tile"><div class="v">'+ccPosts.length+'</div><div class="l">Posts in backlog</div></div>'+
+      STATUSES.map(function(s){return '<div class="tile"><div class="v">'+(by[s]||0)+'</div><div class="l">'+s+'</div></div>'}).join('');
+  }
+  function filters(){
+    var pf=document.getElementById('pillarFilters');
+    pf.innerHTML='<span class="note-strip">Pillar:</span>';
+    ['All'].concat(Object.keys(PILLARS)).forEach(function(c){
+      var b=document.createElement('button');b.className='fbtn'+(c===activePillar?' on':'');b.textContent=c;
+      b.onclick=function(){activePillar=c;filters();render();};pf.appendChild(b);
+    });
+    var sf=document.getElementById('statusFilters');
+    sf.innerHTML='<span class="note-strip">Status:</span>';
+    ['All'].concat(STATUSES).forEach(function(c){
+      var b=document.createElement('button');b.className='fbtn'+(c===activeStatus?' on':'');b.textContent=c;
+      b.onclick=function(){activeStatus=c;filters();render();};sf.appendChild(b);
+    });
+    var add=document.createElement('button');add.className='fbtn';add.textContent='+ New post';
+    add.onclick=function(){
+      ccPosts.unshift({pillar:'Zero-CTA',platform:'Instagram',format:'Static / graphic',status:'Idea',title:'New post idea',cap:'Draft the caption here…',note:''});
+      tiles();render();showToast('New card added to top');
+    };
+    sf.appendChild(add);
+  }
+  function render(){
+    var list=document.getElementById('plist');list.innerHTML='';
+    ccPosts.forEach(function(p,i){
+      if(activePillar!=='All'&&p.pillar!==activePillar)return;
+      if(activeStatus!=='All'&&p.status!==activeStatus)return;
+      var d=document.createElement('div');d.className='pcard';
+      var col=(PILLARS[p.pillar]||{}).color||'#888';
+      var img=document.createElement('div');img.className='img';
+      if(p.img){var im=document.createElement('img');im.src=p.img;img.appendChild(im);}
+      else img.textContent='+ image (click to add)';
+      var fi=document.createElement('input');fi.type='file';fi.accept='image/*';
+      img.onclick=function(){fi.click();};
+      fi.onchange=function(){
+        var f=fi.files[0];if(!f)return;
+        var r=new FileReader();
+        r.onload=function(){p.img=r.result;render();showToast('Image attached (session-only — keep the master in Drive)');};
+        r.readAsDataURL(f);
+      };
+      var mid=document.createElement('div');
+      var sel='<select class="status">'+STATUSES.map(function(s){return '<option'+(s===p.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select>';
+      mid.innerHTML='<div class="pmeta"><span class="pill" style="background:'+col+'">'+p.pillar+'</span>'+
+        '<span class="fmt">'+p.platform+'</span><span class="fmt">'+p.format+'</span>'+sel+'</div>'+
+        '<div class="ptitle" contenteditable="true">'+p.title+'</div>'+
+        '<div class="pcap" contenteditable="true">'+p.cap+'</div>'+
+        (p.note?'<div class="cnote">📌 '+p.note+'</div>':'');
+      mid.querySelector('select').onchange=function(e){p.status=e.target.value;tiles();showToast('Status → '+p.status);};
+      mid.querySelector('.ptitle').onblur=function(e){p.title=e.target.textContent;};
+      mid.querySelector('.pcap').onblur=function(e){p.cap=e.target.innerText;};
+      var ctrl=document.createElement('div');ctrl.className='pctrl';
+      var ord=document.createElement('div');ord.className='ordr';
+      [['↑',-1],['↓',1]].forEach(function(a){
+        var b=document.createElement('button');b.className='cbtn';b.textContent=a[0];
+        b.onclick=function(){
+          var j=i+a[1];if(j<0||j>=ccPosts.length)return;
+          var t=ccPosts[i];ccPosts[i]=ccPosts[j];ccPosts[j]=t;render();
+        };ord.appendChild(b);
+      });
+      var top=document.createElement('button');top.className='cbtn';top.textContent='⤒ top';
+      top.onclick=function(){ccPosts.splice(i,1);ccPosts.unshift(p);render();};
+      var push=document.createElement('button');push.className='cbtn push';push.textContent='Copy + Compose ↗';
+      push.onclick=function(){
+        navigator.clipboard.writeText(p.cap).then(function(){showToast('Caption copied — composer opening');},function(){showToast('Copy blocked — select text manually');});
+        window.open(COMPOSERS[p.platform]||COMPOSERS['LinkedIn'],'_blank');
+      };
+      var del=document.createElement('button');del.className='cbtn';del.textContent='✕ remove';
+      del.onclick=function(){if(confirm('Remove "'+p.title+'" from the backlog?')){ccPosts.splice(i,1);tiles();render();}};
+      ctrl.appendChild(ord);ctrl.appendChild(top);ctrl.appendChild(push);ctrl.appendChild(del);
+      d.appendChild(img);d.appendChild(mid);d.appendChild(ctrl);
+      list.appendChild(d);
+    });
+  }
+  // follow table
+  var tb=document.querySelector('#followTable tbody');
+  FOLLOWS.forEach(function(f){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td contenteditable="true"><b>'+f.who+'</b></td><td contenteditable="true">'+f.cat+'</td><td contenteditable="true">'+f.why+'</td><td contenteditable="true">'+f.pf+'</td><td contenteditable="true">'+f.status+'</td>';
+    tb.appendChild(tr);
+  });
+  // export
+  document.getElementById('exportBtn').onclick=function(){
+    var ta=document.getElementById('ioArea');
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(function(p){var q={};for(var k in p){if(k!=='img')q[k]=p[k];}q.hasImage=!!p.img;return q;}),follows:FOLLOWS};
+    ta.value=JSON.stringify(state,null,2);
+    ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
+    ta.select();
+    try{document.execCommand('copy');showToast('State copied to clipboard — send to Click Shift');}catch(e){showToast('State shown below — copy and send to Click Shift');}
+  };
+  tiles();filters();render();
+})();
+</script>
+</body>
+</html>
