@@ -208,6 +208,30 @@
   th.sortable:hover{color:var(--ink)}
   th .arr{opacity:.55;font-size:9px;margin-left:3px}
   @media print{.logout{display:none!important}}
+  /* ---- v2.2: channel stat tiles ---- */
+  .chstats{display:flex;gap:6px;margin-top:2px}
+  .cs{flex:1;background:var(--page);border:1px solid var(--grid);border-radius:8px;padding:5px 6px;text-align:center;min-width:0}
+  .cs .csl{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:1px;white-space:nowrap}
+  .cs b{font-size:13.5px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .cs b[contenteditable]{outline:none;border-radius:4px;padding:0 3px;display:inline-block;min-width:24px}
+  .cs b[contenteditable]:focus{background:var(--surface);box-shadow:0 0 0 1px var(--blue)}
+  /* ---- v2.2: studio selection + calendar ---- */
+  .psel{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .psel input{accent-color:var(--s1);margin:0}
+  input.pdate{font-size:11.5px;border:1px solid var(--grid);border-radius:6px;background:var(--page);color:var(--ink-2);padding:3px 5px;font-family:inherit;max-width:130px}
+  .pcard.selected{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+  .calhead{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+  .calhead span{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:center}
+  .calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .calday{background:var(--surface);border:1px solid var(--grid);border-radius:8px;min-height:86px;padding:4px 5px;display:flex;flex-direction:column;gap:3px}
+  .calday.out{opacity:.4}
+  .calday.today{border-color:var(--blue)}
+  .calday .dn{font-size:10.5px;color:var(--muted)}
+  .calchip{font-size:10px;color:#fff;border-radius:5px;padding:2px 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;border:none;text-align:left;font-family:inherit;display:block;width:100%}
+  .pcard.flash{animation:flashcard 1.6s}
+  @keyframes flashcard{0%{box-shadow:0 0 0 3px var(--s4)}100%{box-shadow:0 0 0 1px transparent}}
+  @media(prefers-reduced-motion:reduce){.pcard.flash{animation:none}}
+  @media(max-width:700px){.calday{min-height:64px}.calchip{font-size:9px}}
 </style>
 </head>
 <body>
@@ -507,6 +531,11 @@
           <div class="nm">LinkedIn</div>
           <div class="role">The insight channel — exec POV, Index carousels, partnership news first.</div>
           <div class="cad">Target: 6–8 posts/mo</div>
+          <div class="chstats">
+            <div class="cs"><span class="csl">Followers</span><b contenteditable="true" data-ch="LinkedIn">—</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mcur"></span></span><b data-postcount-cur="LinkedIn">0</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mlast"></span></span><b data-postcount-last="LinkedIn">0</b></div>
+          </div>
           <div class="btnrow">
             <a class="btn primary" href="https://www.linkedin.com/company/skyslope" target="_blank">Open page ↗</a>
             <a class="btn" href="https://www.linkedin.com/company/skyslope/admin/analytics/updates/" target="_blank">Analytics</a>
@@ -517,6 +546,11 @@
           <div class="nm">Instagram</div>
           <div class="role">The end-user channel — testimonials &amp; relatable pain-point posts lead each week.</div>
           <div class="cad">Target: 4–6 posts/mo</div>
+          <div class="chstats">
+            <div class="cs"><span class="csl">Followers</span><b contenteditable="true" data-ch="Instagram">—</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mcur"></span></span><b data-postcount-cur="Instagram">0</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mlast"></span></span><b data-postcount-last="Instagram">0</b></div>
+          </div>
           <div class="btnrow">
             <a class="btn primary" href="https://www.instagram.com/skyslope/" target="_blank">Open page ↗</a>
             <a class="btn" href="https://business.facebook.com/latest/insights/content" target="_blank">Insights</a>
@@ -527,6 +561,11 @@
           <div class="nm">Facebook</div>
           <div class="role">The community channel — Groups participation over Page broadcasting.</div>
           <div class="cad">Target: 4–6 posts/mo</div>
+          <div class="chstats">
+            <div class="cs"><span class="csl">Followers</span><b contenteditable="true" data-ch="Facebook">—</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mcur"></span></span><b data-postcount-cur="Facebook">0</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mlast"></span></span><b data-postcount-last="Facebook">0</b></div>
+          </div>
           <div class="btnrow">
             <a class="btn primary" href="https://www.facebook.com/SkySlope/" target="_blank">Open page ↗</a>
             <a class="btn" href="https://business.facebook.com/latest/home" target="_blank">Business Suite</a>
@@ -537,6 +576,11 @@
           <div class="nm">YouTube</div>
           <div class="role">Long-form home — webinars, demos, Spotlight masters that get clipped for social.</div>
           <div class="cad">Repurposing source</div>
+          <div class="chstats">
+            <div class="cs"><span class="csl">Subscribers</span><b contenteditable="true" data-ch="YouTube">—</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mcur"></span></span><b data-postcount-cur="YouTube">0</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mlast"></span></span><b data-postcount-last="YouTube">0</b></div>
+          </div>
           <div class="btnrow">
             <a class="btn primary" href="https://www.youtube.com/c/SkySlope" target="_blank">Open channel ↗</a>
             <a class="btn" href="https://studio.youtube.com" target="_blank">Studio</a>
@@ -547,6 +591,11 @@
           <div class="nm">X (Twitter)</div>
           <div class="role">Maintenance mode — news distribution; not a strategy priority channel.</div>
           <div class="cad">As-needed</div>
+          <div class="chstats">
+            <div class="cs"><span class="csl">Followers</span><b contenteditable="true" data-ch="X">—</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mcur"></span></span><b data-postcount-cur="X">0</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mlast"></span></span><b data-postcount-last="X">0</b></div>
+          </div>
           <div class="btnrow">
             <a class="btn primary" href="https://twitter.com/SkySlope" target="_blank">Open profile ↗</a>
             <a class="btn" href="https://analytics.twitter.com" target="_blank">Analytics</a>
@@ -557,13 +606,18 @@
           <div class="nm">TikTok</div>
           <div class="role">Phase-2 test per strategy — office-hours format with intentional audience seeding.</div>
           <div class="cad">Go/no-go: Month 3</div>
+          <div class="chstats">
+            <div class="cs"><span class="csl">Followers</span><b contenteditable="true" data-ch="TikTok">—</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mcur"></span></span><b data-postcount-cur="TikTok">0</b></div>
+            <div class="cs"><span class="csl">Posts · <span class="mlast"></span></span><b data-postcount-last="TikTok">0</b></div>
+          </div>
           <div class="btnrow">
             <a class="btn" style="opacity:.6;pointer-events:none">Not launched</a>
           </div>
         </div>
       </div>
 
-      <div class="note-card"><b>Why feeds here aren't live:</b> LinkedIn and Meta don't allow feed pulls into a standalone page without authenticated API apps, so this hub tracks posts through the editable feed below (pre-loaded with the June audit sample — the baseline every new post is measured against). Live numbers stay one click away in each channel's console above; Click Shift updates this feed with each month's posts as part of the reporting rhythm.</div>
+      <div class="note-card"><b>Why feeds here aren't live:</b> LinkedIn and Meta don't allow feed pulls into a standalone page without authenticated API apps, so this hub tracks posts through the editable feed below (pre-loaded with the June audit sample — the baseline every new post is measured against). Live numbers stay one click away in each channel's console above; Click Shift updates this feed with each month's posts as part of the reporting rhythm. <b>Follower counts</b> in the cards above are typed in by hand during the monthly analytics pull (click the number to edit — it saves in this browser); <b>posts-per-month</b> counts itself from the tracker below, so it stays correct as posts get logged.</div>
 
       <h2>Engagement at a glance</h2>
       <div class="tiles" id="tiles2"></div>
@@ -599,10 +653,21 @@
     <!-- ========== CONTENT STUDIO ========== -->
     <section class="view" id="view-studio">
       <h1>Content Studio</h1>
-      <div class="sub">The working backlog across all four pillars. Click any title or caption to edit · reorder with ↑↓ · click the image slot to attach a visual · <b>Copy + Compose</b> copies the caption and opens the right native composer. Edits auto-save in this browser; <b>Export state</b> (below) hands them back for baking in. Before publishing, run the <a href="#" data-goto="voice">voice checklist</a>.</div>
+      <div class="sub">The working backlog across all four pillars. Click any title or caption to edit · reorder with ↑↓ · tick cards to select them for bulk actions · assign each post to a publish day and flip to <b>Calendar view</b> to see the schedule by channel · <b>Copy + Compose</b> copies the caption and opens the right native composer. Edits auto-save in this browser; <b>Export state</b> (below) hands them back for baking in. Before publishing, run the <a href="#" data-goto="voice">voice checklist</a>.</div>
       <div class="tiles" id="studioTiles"></div>
       <div class="filters" id="pillarFilters"></div>
       <div class="filters" id="statusFilters"></div>
+      <div class="filters" id="studioTools"></div>
+      <div id="calWrap" style="display:none">
+        <div class="chart-head" style="margin:6px 0 10px"><h3 id="calLabel"></h3>
+          <button class="tbtn" id="calPrev" aria-label="Previous month">←</button>
+          <button class="tbtn" id="calNext" aria-label="Next month">→</button>
+          <span class="note" id="calNote"></span>
+        </div>
+        <div class="filters" id="calChFilters"></div>
+        <div class="calhead"></div>
+        <div class="calgrid" id="calGrid"></div>
+      </div>
       <div class="plist" id="plist"></div>
       <h2>Handoff</h2>
       <div class="ccard">
@@ -1429,43 +1494,70 @@ try{
   }
 }catch(e){}
 (function(){
-  var activePillar='All', activeStatus='All';
+  var activePillar='All', activeStatus='All', studioView='list';
+  var CAL_COLORS={LinkedIn:'#0a66c2',Instagram:'#dd2a7b',Facebook:'#1877f2',YouTube:'#ff0000',X:'#555555',TikTok:'#4a4a4a'};
   var toast=document.createElement('div');toast.className='toast';document.body.appendChild(toast);
   function showToast(m){toast.textContent=m;toast.style.opacity=1;setTimeout(function(){toast.style.opacity=0},1800);}
+  function visible(p){ return (activePillar==='All'||p.pillar===activePillar)&&(activeStatus==='All'||p.status===activeStatus); }
+  function selCount(){ return ccPosts.filter(function(p){return p.sel;}).length; }
+  function cleanPost(p){ var q={}; for(var k in p){ if(k!=='img'&&k!=='sel') q[k]=p[k]; } q.hasImage=!!p.img; return q; }
 
   function tiles(){
     var t=document.getElementById('studioTiles');
     var by={};STATUSES.forEach(function(s){by[s]=0});
     ccPosts.forEach(function(p){by[p.status]=(by[p.status]||0)+1});
+    var dated=ccPosts.filter(function(p){return p.when;}).length;
     t.innerHTML='<div class="tile"><div class="v">'+ccPosts.length+'</div><div class="l">Posts in backlog</div></div>'+
-      STATUSES.map(function(s){return '<div class="tile"><div class="v">'+(by[s]||0)+'</div><div class="l">'+s+'</div></div>'}).join('');
+      STATUSES.map(function(s){return '<div class="tile"><div class="v">'+(by[s]||0)+'</div><div class="l">'+s+'</div></div>'}).join('')+
+      '<div class="tile"><div class="v">'+dated+'</div><div class="l">Assigned to a day</div></div>';
   }
   function filters(){
     var pf=document.getElementById('pillarFilters');
     pf.innerHTML='<span class="note-strip">Pillar:</span>';
     ['All'].concat(Object.keys(PILLARS)).forEach(function(c){
       var b=document.createElement('button');b.className='fbtn'+(c===activePillar?' on':'');b.textContent=c;
-      b.onclick=function(){activePillar=c;filters();render();};pf.appendChild(b);
+      b.onclick=function(){activePillar=c;filters();sync();};pf.appendChild(b);
     });
     var sf=document.getElementById('statusFilters');
     sf.innerHTML='<span class="note-strip">Status:</span>';
     ['All'].concat(STATUSES).forEach(function(c){
       var b=document.createElement('button');b.className='fbtn'+(c===activeStatus?' on':'');b.textContent=c;
-      b.onclick=function(){activeStatus=c;filters();render();};sf.appendChild(b);
+      b.onclick=function(){activeStatus=c;filters();sync();};sf.appendChild(b);
     });
     var add=document.createElement('button');add.className='fbtn';add.textContent='+ New post';
     add.onclick=function(){
-      ccPosts.unshift({pillar:'Zero-CTA',platform:'Instagram',format:'Static / graphic',status:'Idea',title:'New post idea',cap:'Draft the caption here…',note:''});
-      tiles();render();showToast('New card added to top');
+      ccPosts.unshift({pillar:'Zero-CTA',platform:'Instagram',format:'Static / graphic',status:'Idea',title:'New post idea',cap:'Draft the caption here…',note:'',when:''});
+      studioView='list';sync();showToast('New card added to top');
     };
     sf.appendChild(add);
+  }
+  function toolsBar(){
+    var t=document.getElementById('studioTools'); if(!t) return;
+    t.innerHTML='<span class="note-strip">Bulk:</span>';
+    function btn(label,fn){ var b=document.createElement('button'); b.className='fbtn'; b.textContent=label; b.onclick=fn; t.appendChild(b); return b; }
+    btn(studioView==='list'?'🗓 Calendar view':'📋 List view', function(){ studioView=studioView==='list'?'cal':'list'; sync(); });
+    btn('☑ Select shown', function(){ ccPosts.forEach(function(p){ if(visible(p)) p.sel=true; }); sync(); showToast(selCount()+' selected'); });
+    btn('☐ Clear selection', function(){ ccPosts.forEach(function(p){ delete p.sel; }); sync(); });
+    btn('⤒ Selected to top', function(){
+      var sel=ccPosts.filter(function(p){return p.sel;}), rest=ccPosts.filter(function(p){return !p.sel;});
+      if(!sel.length) return showToast('Nothing selected — tick a card first');
+      ccPosts.length=0; sel.concat(rest).forEach(function(p){ccPosts.push(p);});
+      studioView='list'; sync(); showToast(sel.length+' post(s) moved to top');
+    });
+    btn('⬇ Export selected ('+selCount()+')', function(){
+      var sel=ccPosts.filter(function(p){return p.sel;});
+      if(!sel.length) return showToast('Nothing selected — tick a card first');
+      var ta=document.getElementById('ioArea');
+      ta.value=JSON.stringify({exported:new Date().toISOString(),selection:true,posts:sel.map(cleanPost)},null,2);
+      ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});ta.select();
+      try{document.execCommand('copy');showToast(sel.length+' selected post(s) copied as JSON');}catch(e){showToast('Selected posts shown below — copy manually');}
+    });
   }
   function render(){
     var list=document.getElementById('plist');list.innerHTML='';
     ccPosts.forEach(function(p,i){
-      if(activePillar!=='All'&&p.pillar!==activePillar)return;
-      if(activeStatus!=='All'&&p.status!==activeStatus)return;
-      var d=document.createElement('div');d.className='pcard';
+      if(!visible(p))return;
+      var d=document.createElement('div');d.className='pcard'+(p.sel?' selected':'');d.setAttribute('data-idx',i);
       var col=(PILLARS[p.pillar]||{}).color||'#888';
       var img=document.createElement('div');img.className='img';
       if(p.img){var im=document.createElement('img');im.src=p.img;img.appendChild(im);}
@@ -1489,6 +1581,12 @@ try{
       mid.querySelector('.ptitle').onblur=function(e){p.title=e.target.textContent;};
       mid.querySelector('.pcap').onblur=function(e){p.cap=e.target.innerText;};
       var ctrl=document.createElement('div');ctrl.className='pctrl';
+      var pick=document.createElement('label');pick.className='psel';
+      var cb=document.createElement('input');cb.type='checkbox';cb.checked=!!p.sel;
+      cb.onchange=function(){ if(cb.checked){p.sel=true;}else{delete p.sel;} d.classList.toggle('selected',cb.checked); toolsBar(); };
+      pick.appendChild(cb);pick.appendChild(document.createTextNode('select'));
+      var di=document.createElement('input');di.type='date';di.className='pdate';di.value=p.when||'';di.title='Assign to a publish day (shows in Calendar view)';
+      di.onchange=function(){ p.when=di.value; tiles(); showToast(p.when?('Assigned to '+p.when):'Day cleared'); };
       var ord=document.createElement('div');ord.className='ordr';
       [['↑',-1],['↓',1]].forEach(function(a){
         var b=document.createElement('button');b.className='cbtn';b.textContent=a[0];
@@ -1506,10 +1604,68 @@ try{
       };
       var del=document.createElement('button');del.className='cbtn';del.textContent='✕ remove';
       del.onclick=function(){if(confirm('Remove "'+p.title+'" from the backlog?')){ccPosts.splice(i,1);tiles();render();}};
-      ctrl.appendChild(ord);ctrl.appendChild(top);ctrl.appendChild(push);ctrl.appendChild(del);
+      ctrl.appendChild(pick);ctrl.appendChild(di);ctrl.appendChild(ord);ctrl.appendChild(top);ctrl.appendChild(push);ctrl.appendChild(del);
       d.appendChild(img);d.appendChild(mid);d.appendChild(ctrl);
       list.appendChild(d);
     });
+  }
+  // ----- calendar view -----
+  var calMonth=(function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),1);})();
+  var calCh='All';
+  function isoDate(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function calChFilters(){
+    var f=document.getElementById('calChFilters'); if(!f) return;
+    f.innerHTML='<span class="note-strip">Channel:</span>';
+    var chs={}; ccPosts.forEach(function(p){ chs[p.platform]=1; });
+    ['All'].concat(Object.keys(chs)).forEach(function(c){
+      var b=document.createElement('button'); b.className='fbtn'+(c===calCh?' on':''); b.textContent=c;
+      b.onclick=function(){ calCh=c; calChFilters(); renderCal(); };
+      f.appendChild(b);
+    });
+  }
+  function renderCal(){
+    var g=document.getElementById('calGrid'), lbl=document.getElementById('calLabel'); if(!g) return;
+    var MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    lbl.textContent=MN[calMonth.getMonth()]+' '+calMonth.getFullYear();
+    document.querySelector('#calWrap .calhead').innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(function(w){return '<span>'+w+'</span>';}).join('');
+    g.innerHTML='';
+    var start=new Date(calMonth); start.setDate(1-calMonth.getDay());
+    var todayStr=isoDate(new Date());
+    for(var i=0;i<42;i++){
+      var d=new Date(start); d.setDate(start.getDate()+i);
+      var ds=isoDate(d);
+      var cell=document.createElement('div');
+      cell.className='calday'+(d.getMonth()!==calMonth.getMonth()?' out':'')+(ds===todayStr?' today':'');
+      cell.innerHTML='<span class="dn">'+d.getDate()+'</span>';
+      ccPosts.forEach(function(p,idx){
+        if(p.when!==ds) return;
+        if(calCh!=='All'&&p.platform!==calCh) return;
+        var c=document.createElement('button'); c.className='calchip';
+        c.style.background=CAL_COLORS[p.platform]||'#888';
+        c.textContent=p.title;
+        c.title=p.platform+' · '+p.status+' — '+p.title;
+        c.onclick=function(){
+          studioView='list'; activePillar='All'; activeStatus='All'; filters(); sync();
+          var card=document.querySelector('.pcard[data-idx="'+idx+'"]');
+          if(card){ card.scrollIntoView({behavior:'smooth',block:'center'}); card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash');},1700); }
+        };
+        cell.appendChild(c);
+      });
+      g.appendChild(cell);
+    }
+    var un=ccPosts.filter(function(p){return !p.when;}).length;
+    document.getElementById('calNote').textContent = un ? (un+' post(s) have no day yet — assign dates in list view') : 'Every post has a day';
+  }
+  var cp=document.getElementById('calPrev'), cn=document.getElementById('calNext');
+  if(cp) cp.onclick=function(){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1); renderCal(); };
+  if(cn) cn.onclick=function(){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1); renderCal(); };
+  function sync(){
+    var cw=document.getElementById('calWrap'), pl=document.getElementById('plist');
+    if(cw) cw.style.display = studioView==='cal' ? 'block' : 'none';
+    if(pl) pl.style.display = studioView==='cal' ? 'none' : '';
+    toolsBar();
+    if(studioView==='cal'){ calChFilters(); renderCal(); } else { render(); }
+    tiles();
   }
   // follow table
   var tb=document.querySelector('#followTable tbody');
@@ -1518,16 +1674,16 @@ try{
     tr.innerHTML='<td contenteditable="true"><b>'+f.who+'</b></td><td contenteditable="true">'+f.cat+'</td><td contenteditable="true">'+f.why+'</td><td contenteditable="true">'+f.pf+'</td><td contenteditable="true">'+f.status+'</td>';
     tb.appendChild(tr);
   });
-  // export
+  // export everything
   document.getElementById('exportBtn').onclick=function(){
     var ta=document.getElementById('ioArea');
-    var state={exported:new Date().toISOString(),posts:ccPosts.map(function(p){var q={};for(var k in p){if(k!=='img')q[k]=p[k];}q.hasImage=!!p.img;return q;}),follows:FOLLOWS};
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{})};
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
     try{document.execCommand('copy');showToast('State copied to clipboard — send to Click Shift');}catch(e){showToast('State shown below — copy and send to Click Shift');}
   };
-  tiles();filters();render();
+  filters();sync();
 })();
 </script>
 <script>
@@ -1697,6 +1853,33 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
   tiles(); filters(); render();
 })();
 
+// ---------- Channel stat tiles (followers manual · posts auto-counted) ----------
+var CH_STATS = {};
+(function(){
+  var now=new Date();
+  var cur=new Date(now.getFullYear(), now.getMonth(), 1);
+  var last=new Date(now.getFullYear(), now.getMonth()-1, 1);
+  var MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function ym(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2); }
+  Array.prototype.forEach.call(document.querySelectorAll('.mcur'), function(e){ e.textContent=MN[cur.getMonth()]; });
+  Array.prototype.forEach.call(document.querySelectorAll('.mlast'), function(e){ e.textContent=MN[last.getMonth()]; });
+  function count(chn, prefix){ return POSTS.filter(function(p){ return p.channel===chn && (p.date||'').indexOf(prefix)===0; }).length; }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-postcount-cur]'), function(e){ e.textContent=count(e.getAttribute('data-postcount-cur'), ym(cur)); e.title='Counted from the tracker below'; });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-postcount-last]'), function(e){ e.textContent=count(e.getAttribute('data-postcount-last'), ym(last)); e.title='Counted from the tracker below'; });
+  try{
+    var st=JSON.parse(localStorage.getItem('sshub_state')||'null');
+    if(st&&st.channels) CH_STATS=st.channels;
+  }catch(e){}
+  Array.prototype.forEach.call(document.querySelectorAll('.cs b[contenteditable]'), function(b){
+    var chn=b.getAttribute('data-ch');
+    if(CH_STATS[chn]&&CH_STATS[chn].followers) b.textContent=CH_STATS[chn].followers;
+    b.addEventListener('blur', function(){
+      CH_STATS[chn]=CH_STATS[chn]||{};
+      CH_STATS[chn].followers=b.textContent.trim()||'—';
+    });
+  });
+})();
+
 // ---------- Persistence: auto-save edits to this browser ----------
 (function(){
   var KEY='sshub_state';
@@ -1708,6 +1891,7 @@ var KW_DATA = [{"kw":"all in one real estate brokerage software","vol":20,"int":
       savedAt:new Date().toISOString(),
       posts:ccPosts.map(function(p){ var q={}; for(var k in p){ if(k!=='img') q[k]=p[k]; } return q; }),
       follows:FOLLOWS,
+      channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),
       checks:collectChecks()
     };
   }
