@@ -184,7 +184,7 @@
     .sidebar.open{max-height:80vh;overflow-y:auto}
     .main{padding:20px 16px 60px}
     .search,.toolbar input[type=search],.toolbar select{font-size:16px}
-    .logout{top:auto;bottom:16px;right:14px}
+    .corner{top:auto;bottom:16px;right:14px}
   }
   @media print{.sidebar,.mode-toggle,.tbtn{display:none}.view{display:block!important}.card{break-inside:avoid}}
 
@@ -227,12 +227,14 @@
   .wordbank.avoid span{border-color:rgba(208,59,59,.4)}
   .tagline{font-style:italic;color:var(--muted);font-size:13px;margin:2px 0 8px}
   /* ---- v2.1: logout + sortable headers ---- */
-  .logout{position:fixed;top:14px;right:18px;z-index:70;display:none;font-size:12.5px;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:20px;padding:6px 14px;cursor:pointer;font-family:inherit;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .corner{position:fixed;top:14px;right:18px;z-index:70;display:flex;gap:8px}
+  .logout{display:none;font-size:12.5px;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:20px;padding:6px 14px;cursor:pointer;font-family:inherit;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+  .logout.show{display:inline-block}
   .logout:hover{background:var(--accentwash);color:var(--blue)}
   th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
   th.sortable:hover{color:var(--ink)}
   th .arr{opacity:.55;font-size:9px;margin-left:3px}
-  @media print{.logout{display:none!important}}
+  @media print{.corner{display:none!important}}
   /* ---- v2.2: channel stat tiles ---- */
   .chstats{display:flex;flex-direction:column;margin-top:2px;border:1px solid var(--grid);border-radius:8px;background:var(--page);overflow:hidden}
   .cs{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:8px;padding:5px 10px;min-width:0}
@@ -308,7 +310,10 @@
 </head>
 <body>
 <script>try{var __t=localStorage.getItem('sshub_theme');if(__t)document.documentElement.setAttribute('data-theme',__t);}catch(e){}</script>
-<button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device">⎋ Log out</button>
+<div class="corner">
+  <button class="logout show" id="clearBtn" title="Clear cache — wipes this browser's saved edits (posts, statuses, dates, checklists, follower history) and reloads the latest shipped version">↺ Clear cache</button>
+  <button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device">⎋ Log out</button>
+</div>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ss-logo" viewBox="0 0 153 25">
             <path d="M31.8214059,16.4730902 C32.9218046,17.693805 34.6820338,18.7684539 36.9561134,18.7684539 C39.5966032,18.7684539 40.5259131,17.4255801 40.5259131,16.2532624 C40.5259131,14.5442033 38.6675852,14.0558591 36.5894111,13.5188262 C33.972862,12.8351443 30.9411453,12.0782836 30.9411453,8.75754279 C30.9411453,6.07179526 33.3127396,4.11841832 36.7117425,4.11841832 C39.2299009,4.11841832 41.2105603,4.92425919 42.6531366,6.38900035 L41.2350849,8.19572825 C39.9878301,6.87734459 38.2763583,6.29162306 36.516129,6.29162306 C34.7065585,6.29162306 33.4595957,7.21933133 33.4595957,8.58669519 C33.4595957,10.0517279 35.2201168,10.515582 37.2495336,11.0284164 C39.9145481,11.7362969 43.0198388,12.5666278 43.0198388,16.0340177 C43.0198388,18.5731162 41.2593176,20.941367 36.8580147,20.941367 C33.9486293,20.941367 31.8214059,19.8917914 30.4275869,18.3532884 L31.8214059,16.4730902 Z" id="Fill-1" style="fill:var(--logo-word,#3F5B77)"></path>
             <polygon id="Fill-3" style="fill:var(--logo-word,#3F5B77)" points="50.8090794 13.567544 49.2686964 15.3013847 49.2686964 20.6483897 46.8235281 20.6483897 46.8235281 4.36276536 49.2686964 4.36276536 49.2686964 12.444498 56.090351 4.36276536 59.1223597 4.36276536 52.3985118 12.0783127 59.6601508 20.6483897 56.628434 20.6483897"></polygon>
@@ -2049,11 +2054,28 @@ var FOLLOWS = [
 ];
 // =====================================================================
 // ---- v2 persistence: hydrate saved edits before first render ----
+// MERGE, don't override: your saved edits win for posts you've touched, but
+// posts newly shipped in the file (matched by title) are appended so content
+// updates reach browsers that already have saved state. A post you deleted
+// will reappear after a redeploy unless it's also removed from the shipped
+// defaults — flag deletions to Click Shift via Export state.
 try{
   var __ssState = JSON.parse(localStorage.getItem('sshub_state')||'null');
   if(__ssState){
-    if(Array.isArray(__ssState.posts)&&__ssState.posts.length){ ccPosts.length=0; __ssState.posts.forEach(function(p){ ccPosts.push(p); }); }
-    if(Array.isArray(__ssState.follows)&&__ssState.follows.length){ FOLLOWS.length=0; __ssState.follows.forEach(function(f){ FOLLOWS.push(f); }); }
+    if(Array.isArray(__ssState.posts)&&__ssState.posts.length){
+      var __have={}; __ssState.posts.forEach(function(p){ __have[p.title]=1; });
+      var __shippedNew=ccPosts.filter(function(p){ return !__have[p.title]; });
+      ccPosts.length=0;
+      __ssState.posts.forEach(function(p){ ccPosts.push(p); });
+      __shippedNew.forEach(function(p){ ccPosts.push(p); });
+    }
+    if(Array.isArray(__ssState.follows)&&__ssState.follows.length){
+      var __haveF={}; __ssState.follows.forEach(function(f){ __haveF[f.who]=1; });
+      var __newF=FOLLOWS.filter(function(f){ return !__haveF[f.who]; });
+      FOLLOWS.length=0;
+      __ssState.follows.forEach(function(f){ FOLLOWS.push(f); });
+      __newF.forEach(function(f){ FOLLOWS.push(f); });
+    }
   }
 }catch(e){}
 (function(){
@@ -2518,6 +2540,15 @@ var CH_HISTORY = {}; // {channel:[{d:'YYYY-MM-DD',f:'5,147'},...]} — every rec
       location.reload();
     }
   };
+  // corner Clear cache button — full local reset, shares the suspended flag
+  var cb=document.getElementById('clearBtn');
+  if(cb) cb.onclick=function(){
+    if(confirm('Clear the saved hub data in this browser?\n\nThis wipes local edits — post changes, statuses, publish days, selections, checklists, follow-list rows, and follower history — and reloads the latest shipped version. Export state first if you need to keep anything.')){
+      suspended=true;
+      try{ localStorage.removeItem(KEY); localStorage.removeItem('sshub_view'); }catch(e){}
+      location.reload();
+    }
+  };
   // voice checklist reset (per-post scratch, never persisted)
   var vr=document.getElementById('voiceReset');
   if(vr) vr.onclick=function(){
@@ -2538,7 +2569,7 @@ var CH_HISTORY = {}; // {channel:[{d:'YYYY-MM-DD',f:'5,147'},...]} — every rec
   }
   var onGate=/soldonsocial\.com$/i.test(location.hostname);
   if(!(onGate||gateKeys().length)) return;
-  btn.style.display='block';
+  btn.style.display='inline-block';
   btn.onclick=function(){
     try{ gateKeys().forEach(function(k){ localStorage.removeItem(k); }); }catch(e){}
     location.replace(location.origin+'/?staticrypt_logout');
