@@ -259,6 +259,20 @@
   .acell{display:flex;gap:10px;align-items:center;min-width:240px}
   .thumb{width:56px;height:42px;border-radius:6px;background:var(--accentwash);flex-shrink:0;object-fit:cover;display:inline-block}
   .thumb.dead{visibility:hidden}
+  /* ---- v4.1: mobile fixes ---- */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  @media(max-width:700px){
+    .calscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+    .calhead,.calgrid{min-width:560px}
+    .cbtn{padding:9px 13px;font-size:12.5px}
+    .pcard select.status{font-size:16px;padding:6px 8px}
+    .pcard input.pdate{font-size:16px;max-width:160px;padding:7px 8px}
+    .pcard .psel{font-size:13.5px}
+    .pcard .psel input{width:18px;height:18px}
+    .logout{padding:9px 16px}
+    .main{padding-bottom:120px}
+    .fbtn{padding:7px 15px}
+  }
   .pcap mark.tbd,.pvis mark.tbd{background:rgba(220,53,69,.13);color:var(--crit);font-weight:700;border-radius:3px;padding:0 2px}
   .pvis{font-size:12px;color:var(--ink-2);border:1px dashed var(--baseline);border-radius:8px;padding:5px 9px;margin-top:6px;outline:none}
   .pvis::before{content:"Visual · ";font-weight:700;color:var(--muted)}
@@ -754,8 +768,10 @@
           <span class="note" id="calNote"></span>
         </div>
         <div class="filters" id="calChFilters"></div>
-        <div class="calhead"></div>
-        <div class="calgrid" id="calGrid"></div>
+        <div class="calscroll">
+          <div class="calhead"></div>
+          <div class="calgrid" id="calGrid"></div>
+        </div>
       </div>
       <div class="plist" id="plist"></div>
       <h2>Handoff</h2>
@@ -2605,6 +2621,16 @@ function makeSortable(tbl){
 }
 makeSortable(document.getElementById('followTable'));
 makeSortable(document.getElementById('chartTable2'));
+
+// ---------- Mobile: give every bare table its own horizontal scroller ----------
+Array.prototype.forEach.call(document.querySelectorAll('table'), function(t){
+  var p=t.parentElement;
+  if(!p) return;
+  if(p.classList.contains('tscroll')) return;
+  if(((p.getAttribute&&p.getAttribute('style'))||'').indexOf('overflow-x')>-1) return;
+  var w=document.createElement('div'); w.className='tscroll';
+  p.insertBefore(w,t); w.appendChild(t);
+});
 </script>
 </body>
 </html>
