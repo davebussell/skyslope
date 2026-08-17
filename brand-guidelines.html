@@ -166,7 +166,25 @@ pre .copy:hover{background:var(--ss-blue)}
 .clearspace::after{content:"clear space = height of the “S” mark";position:absolute;bottom:-24px;left:0;font-size:12px;color:var(--ss-gray-500)}
 footer.doc{padding:44px;background:var(--ss-gray-100);border-top:1px solid var(--ss-frost);font-size:13.5px;color:var(--ss-gray-500);line-height:1.6}
 footer.doc .wrap{padding:0}
-@media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:relative;height:auto}.cover h1{font-size:42px}.dd,.logo-stage{grid-template-columns:1fr}.wrap{padding:0 22px}}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.toc-summary{display:none}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  aside{position:relative;height:auto;padding:18px 22px}
+  .cover{padding:56px 0 64px}
+  .cover h1{font-size:42px}
+  .cover .logo-white{width:190px}
+  .dd,.logo-stage{grid-template-columns:1fr}
+  .wrap{padding:0 22px}
+  section.block{padding:48px 0 20px}
+  h2.title{font-size:30px}
+  p.lede{font-size:17px;line-height:1.5}
+  .toc-summary{display:block;font-size:14px;font-weight:700;color:var(--ss-blue);cursor:pointer;padding:6px 0;list-style:none}
+  .toc-summary::-webkit-details-marker{display:none}
+  .toc-summary::after{content:" BE"}
+  #tocbox[open] .toc-summary::after{content:" B4"}
+  aside .logo{margin-bottom:12px}
+}
 @media print{aside{display:none}.layout{grid-template-columns:1fr}}
 </style>
 </head>
@@ -186,7 +204,7 @@ footer.doc .wrap{padding:0}
 <div class="layout">
 <aside>
   <svg class="logo" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
-  <nav id="toc">
+  <details id="tocbox" open><summary class="toc-summary">Contents</summary><nav id="toc">
     <a href="#glance"><span>01</span>Brand at a glance</a>
     <a href="#logo"><span>02</span>Logo</a>
     <a href="#color"><span>03</span>Color</a>
@@ -200,7 +218,7 @@ footer.doc .wrap{padding:0}
     <a href="#a11y"><span>11</span>Accessibility</a>
     <a href="#tokens"><span>12</span>Design tokens</a>
     <a href="#sources"><span>13</span>Sources</a>
-  </nav>
+  </nav></details>
   <div class="aside-foot">Reference edition v1.0<br>Compiled Aug 12, 2026 from skyslope.com<br><br>Unofficial — see §13</div>
 </aside>
 <main>
@@ -770,6 +788,14 @@ const links=[...document.querySelectorAll('#toc a')];
 const secs=links.map(a=>document.querySelector(a.hash)).filter(Boolean);
 const spy=()=>{let cur=secs[0];for(const s of secs){if(s.getBoundingClientRect().top<140)cur=s;}links.forEach(a=>a.classList.toggle('active',a.hash==='#'+cur.id));};
 document.addEventListener('scroll',spy,{passive:true});spy();
+// mobile: every table scrolls in its own container; TOC starts collapsed
+document.querySelectorAll('table').forEach(t=>{
+  const p=t.parentElement;
+  if(p&&p.classList.contains('tscroll'))return;
+  const w=document.createElement('div');w.className='tscroll';
+  p.insertBefore(w,t);w.appendChild(t);
+});
+if(window.innerWidth<900){const tb=document.getElementById('tocbox');if(tb)tb.removeAttribute('open');}
 </script>
 </body>
 </html>
