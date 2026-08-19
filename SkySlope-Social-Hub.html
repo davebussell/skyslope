@@ -318,6 +318,24 @@
   .pvact{padding:10px 14px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--grid)}
   .pvtools{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
   .pvh{margin:26px 0 12px}
+  /* ---- v7: export cart ---- */
+  .cartbar{position:fixed;left:0;right:0;bottom:0;z-index:66;background:var(--surface);border-top:2px solid var(--blue);box-shadow:0 -6px 24px rgba(21,26,39,.16);padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .cb-info{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+  .cb-info>b{font-size:16px;color:var(--blue)}
+  .cb-items{display:flex;gap:6px;flex-wrap:wrap}
+  .cb-chip{font-size:11px;background:var(--accentwash);color:var(--blue);border-radius:999px;padding:3px 8px;display:inline-flex;align-items:center;gap:5px;max-width:180px}
+  .cb-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cb-chip button{border:0;background:none;color:var(--blue);cursor:pointer;font-size:11px;padding:0;font-family:inherit;font-weight:700}
+  .cb-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .pv .pvcard{cursor:pointer;transition:box-shadow .12s ease}
+  .pv.incart .pvcard{box-shadow:0 0 0 3px var(--blue)}
+  .cb-flag{color:var(--blue);font-weight:700}
+  body.cart-open .main{padding-bottom:170px}
+  @media(max-width:820px){
+    body.cart-open .corner{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+    .cartbar{padding-left:12px;padding-right:12px}
+    .cb-chip{max-width:120px}
+  }
   /* ---- v6: performance vs plan ---- */
   .pbar{background:var(--grid);border-radius:999px;height:8px;min-width:90px;max-width:140px;overflow:hidden}
   .pbar i{display:block;height:100%;background:var(--s3);border-radius:999px}
@@ -396,7 +414,7 @@
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-head">
       <div><svg class="sslogo" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
-      <div class="brand">Social Hub<small>Command Center v2 · Operator: Naomi Pinkston · Click Shift · Aug 2026</small></div></div>
+      <div class="brand">Social Hub<small>Command Center v2 · Aug 2026<br>Operator: Naomi Pinkston · <a href="mailto:naomi@soldonsocial.com">naomi@soldonsocial.com</a><br>Backup — PM: Jess · <a href="mailto:jess@clickshift.ca">jess@clickshift.ca</a><br>Backup — Client Manager: Dave · <a href="mailto:dave@clickshift.ca">dave@clickshift.ca</a></small></div></div>
       <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="sidebar">Menu</button>
     </div>
     <input class="search" id="searchBox" type="search" placeholder="Search sections…  ( / )" aria-label="Search sections">
@@ -881,6 +899,15 @@
         <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button></div>
       </div>
       <textarea class="io" id="ioArea" style="display:none" readonly></textarea>
+      <div id="cartBar" class="cartbar" style="display:none">
+        <div class="cb-info"><b id="cbCount">0</b>&nbsp;in export cart<span id="cbItems" class="cb-items"></span></div>
+        <div class="cb-actions">
+          <button class="cbtn push" id="cbLLM" type="button">⬇ LLM tasks</button>
+          <button class="cbtn push" id="cbCSV" type="button">⬇ Excel (CSV)</button>
+          <button class="cbtn" id="cbBriefs" type="button">⧉ Copy briefs</button>
+          <button class="cbtn" id="cbClear" type="button">✕ Clear cart</button>
+        </div>
+      </div>
     </section>
 
     <!-- ========== INSPIRATION ========== -->
@@ -2559,6 +2586,7 @@ try{
       ccPosts.length=0; sel.concat(rest).forEach(function(p){ccPosts.push(p);});
       studioView='list'; syncView(); showToast(sel.length+' post(s) moved to top');
     });
+    if(typeof updateCart==='function') try{ updateCart(); }catch(err){}
     btn('Export selected ('+selCount()+')', function(){
       var sel=ccPosts.filter(function(p){return p.sel;});
       if(!sel.length) return showToast('Nothing selected \u2014 tick a card first');
@@ -2607,8 +2635,10 @@ try{
         var m=PV_META[plat]||PV_META.LinkedIn;
         var d=document.createElement('div'); d.className='pv pv-'+plat.toLowerCase();
         var folded = m.fold && p.cap.length>m.fold;
+        d.setAttribute('data-pvi', ccPosts.indexOf(p));
+        d.className+=(p.sel?' incart':'');
         d.innerHTML=
-          '<div class="pvstrip">'+p.env+' · '+p.status+(p.when?' · '+p.when:'')+' · '+p.pillar+'</div>'+
+          '<div class="pvstrip">'+p.env+' · '+p.status+(p.when?' · '+p.when:'')+' · '+p.pillar+' <span class="cb-flag"'+(p.sel?'':' style="display:none"')+'>✓ in cart</span></div>'+
           '<div class="pvcard">'+
             '<div class="pvhead"><svg class="pvavatar" viewBox="-0.7 -0.2 24.9 25.4" aria-hidden="true"><use href="#ss-mark"/></svg>'+
             '<div><b>'+m.name+'</b><div class="pvsub">'+m.sub+'</div></div></div>'+
@@ -2621,6 +2651,13 @@ try{
           '<div class="pvtools"></div>';
         var more=d.querySelector('.pvmore');
         if(more) more.onclick=function(ev){ ev.preventDefault(); more.style.display='none'; d.querySelector('.pvrest').style.display='inline'; };
+        d.querySelector('.pvcard').addEventListener('click', function(ev){
+          if(ev.target.closest('a,button')) return;
+          if(p.sel){ delete p.sel; } else { p.sel=true; }
+          d.classList.toggle('incart', !!p.sel);
+          var fl=d.querySelector('.cb-flag'); if(fl) fl.style.display=p.sel?'':'none';
+          updateCart();
+        });
         var tools=d.querySelector('.pvtools');
         var b1=document.createElement('button'); b1.className='cbtn push'; b1.textContent='⧉ Copy brief';
         b1.onclick=function(){ copyText(postBrief(p),'Brief copied'); };
@@ -2824,6 +2861,68 @@ try{
     if(studioView==='cal'){ calChFilters(); renderCal(); } else { render(); }
     tiles();
   }
+  // ----- export cart -----
+  function cartItems(){ return ccPosts.filter(function(p){return p.sel;}); }
+  function refreshSelViews(){
+    if(filterFree){
+      Array.prototype.forEach.call(document.querySelectorAll('#plist .pv'), function(d){
+        var idx=parseInt(d.getAttribute('data-pvi'),10);
+        var p=ccPosts[idx]; if(!p) return;
+        d.classList.toggle('incart', !!p.sel);
+        var fl=d.querySelector('.cb-flag'); if(fl) fl.style.display=p.sel?'':'none';
+      });
+    } else { render(); }
+  }
+  function updateCart(){
+    var bar=document.getElementById('cartBar'); if(!bar) return;
+    var items=cartItems();
+    bar.style.display=items.length?'flex':'none';
+    document.body.classList.toggle('cart-open', items.length>0);
+    document.getElementById('cbCount').textContent=items.length;
+    var chips=document.getElementById('cbItems'); chips.innerHTML='';
+    items.slice(0,3).forEach(function(p){
+      var c=document.createElement('span'); c.className='cb-chip';
+      var s=document.createElement('span'); s.textContent=p.title; c.appendChild(s);
+      var x=document.createElement('button'); x.textContent='\u2715'; x.title='Remove from cart';
+      x.onclick=function(){ delete p.sel; updateCart(); refreshSelViews(); toolsBar(); };
+      c.appendChild(x); chips.appendChild(c);
+    });
+    if(items.length>3){
+      var m=document.createElement('span'); m.className='cb-chip'; m.innerHTML='<span>+'+(items.length-3)+' more</span>';
+      chips.appendChild(m);
+    }
+  }
+  function downloadText(txt,fname,msg){
+    var blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=fname;
+    document.body.appendChild(a); a.click(); a.remove();
+    showToast(msg);
+  }
+  var cbL=document.getElementById('cbLLM');
+  if(cbL) cbL.onclick=function(){
+    if(!cartItems().length) return showToast('Cart is empty \u2014 click preview cards or tick list checkboxes');
+    downloadText(buildLLMExport(),'skyslope-llm-tasks-'+new Date().toISOString().slice(0,10)+'.txt','LLM task pack for '+cartItems().length+' cart item(s) downloaded');
+  };
+  var cbC=document.getElementById('cbCSV');
+  if(cbC) cbC.onclick=function(){
+    if(!cartItems().length) return showToast('Cart is empty \u2014 click preview cards or tick list checkboxes');
+    var blob=new Blob([buildContentCSV()],{type:'text/csv;charset=utf-8'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='skyslope-content-cart-'+new Date().toISOString().slice(0,10)+'.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    showToast('Excel export of '+cartItems().length+' cart item(s) downloaded');
+  };
+  var cbB=document.getElementById('cbBriefs');
+  if(cbB) cbB.onclick=function(){
+    var items=cartItems();
+    if(!items.length) return showToast('Cart is empty');
+    copyText(items.map(postBrief).join('\n\n========================================\n\n'), items.length+' brief(s) copied');
+  };
+  var cbX=document.getElementById('cbClear');
+  if(cbX) cbX.onclick=function(){ ccPosts.forEach(function(p){ delete p.sel; }); updateCart(); refreshSelViews(); toolsBar(); };
   // follow table
   var tb=document.querySelector('#followTable tbody');
   FOLLOWS.forEach(function(f){
@@ -2845,7 +2944,9 @@ try{
     var head=['#','Platform','Stage','Status','Publish day','Pillar','Format','Title','Caption / prompt','Visual instructions','Creative type','Creative link','Creative note','Platform rules','Post note','Last action'];
     var rows=[head.map(csvCell).join(',')];
     var eo={copy:0,creative:1,ready:2};
-    var sorted=ccPosts.slice().sort(function(a,b){
+    var pool=ccPosts.filter(function(p){return p.sel;});
+    if(!pool.length) pool=ccPosts.slice();
+    var sorted=pool.sort(function(a,b){
       var pa=PLATFORM_ORDER.indexOf(a.platform), pb=PLATFORM_ORDER.indexOf(b.platform);
       if(pa!==pb) return pa-pb;
       return (eo[a.env]||0)-(eo[b.env]||0);
@@ -3350,7 +3451,8 @@ var GOAL_LEADER='Engagement';
 
 // ---------- Amplify: distribution list + live-post email ----------
 var AMPLIFIERS=[
-  {name:'Naomi Pinkston',email:'naomirpinkston@gmail.com',role:'Operator',channels:'All',status:'Active'},
+  {name:'Naomi Pinkston',email:'naomi@soldonsocial.com',role:'Operator',channels:'All',status:'Active'},
+  {name:'Jess',email:'jess@clickshift.ca',role:'PM (backup)',channels:'All',status:'Active'},
   {name:'Dave Bussell',email:'dave@clickshift.ca',role:'Strategy',channels:'All',status:'Active'},
   {name:'Rob Pedraza',email:'rpedraza@skyslope.com',role:'Client lead',channels:'LinkedIn',status:'Active'},
   {name:'[AE name]',email:'[email]',role:'Sales',channels:'LinkedIn',status:'Invited'},
