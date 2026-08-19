@@ -8,7 +8,20 @@ $ErrorActionPreference = 'Stop'
 $pw = Read-Host 'Site password'
 $env:STATICRYPT_PASSWORD = $pw
 $tmp = Join-Path $env:TEMP ("hub-deploy-" + [guid]::NewGuid())
-npx staticrypt SkySlope-Social-Hub.html brand-guidelines.html -d $tmp -t gate-template.html --short --remember 30 --template-title "SkySlope Social Hub" --template-instructions "Enter the shared team password to open the workspace." --template-placeholder "Team password" --template-button "Enter the Hub" --template-error "That password didn't unlock it - check with Dave and try again." --template-remember "Keep me signed in on this device (30 days)"
+New-Item -ItemType Directory -Force $tmp | Out-Null
+# Inject Supabase sync credentials (kept OUT of git) into the copy that gets
+# encrypted — the public repo keeps an empty BAKED config.
+$hubFile = 'SkySlope-Social-Hub.html'
+if (Test-Path 'sync-config.local.json') {
+  $cfg = Get-Content 'sync-config.local.json' -Raw | ConvertFrom-Json
+  $hub = Get-Content 'SkySlope-Social-Hub.html' -Raw
+  $hub = $hub.Replace("var BAKED={url:'',anonKey:''};", "var BAKED={url:'$($cfg.url)',anonKey:'$($cfg.anonKey)'};")
+  New-Item -ItemType Directory -Force (Join-Path $tmp 'src') | Out-Null
+  $hubFile = Join-Path $tmp 'src\SkySlope-Social-Hub.html'
+  Set-Content -Encoding utf8 $hubFile $hub
+  Write-Host 'Team sync credentials injected into the deploy copy.'
+}
+npx staticrypt $hubFile brand-guidelines.html -d $tmp -t gate-template.html --short --remember 30 --template-title "SkySlope Social Hub" --template-instructions "Enter the shared team password to open the workspace." --template-placeholder "Team password" --template-button "Enter the Hub" --template-error "That password didn't unlock it - check with Dave and try again." --template-remember "Keep me signed in on this device (30 days)"
 if ($LASTEXITCODE -ne 0) { throw 'staticrypt failed' }
 $site = Join-Path $tmp 'site'
 New-Item -ItemType Directory -Force $site | Out-Null

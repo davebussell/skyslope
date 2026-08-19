@@ -2664,7 +2664,8 @@ try{
       var local=localState();
       if(remote===local){ setSt('synced \u00b7 up to date'); return; }
       var rAt=savedAtOf(remote), lAt=savedAtOf(local);
-      if(initial && rAt>lAt){
+      if(initial && !local){
+        // fresh browser, existing team state: adopt it outright
         try{ localStorage.setItem('sshub_state', remote); }catch(err){}
         if(!sessionStorage.getItem('sshub_adopted')){ sessionStorage.setItem('sshub_adopted','1'); location.reload(); }
       } else if(rAt>lAt && !remoteNewerShown && st){
