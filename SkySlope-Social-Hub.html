@@ -284,6 +284,18 @@
   .pvis{font-size:12px;color:var(--ink-2);border:1px dashed var(--baseline);border-radius:8px;padding:5px 9px;margin-top:6px;outline:none}
   .pvis::before{content:"Visual · ";font-weight:700;color:var(--muted)}
   .pvis:focus{border-style:solid;border-color:var(--blue);background:var(--page)}
+  /* ---- v5: three-stage studio + identity + sync ---- */
+  .whoami{margin-top:14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .whoami b{color:var(--ink-2)}
+  #envTabs .fbtn.on{background:var(--blue);color:#fff;border-color:transparent}
+  .crt{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .crt select,.crt input{font-size:12.5px;border:1px solid var(--grid);border-radius:8px;background:var(--page);color:var(--ink-2);padding:6px 8px;font-family:inherit}
+  .crt input.clink{flex:1;min-width:220px}
+  .stamp{font-size:11px;color:var(--muted);margin-top:6px}
+  .rc-cap{background:var(--page);border:1px solid var(--grid);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--ink);white-space:pre-wrap;margin:8px 0}
+  .pcard.pubdone{opacity:.55}
+  .envnote{font-size:12px;color:var(--muted);margin:2px 0 10px}
+  @media(max-width:700px){.crt input.clink{min-width:0;width:100%}.crt select,.crt input{font-size:16px}}
   /* ---- v2.2: studio selection + calendar ---- */
   .psel{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
   .psel input{accent-color:var(--s1);margin:0}
@@ -402,6 +414,7 @@
       <button class="navlink deep sub" data-view="auto" data-terms="automation policy dm bots scheduling rules tos compliance ban">Automation Policy</button>
       <button class="navlink deep sub" data-view="ops" data-terms="weekly rhythm operations roles roadmap naomi cadence monday friday">Weekly Rhythm</button>
     </div>
+    <div class="whoami">Working as <b id="whoName">not set</b> <button class="cbtn" id="whoChange" type="button">change</button></div>
     <button class="mode-toggle" id="modeToggle">◐ Toggle dark mode</button>
   </nav>
 
@@ -768,10 +781,12 @@
     <!-- ========== CONTENT STUDIO ========== -->
     <section class="view" id="view-studio">
       <h1>Content Studio</h1>
-      <div class="sub">The working backlog across all four pillars. Click any title or caption to edit · reorder with ↑↓ · tick cards to select them for bulk actions · assign each post to a publish day and flip to <b>Calendar view</b> to see the schedule by channel · <b>Copy + Compose</b> copies the caption and opens the right native composer. Edits auto-save in this browser; <b>Export state</b> (below) hands them back for baking in. <b style="color:var(--crit)">Red bracketed values are placeholder stats and names</b> — replace them with validated numbers (and remove the brackets) before publishing. Before publishing, run the <a href="#" data-goto="voice">voice checklist</a>.</div>
+      <div class="sub">Three environments, one pipeline: <b>1 · Copy</b> (write and approve the text) → <b>2 · Creative</b> (attach the image or a Drive link for video) → <b>3 · Ready to schedule</b> (the pickup room — grab caption + creative and push live). Every push between stages is stamped with who did it and when. <b style="color:var(--crit)">Red bracketed values are placeholders</b> — validate before publishing, and run the <a href="#" data-goto="voice">voice checklist</a>.</div>
       <div class="tiles" id="studioTiles"></div>
+      <div class="filters" id="envTabs"></div>
       <div class="filters" id="pillarFilters"></div>
       <div class="filters" id="statusFilters"></div>
+      <div class="filters" id="readyFilters"></div>
       <div class="filters" id="studioTools"></div>
       <div id="calWrap" style="display:none">
         <div class="chart-head" style="margin:6px 0 10px"><h3 id="calLabel"></h3>
@@ -790,7 +805,8 @@
       <div class="ccard">
         <b>Push-live workflow (honest version):</b> no standalone page can post directly to LinkedIn/Instagram/Facebook — that requires an authenticated publishing app. <b>Copy + Compose</b> gets you one click away: paste, attach the visual, publish. Phase 2 moves scheduling into Meta Business Suite Planner or Buffer/Metricool with an approval step; this studio stays the drafting + QA layer.
         <div style="margin-top:8px"><b>QA before every publish (the "Johnny" rule):</b> caption matches the visual · names spelled right · zero-CTA posts have NO link (product mention goes in a comment reply) · alt text added.</div>
-        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, statuses, follow-list rows and tracker checkboxes auto-save in this browser. Images are session-only — keep masters in Drive.</span></div>
+        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses and checklists auto-save in this browser. Video and heavy images stay in Google Drive — only links are stored here.</span></div>
+        <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button></div>
       </div>
       <textarea class="io" id="ioArea" style="display:none" readonly></textarea>
     </section>
@@ -2264,123 +2280,270 @@ try{
   }
 }catch(e){}
 (function(){
-  var activePillar='All', activeStatus='All', studioView='list';
+  var activePillar='All', activeStatus='All', activeReady='To schedule', studioView='list';
+  var activeEnv='copy';
+  try{ activeEnv=localStorage.getItem('sshub_env')||'copy'; }catch(err){}
+  var ENVS=[['copy','1 \u00b7 Copy'],['creative','2 \u00b7 Creative'],['ready','3 \u00b7 Ready to schedule']];
+  var COPY_STATUSES=['Idea','Drafted','Approved'];
   var CAL_COLORS={LinkedIn:'#0a66c2',Instagram:'#dd2a7b',Facebook:'#1877f2',YouTube:'#ff0000',X:'#555555',TikTok:'#4a4a4a'};
   var toast=document.createElement('div');toast.className='toast';document.body.appendChild(toast);
-  function showToast(m){toast.textContent=m;toast.style.opacity=1;setTimeout(function(){toast.style.opacity=0},1800);}
-  function visible(p){ return (activePillar==='All'||p.pillar===activePillar)&&(activeStatus==='All'||p.status===activeStatus); }
+  function showToast(m){toast.textContent=m;toast.style.opacity=1;setTimeout(function(){toast.style.opacity=0},2200);}
+  // normalize posts into the three-stage model
+  ccPosts.forEach(function(p){
+    if(!p.env) p.env = (p.status==='Scheduled'||p.status==='Published') ? 'ready' : 'copy';
+    if(!p.creative) p.creative={kind:'',link:'',note:''};
+    if(!p.history) p.history=[];
+  });
+  // ----- identity -----
+  function whoRaw(){ try{return localStorage.getItem('sshub_user')||'';}catch(err){return '';} }
+  function updateWho(){ var el=document.getElementById('whoName'); if(el) el.textContent=whoRaw()||'not set'; }
+  function hubUser(force){
+    var u=whoRaw();
+    if(!u||force){
+      u=(prompt('Your name \u2014 stamped on every stage push so the team knows who moved what:', u||'')||'').trim();
+      if(u){ try{localStorage.setItem('sshub_user',u);}catch(err){} }
+    }
+    updateWho();
+    return u||'Unknown';
+  }
+  var wc=document.getElementById('whoChange');
+  if(wc) wc.onclick=function(){ hubUser(true); };
+  updateWho();
+  function stamp(p,act){ p.history.push({act:act,by:hubUser(),at:new Date().toISOString().slice(0,16).replace('T',' ')}); }
+  function lastStamp(p){ return p.history.length?p.history[p.history.length-1]:null; }
+  function fmtAct(s){
+    var m={'to-creative':'pushed to Creative','to-ready':'pushed to Ready','back-to-copy':'sent back to Copy','back-to-creative':'sent back to Creative','scheduled':'marked scheduled','published':'marked published'};
+    return (m[s.act]||s.act)+' by '+s.by+' \u00b7 '+s.at;
+  }
+  function visible(p){
+    if(p.env!==activeEnv) return false;
+    if(activePillar!=='All'&&p.pillar!==activePillar) return false;
+    if(activeEnv==='copy'&&activeStatus!=='All'&&p.status!==activeStatus) return false;
+    if(activeEnv==='ready'&&activeReady!=='All'){
+      if(activeReady==='To schedule'&&(p.status==='Scheduled'||p.status==='Published')) return false;
+      if(activeReady==='Scheduled'&&p.status!=='Scheduled') return false;
+      if(activeReady==='Published'&&p.status!=='Published') return false;
+    }
+    return true;
+  }
   function selCount(){ return ccPosts.filter(function(p){return p.sel;}).length; }
   function cleanPost(p){ var q={}; for(var k in p){ if(k!=='img'&&k!=='sel') q[k]=p[k]; } q.hasImage=!!p.img; return q; }
+  function envCount(env){ return ccPosts.filter(function(p){return p.env===env;}).length; }
 
   function tiles(){
     var t=document.getElementById('studioTiles');
-    var by={};STATUSES.forEach(function(s){by[s]=0});
-    ccPosts.forEach(function(p){by[p.status]=(by[p.status]||0)+1});
+    var toSched=ccPosts.filter(function(p){return p.env==='ready'&&p.status!=='Scheduled'&&p.status!=='Published';}).length;
+    var sched=ccPosts.filter(function(p){return p.status==='Scheduled';}).length;
+    var pub=ccPosts.filter(function(p){return p.status==='Published';}).length;
     var dated=ccPosts.filter(function(p){return p.when;}).length;
-    t.innerHTML='<div class="tile"><div class="v">'+ccPosts.length+'</div><div class="l">Posts in backlog</div></div>'+
-      STATUSES.map(function(s){return '<div class="tile"><div class="v">'+(by[s]||0)+'</div><div class="l">'+s+'</div></div>'}).join('')+
+    t.innerHTML='<div class="tile"><div class="v">'+ccPosts.length+'</div><div class="l">Posts in pipeline</div></div>'+
+      '<div class="tile"><div class="v">'+envCount('copy')+'</div><div class="l">1 \u00b7 Copy</div></div>'+
+      '<div class="tile"><div class="v">'+envCount('creative')+'</div><div class="l">2 \u00b7 Creative</div></div>'+
+      '<div class="tile"><div class="v">'+toSched+'</div><div class="l">3 \u00b7 Awaiting scheduling</div></div>'+
+      '<div class="tile"><div class="v">'+sched+'</div><div class="l">Scheduled</div></div>'+
+      '<div class="tile"><div class="v">'+pub+'</div><div class="l">Published</div></div>'+
       '<div class="tile"><div class="v">'+dated+'</div><div class="l">Assigned to a day</div></div>';
+  }
+  function envTabs(){
+    var t=document.getElementById('envTabs'); if(!t) return;
+    t.innerHTML='<span class="note-strip">Stage:</span>';
+    ENVS.forEach(function(pair){
+      var b=document.createElement('button');
+      b.className='fbtn'+(pair[0]===activeEnv?' on':'');
+      b.textContent=pair[1]+' ('+envCount(pair[0])+')';
+      b.onclick=function(){ activeEnv=pair[0]; try{localStorage.setItem('sshub_env',activeEnv);}catch(err){} filters(); syncView(); };
+      t.appendChild(b);
+    });
   }
   function filters(){
     var pf=document.getElementById('pillarFilters');
     pf.innerHTML='<span class="note-strip">Pillar:</span>';
     ['All'].concat(Object.keys(PILLARS)).forEach(function(c){
       var b=document.createElement('button');b.className='fbtn'+(c===activePillar?' on':'');b.textContent=c;
-      b.onclick=function(){activePillar=c;filters();sync();};pf.appendChild(b);
+      b.onclick=function(){activePillar=c;filters();syncView();};pf.appendChild(b);
     });
     var sf=document.getElementById('statusFilters');
-    sf.innerHTML='<span class="note-strip">Status:</span>';
-    ['All'].concat(STATUSES).forEach(function(c){
-      var b=document.createElement('button');b.className='fbtn'+(c===activeStatus?' on':'');b.textContent=c;
-      b.onclick=function(){activeStatus=c;filters();sync();};sf.appendChild(b);
-    });
-    var add=document.createElement('button');add.className='fbtn';add.textContent='+ New post';
-    add.onclick=function(){
-      ccPosts.unshift({pillar:'Zero-CTA',platform:'Instagram',format:'Static / graphic',status:'Idea',title:'New post idea',cap:'Draft the caption here…',visual:'Describe the visual: format, composition, colors.',note:'',when:''});
-      studioView='list';sync();showToast('New card added to top');
-    };
-    sf.appendChild(add);
+    sf.innerHTML='';
+    if(activeEnv==='copy'){
+      sf.innerHTML='<span class="note-strip">Status:</span>';
+      ['All'].concat(COPY_STATUSES).forEach(function(c){
+        var b=document.createElement('button');b.className='fbtn'+(c===activeStatus?' on':'');b.textContent=c;
+        b.onclick=function(){activeStatus=c;filters();syncView();};sf.appendChild(b);
+      });
+      var add=document.createElement('button');add.className='fbtn';add.textContent='+ New post';
+      add.onclick=function(){
+        ccPosts.unshift({pillar:'Zero-CTA',platform:'Instagram',format:'Static / graphic',status:'Idea',env:'copy',creative:{kind:'',link:'',note:''},history:[],title:'New post idea',cap:'Draft the caption here\u2026',visual:'Describe the visual: format, composition, colors.',note:'',when:''});
+        studioView='list';syncView();showToast('New card added to top of Copy');
+      };
+      sf.appendChild(add);
+    }
+    var rf=document.getElementById('readyFilters');
+    rf.innerHTML='';
+    if(activeEnv==='ready'){
+      rf.innerHTML='<span class="note-strip">Show:</span>';
+      ['To schedule','Scheduled','Published','All'].forEach(function(c){
+        var b=document.createElement('button');b.className='fbtn'+(c===activeReady?' on':'');b.textContent=c;
+        b.onclick=function(){activeReady=c;filters();syncView();};rf.appendChild(b);
+      });
+    }
   }
   function toolsBar(){
     var t=document.getElementById('studioTools'); if(!t) return;
     t.innerHTML='<span class="note-strip">Bulk:</span>';
     function btn(label,fn){ var b=document.createElement('button'); b.className='fbtn'; b.textContent=label; b.onclick=fn; t.appendChild(b); return b; }
-    btn(studioView==='list'?'Calendar view':'List view', function(){ studioView=studioView==='list'?'cal':'list'; sync(); });
-    btn('Select shown', function(){ ccPosts.forEach(function(p){ if(visible(p)) p.sel=true; }); sync(); showToast(selCount()+' selected'); });
-    btn('Clear selection', function(){ ccPosts.forEach(function(p){ delete p.sel; }); sync(); });
+    btn(studioView==='list'?'Calendar view':'List view', function(){ studioView=studioView==='list'?'cal':'list'; syncView(); });
+    btn('Select shown', function(){ ccPosts.forEach(function(p){ if(visible(p)) p.sel=true; }); syncView(); showToast(selCount()+' selected'); });
+    btn('Clear selection', function(){ ccPosts.forEach(function(p){ delete p.sel; }); syncView(); });
     btn('Selected to top', function(){
       var sel=ccPosts.filter(function(p){return p.sel;}), rest=ccPosts.filter(function(p){return !p.sel;});
-      if(!sel.length) return showToast('Nothing selected — tick a card first');
+      if(!sel.length) return showToast('Nothing selected \u2014 tick a card first');
       ccPosts.length=0; sel.concat(rest).forEach(function(p){ccPosts.push(p);});
-      studioView='list'; sync(); showToast(sel.length+' post(s) moved to top');
+      studioView='list'; syncView(); showToast(sel.length+' post(s) moved to top');
     });
     btn('Export selected ('+selCount()+')', function(){
       var sel=ccPosts.filter(function(p){return p.sel;});
-      if(!sel.length) return showToast('Nothing selected — tick a card first');
+      if(!sel.length) return showToast('Nothing selected \u2014 tick a card first');
       var ta=document.getElementById('ioArea');
       ta.value=JSON.stringify({exported:new Date().toISOString(),selection:true,posts:sel.map(cleanPost)},null,2);
       ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});ta.select();
-      try{document.execCommand('copy');showToast(sel.length+' selected post(s) copied as JSON');}catch(e){showToast('Selected posts shown below — copy manually');}
+      try{document.execCommand('copy');showToast(sel.length+' selected post(s) copied as JSON');}catch(err){showToast('Selected posts shown below \u2014 copy manually');}
     });
   }
+  function capHTML(c){ return (c||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\[([^\]\n]{1,60})\]/g,'<mark class="tbd">[$1]</mark>'); }
+  function copyText(txt,okMsg){
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){showToast(okMsg);},function(){showToast('Copy blocked \u2014 select manually');}); }
+    else showToast('Copy not available \u2014 select manually');
+  }
+  function moveEnv(p,env,act,msg){ p.env=env; delete p.sel; stamp(p,act); tiles(); envTabs(); render(); showToast(msg+' \u2014 stamped as '+lastStamp(p).by); }
+
   function render(){
     var list=document.getElementById('plist');list.innerHTML='';
     ccPosts.forEach(function(p,i){
       if(!visible(p))return;
-      var d=document.createElement('div');d.className='pcard'+(p.sel?' selected':'');d.setAttribute('data-idx',i);
+      var d=document.createElement('div');d.className='pcard'+(p.sel?' selected':'')+(p.status==='Published'?' pubdone':'');d.setAttribute('data-idx',i);
       var col=(PILLARS[p.pillar]||{}).color||'#888';
+      var ls=lastStamp(p);
+      // ---- left: image slot (copy/creative) or creative summary (ready) ----
       var img=document.createElement('div');img.className='img';
-      if(p.img){var im=document.createElement('img');im.src=p.img;img.appendChild(im);}
-      else img.textContent='+ image (click to add)';
-      var fi=document.createElement('input');fi.type='file';fi.accept='image/*';
-      img.onclick=function(){fi.click();};
-      fi.onchange=function(){
-        var f=fi.files[0];if(!f)return;
-        var r=new FileReader();
-        r.onload=function(){p.img=r.result;render();showToast('Image attached (session-only — keep the master in Drive)');};
-        r.readAsDataURL(f);
-      };
+      if(p.env==='ready'){
+        img.textContent=p.creative.kind?('creative: '+p.creative.kind):'no creative';
+        if(p.creative.link){ img.style.cursor='pointer'; img.title='Open creative link'; img.onclick=function(){ window.open(p.creative.link,'_blank'); }; }
+      } else {
+        if(p.img){var im=document.createElement('img');im.src=p.img;img.appendChild(im);}
+        else img.textContent='+ preview image (click \u2014 session only)';
+        var fi=document.createElement('input');fi.type='file';fi.accept='image/*';
+        img.onclick=function(){fi.click();};
+        fi.onchange=function(){
+          var f=fi.files[0];if(!f)return;
+          var r=new FileReader();
+          r.onload=function(){p.img=r.result;render();showToast('Preview attached (session-only \u2014 the real asset lives in Drive)');};
+          r.readAsDataURL(f);
+        };
+      }
+      // ---- middle ----
       var mid=document.createElement('div');
-      var sel='<select class="status">'+STATUSES.map(function(s){return '<option'+(s===p.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select>';
-      function capHTML(c){ return (c||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\[([^\]\n]{1,60})\]/g,'<mark class="tbd">[$1]</mark>'); }
-      mid.innerHTML='<div class="pmeta"><span class="pill" style="background:'+col+'">'+p.pillar+'</span>'+
-        '<span class="fmt">'+p.platform+'</span><span class="fmt">'+p.format+'</span>'+sel+'</div>'+
-        '<div class="ptitle" contenteditable="true">'+p.title+'</div>'+
-        '<div class="pcap" contenteditable="true">'+capHTML(p.cap)+'</div>'+
-        '<div class="pvis" contenteditable="true" title="What the visual for this post should be">'+capHTML(p.visual||'')+'</div>'+
-        (p.note?'<div class="cnote">Note: '+p.note+'</div>':'');
-      mid.querySelector('select').onchange=function(e){p.status=e.target.value;tiles();showToast('Status → '+p.status);};
-      mid.querySelector('.ptitle').onblur=function(e){p.title=e.target.textContent;};
-      mid.querySelector('.pcap').onblur=function(e){p.cap=e.target.innerText;};
-      mid.querySelector('.pvis').onblur=function(e){p.visual=e.target.innerText.trim();};
+      var metaBits='<div class="pmeta"><span class="pill" style="background:'+col+'">'+p.pillar+'</span>'+
+        '<span class="fmt">'+p.platform+'</span><span class="fmt">'+p.format+'</span>';
+      if(p.env==='copy'){
+        metaBits+='<select class="status">'+COPY_STATUSES.map(function(st){return '<option'+(st===p.status?' selected':'')+'>'+st+'</option>';}).join('')+'</select>';
+      } else if(p.env==='ready'){
+        metaBits+='<span class="fmt">'+(p.status==='Scheduled'?'\u23f0 Scheduled':p.status==='Published'?'\u2713 Published':'awaiting scheduling')+'</span>';
+        metaBits+=(p.when?'<span class="fmt">'+p.when+'</span>':'<span class="fmt" style="color:var(--crit)">no day assigned</span>');
+      }
+      metaBits+='</div>';
+      if(p.env==='ready'){
+        mid.innerHTML=metaBits+
+          '<div class="ptitle">'+p.title+'</div>'+
+          '<div class="rc-cap">'+capHTML(p.cap)+'</div>'+
+          (p.creative.note?'<div class="cnote">Creative note: '+p.creative.note+'</div>':'')+
+          (ls?'<div class="stamp">'+fmtAct(ls)+'</div>':'');
+      } else if(p.env==='creative'){
+        mid.innerHTML=metaBits+
+          '<div class="ptitle" contenteditable="true">'+p.title+'</div>'+
+          '<div class="pvis" contenteditable="true" title="The creative brief for this post">'+capHTML(p.visual||'')+'</div>'+
+          '<div class="pcap" contenteditable="true">'+capHTML(p.cap)+'</div>'+
+          '<div class="crt">'+
+            '<select class="ckind"><option value=""'+(p.creative.kind===''?' selected':'')+'>creative type\u2026</option><option value="image"'+(p.creative.kind==='image'?' selected':'')+'>Image</option><option value="video"'+(p.creative.kind==='video'?' selected':'')+'>Video (Drive link)</option></select>'+
+            '<input class="clink" type="url" placeholder="Google Drive / asset link \u2014 required to push onward" value="'+(p.creative.link||'').replace(/"/g,'&quot;')+'">'+
+            '<input class="cnote2" type="text" placeholder="creative note (optional)" value="'+(p.creative.note||'').replace(/"/g,'&quot;')+'">'+
+          '</div>'+
+          (p.note?'<div class="cnote">Note: '+p.note+'</div>':'')+
+          (ls?'<div class="stamp">'+fmtAct(ls)+'</div>':'');
+        mid.querySelector('.ckind').onchange=function(ev){ p.creative.kind=ev.target.value; };
+        mid.querySelector('.clink').onchange=function(ev){ p.creative.link=ev.target.value.trim(); };
+        mid.querySelector('.cnote2').onchange=function(ev){ p.creative.note=ev.target.value.trim(); };
+        mid.querySelector('.ptitle').onblur=function(ev){p.title=ev.target.textContent;};
+        mid.querySelector('.pcap').onblur=function(ev){p.cap=ev.target.innerText;};
+        mid.querySelector('.pvis').onblur=function(ev){p.visual=ev.target.innerText.trim();};
+      } else {
+        mid.innerHTML=metaBits+
+          '<div class="ptitle" contenteditable="true">'+p.title+'</div>'+
+          '<div class="pcap" contenteditable="true">'+capHTML(p.cap)+'</div>'+
+          '<div class="pvis" contenteditable="true" title="What the visual for this post should be">'+capHTML(p.visual||'')+'</div>'+
+          (p.note?'<div class="cnote">Note: '+p.note+'</div>':'')+
+          (ls?'<div class="stamp">'+fmtAct(ls)+'</div>':'');
+        mid.querySelector('select').onchange=function(ev){p.status=ev.target.value;tiles();showToast('Status \u2192 '+p.status);};
+        mid.querySelector('.ptitle').onblur=function(ev){p.title=ev.target.textContent;};
+        mid.querySelector('.pcap').onblur=function(ev){p.cap=ev.target.innerText;};
+        mid.querySelector('.pvis').onblur=function(ev){p.visual=ev.target.innerText.trim();};
+      }
+      // ---- right: controls ----
       var ctrl=document.createElement('div');ctrl.className='pctrl';
       var pick=document.createElement('label');pick.className='psel';
       var cb=document.createElement('input');cb.type='checkbox';cb.checked=!!p.sel;
       cb.onchange=function(){ if(cb.checked){p.sel=true;}else{delete p.sel;} d.classList.toggle('selected',cb.checked); toolsBar(); };
       pick.appendChild(cb);pick.appendChild(document.createTextNode('select'));
-      var di=document.createElement('input');di.type='date';di.className='pdate';di.value=p.when||'';di.title='Assign to a publish day (shows in Calendar view)';
+      ctrl.appendChild(pick);
+      var di=document.createElement('input');di.type='date';di.className='pdate';di.value=p.when||'';di.title='Publish day (shows in Calendar view)';
       di.onchange=function(){ p.when=di.value; tiles(); showToast(p.when?('Assigned to '+p.when):'Day cleared'); };
-      var ord=document.createElement('div');ord.className='ordr';
-      [['↑',-1],['↓',1]].forEach(function(a){
-        var b=document.createElement('button');b.className='cbtn';b.textContent=a[0];
-        b.onclick=function(){
-          var j=i+a[1];if(j<0||j>=ccPosts.length)return;
-          var t=ccPosts[i];ccPosts[i]=ccPosts[j];ccPosts[j]=t;render();
-        };ord.appendChild(b);
-      });
-      var top=document.createElement('button');top.className='cbtn';top.textContent='⤒ top';
-      top.onclick=function(){ccPosts.splice(i,1);ccPosts.unshift(p);render();};
-      var push=document.createElement('button');push.className='cbtn push';push.textContent='Copy + Compose ↗';
-      push.onclick=function(){
-        navigator.clipboard.writeText(p.cap).then(function(){showToast('Caption copied — composer opening');},function(){showToast('Copy blocked — select text manually');});
-        window.open(COMPOSERS[p.platform]||COMPOSERS['LinkedIn'],'_blank');
-      };
-      var del=document.createElement('button');del.className='cbtn';del.textContent='✕ remove';
-      del.onclick=function(){if(confirm('Remove "'+p.title+'" from the backlog?')){ccPosts.splice(i,1);tiles();render();}};
-      ctrl.appendChild(pick);ctrl.appendChild(di);ctrl.appendChild(ord);ctrl.appendChild(top);ctrl.appendChild(push);ctrl.appendChild(del);
+      ctrl.appendChild(di);
+      function cbtn(label,cls,fn){ var b=document.createElement('button'); b.className='cbtn'+(cls?' '+cls:''); b.textContent=label; b.onclick=fn; ctrl.appendChild(b); return b; }
+      if(p.env==='copy'){
+        var ord=document.createElement('div');ord.className='ordr';
+        [['\u2191',-1],['\u2193',1]].forEach(function(a){
+          var b=document.createElement('button');b.className='cbtn';b.textContent=a[0];
+          b.onclick=function(){ var j=i+a[1];if(j<0||j>=ccPosts.length)return; var tmp=ccPosts[i];ccPosts[i]=ccPosts[j];ccPosts[j]=tmp;render(); };
+          ord.appendChild(b);
+        });
+        ctrl.appendChild(ord);
+        cbtn('\u2192 Push to Creative','push',function(){
+          if(p.status!=='Approved'){ showToast('Set status to Approved first \u2014 only approved copy moves on'); return; }
+          moveEnv(p,'creative','to-creative','"'+p.title.slice(0,32)+'" \u2192 Creative');
+        });
+        cbtn('\u2715 remove','',function(){ if(confirm('Remove "'+p.title+'" from the pipeline?')){ccPosts.splice(i,1);tiles();envTabs();render();} });
+      } else if(p.env==='creative'){
+        cbtn('\u2192 Push to Ready','push',function(){
+          if(!p.creative.link){ showToast('Add the Drive/asset link first \u2014 stage 3 needs a collectible creative'); return; }
+          if(!p.creative.kind){ p.creative.kind = /video|mp4|reel/i.test(p.creative.link)?'video':'image'; }
+          moveEnv(p,'ready','to-ready','"'+p.title.slice(0,32)+'" \u2192 Ready to schedule');
+        });
+        cbtn('\u2190 Back to Copy','',function(){ moveEnv(p,'copy','back-to-copy','Sent back to Copy'); });
+      } else {
+        cbtn('\u29c9 Copy caption','push',function(){ copyText(p.cap,'Caption copied'); });
+        if(p.creative.link) cbtn('\u2197 Open creative','',function(){ window.open(p.creative.link,'_blank'); });
+        cbtn('Copy + Compose \u2197','',function(){
+          copyText(p.cap,'Caption copied \u2014 composer opening');
+          window.open(COMPOSERS[p.platform]||COMPOSERS['LinkedIn'],'_blank');
+        });
+        if(p.status!=='Scheduled'&&p.status!=='Published'){
+          cbtn('\u23f0 Mark scheduled','',function(){ p.status='Scheduled'; stamp(p,'scheduled'); tiles(); render(); showToast('Scheduled \u2014 stamped as '+lastStamp(p).by); });
+        }
+        if(p.status!=='Published'){
+          cbtn('\u2713 Mark published','',function(){ p.status='Published'; stamp(p,'published'); tiles(); render(); showToast('Published \u2014 stamped as '+lastStamp(p).by); });
+        }
+        cbtn('\u2190 Back to Creative','',function(){ p.status='Approved'; moveEnv(p,'creative','back-to-creative','Sent back to Creative'); });
+      }
       d.appendChild(img);d.appendChild(mid);d.appendChild(ctrl);
       list.appendChild(d);
     });
+    var list2=document.getElementById('plist');
+    if(!list2.children.length){
+      var empty=document.createElement('div'); empty.className='envnote';
+      empty.textContent = activeEnv==='copy' ? 'Nothing here \u2014 add a post or loosen the filters.' :
+        activeEnv==='creative' ? 'Nothing awaiting creative \u2014 approve copy in stage 1 and push it here.' :
+        'Nothing ready to schedule \u2014 attach creative in stage 2 and push it here.';
+      list2.appendChild(empty);
+    }
   }
   // ----- calendar view -----
   var calMonth=(function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),1);})();
@@ -2415,10 +2578,13 @@ try{
         if(calCh!=='All'&&p.platform!==calCh) return;
         var c=document.createElement('button'); c.className='calchip';
         c.style.background=CAL_COLORS[p.platform]||'#888';
-        c.textContent=p.title;
-        c.title=p.platform+' · '+p.status+' — '+p.title;
+        var envN = p.env==='copy'?'1':p.env==='creative'?'2':'3';
+        c.textContent='['+envN+'] '+p.title;
+        c.title=p.platform+' \u00b7 stage '+envN+' \u00b7 '+p.status+' \u2014 '+p.title;
         c.onclick=function(){
-          studioView='list'; activePillar='All'; activeStatus='All'; filters(); sync();
+          studioView='list'; activeEnv=p.env; activePillar='All'; activeStatus='All'; activeReady='All';
+          try{localStorage.setItem('sshub_env',activeEnv);}catch(err){}
+          filters(); syncView();
           var card=document.querySelector('.pcard[data-idx="'+idx+'"]');
           if(card){ card.scrollIntoView({behavior:'smooth',block:'center'}); card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash');},1700); }
         };
@@ -2427,16 +2593,16 @@ try{
       g.appendChild(cell);
     }
     var un=ccPosts.filter(function(p){return !p.when;}).length;
-    document.getElementById('calNote').textContent = un ? (un+' post(s) have no day yet — assign dates in list view') : 'Every post has a day';
+    document.getElementById('calNote').textContent = un ? (un+' post(s) have no day yet \u2014 assign dates in list view') : 'Every post has a day';
   }
   var cp=document.getElementById('calPrev'), cn=document.getElementById('calNext');
   if(cp) cp.onclick=function(){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1); renderCal(); };
   if(cn) cn.onclick=function(){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1); renderCal(); };
-  function sync(){
+  function syncView(){
     var cw=document.getElementById('calWrap'), pl=document.getElementById('plist');
     if(cw) cw.style.display = studioView==='cal' ? 'block' : 'none';
     if(pl) pl.style.display = studioView==='cal' ? 'none' : '';
-    toolsBar();
+    envTabs(); toolsBar();
     if(studioView==='cal'){ calChFilters(); renderCal(); } else { render(); }
     tiles();
   }
@@ -2454,9 +2620,76 @@ try{
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
-    try{document.execCommand('copy');showToast('State copied to clipboard — send to Click Shift');}catch(e){showToast('State shown below — copy and send to Click Shift');}
+    try{document.execCommand('copy');showToast('State copied to clipboard \u2014 send to Click Shift');}catch(err){showToast('State shown below \u2014 copy and send to Click Shift');}
   };
-  filters();sync();
+  filters();syncView();
+})();
+
+// ---------- CloudSync: shared team state via Supabase (inactive until configured) ----------
+(function(){
+  var cfg=null;
+  try{ cfg=JSON.parse(localStorage.getItem('sshub_sync')||'null'); }catch(err){}
+  var BAKED={url:'',anonKey:''}; // Click Shift can bake project credentials here at deploy time
+  cfg=cfg||BAKED;
+  var st=document.getElementById('syncStatus');
+  var btn=document.getElementById('syncConfig');
+  function setSt(t){ if(st) st.textContent=t; }
+  if(btn) btn.onclick=function(){
+    var u=prompt('Supabase project URL (https://xxxx.supabase.co) \u2014 leave empty to disconnect:', cfg.url||'');
+    if(u===null) return;
+    u=u.trim();
+    if(!u){ try{localStorage.removeItem('sshub_sync');}catch(err){} location.reload(); return; }
+    var k=prompt('Supabase anon public key:', cfg.anonKey||'');
+    if(k===null) return;
+    try{ localStorage.setItem('sshub_sync', JSON.stringify({url:u,anonKey:k.trim()})); }catch(err){}
+    location.reload();
+  };
+  if(!cfg.url||!cfg.anonKey){
+    setSt('local only \u2014 edits live in this browser; Export state to hand off, or connect Supabase for live team sync');
+    return;
+  }
+  var H={'apikey':cfg.anonKey,'Authorization':'Bearer '+cfg.anonKey,'Content-Type':'application/json'};
+  var EP=cfg.url.replace(/\/+$/,'')+'/rest/v1/hub_state';
+  function localState(){ try{return localStorage.getItem('sshub_state');}catch(err){return null;} }
+  var lastPushed=localState(), remoteNewerShown=false;
+  function savedAtOf(s){ try{ return (JSON.parse(s||'null')||{}).savedAt||''; }catch(err){ return ''; } }
+  function pull(initial){
+    fetch(EP+'?id=eq.1&select=state,updated_at',{headers:H}).then(function(r){
+      if(!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function(rows){
+      var row=rows&&rows[0];
+      if(!row||!row.state){ setSt('connected \u2014 no team state yet; your next edit seeds it'); return; }
+      var remote=JSON.stringify(row.state);
+      var local=localState();
+      if(remote===local){ setSt('synced \u00b7 up to date'); return; }
+      var rAt=savedAtOf(remote), lAt=savedAtOf(local);
+      if(initial && rAt>lAt){
+        try{ localStorage.setItem('sshub_state', remote); }catch(err){}
+        if(!sessionStorage.getItem('sshub_adopted')){ sessionStorage.setItem('sshub_adopted','1'); location.reload(); }
+      } else if(rAt>lAt && !remoteNewerShown && st){
+        remoteNewerShown=true;
+        setSt('a newer team version exists \u2014 ');
+        var b=document.createElement('button'); b.className='cbtn'; b.textContent='\u21bb Load team version';
+        b.onclick=function(){ try{ localStorage.setItem('sshub_state', remote); }catch(err){} location.reload(); };
+        st.appendChild(b);
+      }
+    }).catch(function(){ setSt('sync error \u2014 check connection and keys'); });
+  }
+  function push(){
+    var cur=localState(); if(!cur||cur===lastPushed) return;
+    var body; try{ body=JSON.parse(cur); }catch(err){ return; }
+    fetch(EP,{method:'POST',headers:Object.assign({'Prefer':'resolution=merge-duplicates'},H),body:JSON.stringify([{id:1,state:body,updated_at:new Date().toISOString()}])})
+      .then(function(r){
+        if(r.ok){ lastPushed=cur; setSt('synced \u00b7 '+new Date().toLocaleTimeString()); }
+        else { setSt('sync push failed ('+r.status+') \u2014 check table + policies'); }
+      })
+      .catch(function(){ setSt('sync error \u2014 offline?'); });
+  }
+  setSt('connecting\u2026');
+  pull(true);
+  setInterval(function(){ pull(false); }, 45000);
+  setInterval(push, 6000);
 })();
 </script>
 <script>
