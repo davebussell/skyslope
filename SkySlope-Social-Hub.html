@@ -327,6 +327,7 @@
   .tgt:focus{background:var(--surface);box-shadow:0 0 0 1px var(--blue)}
   .tgt-l{font-size:10px;color:var(--muted);margin-left:3px}
   #perfTable td{vertical-align:middle}
+  .ccard.lead{border:1.5px solid var(--s3);box-shadow:0 0 0 1px rgba(40,167,69,.18)}
   /* ---- v2.2: studio selection + calendar ---- */
   .psel{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
   .psel input{accent-color:var(--s1);margin:0}
@@ -462,12 +463,23 @@
         <div class="body"><p>The June audit proved SkySlope's channels are all ask and no give. The keyword data shows competitors own the research narrative — Paperless Pipeline owns the TC audience, Dotloop owns brand gravity — while SkySlope wins AI overviews on broker terms. The review platforms show a validation gap (3.9★ Capterra, half the review volume of rivals). The answer: publish the industry's only proprietary transaction data (the give nobody else can copy), deliver it through the personas' actual channels, activate 900K users + sales + execs as distribution, and fix the review surface in parallel. Awareness → credibility → referral, each stage reinforcing the next.</p></div>
       </details>
 
-      <h2>Performance vs plan</h2>
-      <p class="note-strip" style="margin:0 0 8px">Live follower counts from the growth log · <b>monthly growth targets are Click Shift estimates pending Rob-confirmed commitments</b> (no numeric follower targets exist in the email record yet) — click a target to set the committed number; it saves and syncs to the team. Engagement = avg likes + comments per tracked post; the committed target from Doc 2: above the June baseline within 6 weeks.</p>
+      <h2>The goal stack</h2>
+      <p class="note-strip" style="margin:0 0 10px">Four layers, one loop: Visibility → Engagement → Conversion → Retention — advocacy restarts visibility. <b>Pick one leading priority per quarter; measure the others, feed the leader.</b> Framework: <a href="https://soldonsocial.com/insights/social-media-goal-stack/" target="_blank" rel="noopener">the Social Media Goal Stack</a>.</p>
+      <div class="note-card" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b>Leading priority this quarter:</b>
+        <select id="goalLeader" class="status" style="font-size:13px;padding:4px 8px">
+          <option>Engagement</option><option>Visibility</option><option>Conversion</option><option>Retention</option>
+        </select>
+        <span class="note-strip">Q3 2026 default: Engagement — Doc 1 makes engagement-vs-June-baseline the success metric. Re-score and re-select at quarter end (saves &amp; syncs).</span>
+      </div>
+      <div class="grid2" id="stackCards"></div>
+
+      <h2 style="font-size:16px">Visibility detail — follower growth vs targets</h2>
+      <p class="note-strip" style="margin:0 0 8px">Live counts from the growth log · <b>monthly targets are Click Shift estimates pending Rob-confirmed commitments</b> (none exist in the email record yet) — click a target to set the committed number; goal format: direction + metric + baseline + target + deadline + owner.</p>
       <div style="overflow-x:auto"><table id="perfTable">
         <thead><tr><th>Channel</th><th>Followers now</th><th>Growth this month</th><th>Monthly target</th><th>Progress</th><th>Eng./post this month</th><th>June baseline</th></tr></thead>
         <tbody></tbody>
       </table></div>
+      <div class="note-card"><b>Operating cadence (per the framework):</b> Weekly, 15 min — leading indicators only (fold into the Friday tracker session) · Monthly, 1 hr — lagging metrics + content analysis (the analytics pull) · Quarterly — score every goal, reassess the constraint, re-pick the leader.</div>
 
       <div class="tiles">
         <div class="tile"><div class="v">900K+</div><div class="l">Real estate professionals on SkySlope</div></div>
@@ -2764,7 +2776,7 @@ try{
   // export everything
   document.getElementById('exportBtn').onclick=function(){
     var ta=document.getElementById('ioArea');
-    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{})};
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement')};
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
@@ -3074,6 +3086,7 @@ var CH_HISTORY = {}; // {channel:[{d:'YYYY-MM-DD',f:'5,147'},...]} — every rec
 
 // ---------- Overview: performance vs plan ----------
 var GROWTH_TARGETS={LinkedIn:150,Instagram:120,Facebook:80,YouTube:30,X:20};
+var GOAL_LEADER='Engagement';
 (function(){
   var tb=document.querySelector('#perfTable tbody'); if(!tb) return;
   try{
@@ -3124,6 +3137,58 @@ var GROWTH_TARGETS={LinkedIn:150,Instagram:120,Facebook:80,YouTube:30,X:20};
     });
   }
   renderPerf();
+  // ----- goal stack cards -----
+  try{
+    var st2=JSON.parse(localStorage.getItem('sshub_state')||'null');
+    if(st2&&st2.goalLeader) GOAL_LEADER=st2.goalLeader;
+  }catch(e){}
+  function renderStack(){
+    var el=document.getElementById('stackCards'); if(!el) return;
+    var baseAll=engAvg(function(p){return p.baseline;});
+    var curAll=engAvg(function(p){return (p.date||'').indexOf(ym)===0;});
+    var cBase=(function(){ var ps=POSTS.filter(function(p){return p.baseline;}); if(!ps.length) return null; return ps.reduce(function(a,p){return a+(p.comments||0);},0)/ps.length; })();
+    var stories=(typeof ccPosts!=='undefined')?ccPosts.filter(function(p){return p.pillar==='Testimonial'&&p.status==='Published';}).length:0;
+    var dTot=0, any=false;
+    CHS.forEach(function(ch){ var fi=followerInfo(ch); if(fi&&fi.delta!=null){ dTot+=fi.delta; any=true; } });
+    function r1(x){ return x==null?'—':String(Math.round(x*10)/10); }
+    var L=[
+      {name:'Visibility', role:'Audience discovery',
+       lead:'Quality follower growth: '+(any?((dTot>=0?'+':'')+dTot+' this month'):'—')+' — detail below',
+       lag:'Branded search + share of voice — Semrush snapshot: 13 AI-overview #1s; refresh quarterly',
+       goal:'Grow followers vs the monthly targets below by Sep 30 — owner: Dave',
+       guard:'Guardrail: growth from named customer/prospect accounts only — never bots (Doc 2 §6).'},
+      {name:'Engagement', role:'Relationship building',
+       lead:'Comments weighted over likes — June baseline comments/post: '+r1(cBase)+' · target: comments > 0 on 80% of posts within 90 days',
+       lag:'Avg engagement/post: '+r1(curAll)+' this month vs '+r1(baseAll)+' June baseline',
+       goal:'Lift avg engagement/post above the June baseline ('+r1(baseAll)+') within 6 weeks — owner: Naomi',
+       guard:'Guardrail: every comment and DM answered inside 24h while volume scales.'},
+      {name:'Conversion', role:'Customer acquisition',
+       lead:'Profile visits + link clicks — log during the monthly analytics pull',
+       lag:'UTM-tracked inquiries + demo requests — reported in the invoice rhythm',
+       goal:'Establish the UTM baseline this quarter; set the numeric target at the Q4 re-score — owner: Dave',
+       guard:'Guardrail: zero-CTA posts stay zero-CTA — conversion never leaks into the relatable pillar.'},
+      {name:'Retention', role:'Loyalty & advocacy',
+       lead:'Customer stories published: '+stories+' — the Spotlight flywheel',
+       lag:'+40 fresh G2/Capterra reviews within 6 months (Doc 2 committed target)',
+       goal:'2 Spotlights per month; review-generation program green-lit in the Action Tracker — owner: Rob + CS',
+       guard:'Guardrail: never unfollow or ignore a customer account.'}
+    ];
+    el.innerHTML='';
+    L.forEach(function(x){
+      var c=document.createElement('div'); c.className='ccard'+(x.name===GOAL_LEADER?' lead':'');
+      c.innerHTML='<h3>'+x.name+(x.name===GOAL_LEADER?' <span class="fmt" style="background:var(--s3);color:#fff">LEADING</span>':'')+'</h3>'+
+        '<div class="note-strip" style="margin:0 0 6px">'+x.role+'</div>'+
+        '<ul style="margin:6px 0"><li><b>Leading:</b> '+x.lead+'</li><li><b>Lagging:</b> '+x.lag+'</li></ul>'+
+        '<div class="stamp"><b>Q3 goal:</b> '+x.goal+'</div>'+
+        '<div class="stamp">'+x.guard+'</div>';
+      el.appendChild(c);
+    });
+    var sel=document.getElementById('goalLeader');
+    if(sel&&sel.value!==GOAL_LEADER) sel.value=GOAL_LEADER;
+  }
+  var gl=document.getElementById('goalLeader');
+  if(gl) gl.onchange=function(){ GOAL_LEADER=gl.value; renderStack(); };
+  renderStack();
 })();
 
 // ---------- Persistence: auto-save edits to this browser ----------
@@ -3146,6 +3211,7 @@ var GROWTH_TARGETS={LinkedIn:150,Instagram:120,Facebook:80,YouTube:30,X:20};
       channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),
       channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),
       targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),
+      goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),
       checks:collectChecks()
     };
   }
