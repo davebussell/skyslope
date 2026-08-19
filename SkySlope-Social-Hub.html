@@ -804,6 +804,21 @@
         <tbody></tbody>
       </table></div>
 
+      <h2>Data intake</h2>
+      <div class="note-card">Fill the manual feeds by pasting CSV rows (or choosing a .csv file). Simple comma-separated values, no quotes needed; one row per line, header row optional. After a successful import the page saves, syncs to the team, and reloads with the data merged everywhere (growth log, charts, performance dashboard).</div>
+      <div class="grid2">
+        <div class="ccard"><h3>Follower counts</h3>
+          <p class="note-strip">Columns: channel, date, followers — e.g. <code>LinkedIn,2026-09-01,5320</code></p>
+          <textarea id="intakeF" class="io" style="height:80px" placeholder="LinkedIn,2026-09-01,5320&#10;Instagram,2026-09-01,2050"></textarea>
+          <div class="filters" style="margin-top:8px"><input type="file" id="intakeFFile" accept=".csv,text/csv" style="font-size:12px;color:var(--muted)"><button class="fbtn" id="intakeFBtn">Import follower CSV</button></div>
+        </div>
+        <div class="ccard"><h3>Post engagement</h3>
+          <p class="note-strip">Columns: date, channel, format, title, likes, comments, shares — e.g. <code>2026-08-20,Instagram,Video testimonial,Spotlight NextHome,14,3,2</code></p>
+          <textarea id="intakeP" class="io" style="height:80px" placeholder="2026-08-20,Instagram,Static / graphic,Post title,12,2,1"></textarea>
+          <div class="filters" style="margin-top:8px"><input type="file" id="intakePFile" accept=".csv,text/csv" style="font-size:12px;color:var(--muted)"><button class="fbtn" id="intakePBtn">Import engagement CSV</button></div>
+        </div>
+      </div>
+
       <h2>Engagement at a glance</h2>
       <div class="tiles" id="tiles2"></div>
       <div class="chartwrap">
@@ -862,7 +877,7 @@
       <div class="ccard">
         <b>Push-live workflow (honest version):</b> no standalone page can post directly to LinkedIn/Instagram/Facebook — that requires an authenticated publishing app. <b>Copy + Compose</b> gets you one click away: paste, attach the visual, publish. Phase 2 moves scheduling into Meta Business Suite Planner or Buffer/Metricool with an approval step; this studio stays the drafting + QA layer.
         <div style="margin-top:8px"><b>QA before every publish (the "Johnny" rule):</b> caption matches the visual · names spelled right · zero-CTA posts have NO link (product mention goes in a comment reply) · alt text added.</div>
-        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn push" id="excelBtn">⬇ Excel export (rows by platform)</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses and checklists auto-save in this browser. Video and heavy images stay in Google Drive — only links are stored here.</span></div>
+        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn push" id="excelBtn">⬇ Excel export (rows by platform)</button> <button class="cbtn push" id="llmBtn">⬇ LLM task export</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses and checklists auto-save in this browser. Video and heavy images stay in Google Drive — only links are stored here.</span></div>
         <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button></div>
       </div>
       <textarea class="io" id="ioArea" style="display:none" readonly></textarea>
@@ -1962,6 +1977,14 @@ var POSTS = [
   {date:'2026-05-14', channel:'Instagram', format:'Static / graphic', title:'AI product year recap', note:'Company recap; CTA to press release.', likes:3, comments:0, shares:0, url:'https://www.instagram.com/skyslope/', baseline:true}
 ];
 // =====================================================================
+var TRACKER_EXTRA=[];
+try{
+  var __tx=JSON.parse(localStorage.getItem('sshub_state')||'null');
+  if(__tx&&Array.isArray(__tx.trackerExtra)&&__tx.trackerExtra.length){
+    TRACKER_EXTRA=__tx.trackerExtra;
+    for(var __ti=TRACKER_EXTRA.length-1;__ti>=0;__ti--){ POSTS.unshift(TRACKER_EXTRA[__ti]); }
+  }
+}catch(e){}
 (function(){
   var CH_COLORS = {LinkedIn:'#0a66c2', Instagram:'#dd2a7b', Facebook:'#1877f2', YouTube:'#ff0000', X:'#555555'};
   var tooltip = document.getElementById('tooltip');
@@ -2811,7 +2834,7 @@ try{
   // export everything
   document.getElementById('exportBtn').onclick=function(){
     var ta=document.getElementById('ioArea');
-    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[])};
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),trackerExtra:(typeof TRACKER_EXTRA!=='undefined'?TRACKER_EXTRA:[])};
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
@@ -2835,6 +2858,49 @@ try{
   }
   window.buildContentCSV=buildContentCSV;
   window.postBrief=postBrief;
+  var VOICE_CORE='VOICE RULES: outcome-first, plain-spoken; every claim needs a receipt (a number, a named customer, or a named feature); at most one wink (sky motif) and never about compliance, security, money or fair housing; compliance topics use the guardian register (steady, protective, zero jokes); name roles (agents, TCs, brokers, auditors) — never "users"; current numbers only (900K+ professionals, ~3M transactions/yr, $340/mo starting); product spellings exact: SkySlope, Forms, DigiSign, Offers, Breeze, Books, SkyTC (a human service, never software), SkySight (iOS only), Ayce, Smart Suite, Pilot (waitlist — say coming soon).';
+  function buildLLMExport(){
+    var pool=ccPosts.filter(function(p){return p.sel;});
+    var scope='selected posts';
+    if(!pool.length){ pool=ccPosts.filter(visible); scope='posts in the current view'; }
+    if(!pool.length){ pool=ccPosts.slice(); scope='all posts'; }
+    var out=['SKYSLOPE SOCIAL — LLM TASK PACK · '+pool.length+' task(s) ('+scope+') · generated '+new Date().toISOString().slice(0,10),
+             'Give each task below to an LLM as a standalone request.',''];
+    pool.forEach(function(p,i){
+      out.push('==================== TASK '+(i+1)+' of '+pool.length+' ====================');
+      out.push('ROLE: You are the social media copywriter-producer for SkySlope, the real estate transaction-management platform.');
+      out.push(VOICE_CORE);
+      out.push('PLATFORM ('+p.platform+'): '+(PLATFORM_GUIDE[p.platform]||''));
+      out.push('PILLAR: '+p.pillar+(p.pillar==='Zero-CTA'?' — absolute rule: no link, no product name, no pitch anywhere in the caption.':''));
+      out.push('');
+      out.push('CURRENT DRAFT');
+      out.push('Title: '+p.title);
+      out.push('Caption: '+p.cap);
+      if(p.visual) out.push('Visual brief: '+p.visual);
+      if(p.note) out.push('Producer note: '+p.note);
+      if(p.creative&&p.creative.link) out.push('Creative asset: '+(p.creative.kind||'asset')+' at '+p.creative.link);
+      out.push('');
+      out.push('DELIVERABLES');
+      out.push('1. Final caption, platform-ready. Keep every [bracketed] value AS a bracketed placeholder — never invent data; if context is missing, flag it as [DATA NEEDED: what].');
+      out.push('2. Three alternative opening hooks: one identity-call, one contrarian, one specific-outcome.');
+      out.push('3. A suggested first comment (methodology or link lives there, never in the caption).');
+      out.push('4. Alt text for the visual.');
+      out.push('5. QA pass: list anything in the draft that violates the rules above.');
+      out.push('');
+    });
+    return out.join('\n');
+  }
+  window.buildLLMExport=buildLLMExport;
+  var lb=document.getElementById('llmBtn');
+  if(lb) lb.onclick=function(){
+    var txt=buildLLMExport();
+    var blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='skyslope-llm-tasks-'+new Date().toISOString().slice(0,10)+'.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    showToast('LLM task pack downloaded — selected posts first, else the current view');
+  };
   var xb=document.getElementById('excelBtn');
   if(xb) xb.onclick=function(){
     var blob=new Blob([buildContentCSV()],{type:'text/csv;charset=utf-8'});
@@ -3226,6 +3292,62 @@ var GOAL_LEADER='Engagement';
   renderStack();
 })();
 
+// ---------- Data intake: CSV -> growth log / engagement tracker ----------
+(function(){
+  var fB=document.getElementById('intakeFBtn'); if(!fB) return;
+  function toastMsg(m){ var t=document.querySelector('.toast'); if(t){ t.textContent=m; t.style.opacity=1; setTimeout(function(){t.style.opacity=0;},2600); } }
+  function parseCSV(txt){
+    return txt.split(/\r?\n/).map(function(l){return l.trim();}).filter(Boolean)
+      .map(function(l){ return l.split(',').map(function(c){return c.trim().replace(/^"|"$/g,'');}); });
+  }
+  function wireFile(fileId, taId){
+    var fi=document.getElementById(fileId);
+    if(fi) fi.addEventListener('change', function(){
+      var f=fi.files[0]; if(!f) return;
+      var r=new FileReader();
+      r.onload=function(){ document.getElementById(taId).value=String(r.result||''); toastMsg('File loaded — now press Import'); };
+      r.readAsText(f);
+    });
+  }
+  wireFile('intakeFFile','intakeF'); wireFile('intakePFile','intakeP');
+  function reloadSoon(n){ toastMsg('Imported '+n+' row(s) — saving, syncing and reloading…'); setTimeout(function(){ location.reload(); }, 4500); }
+  fB.onclick=function(){
+    var rows=parseCSV(document.getElementById('intakeF').value);
+    var ok=0, bad=0;
+    rows.forEach(function(c){
+      if(c.length<3) { bad++; return; }
+      var ch=c[0], d=c[1], f=c[2];
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(d) || !(typeof CH_HISTORY!=='undefined')) { if(!/^channel$/i.test(ch)) bad++; return; }
+      CH_HISTORY[ch]=CH_HISTORY[ch]||[];
+      var hh=CH_HISTORY[ch], hit=null;
+      hh.forEach(function(e){ if(e.d===d) hit=e; });
+      if(hit){ hit.f=f; } else { hh.push({d:d,f:f}); hh.sort(function(a,b){return a.d<b.d?-1:1;}); }
+      var last=hh[hh.length-1];
+      if(typeof CH_STATS!=='undefined') CH_STATS[ch]={followers:last.f,updated:last.d};
+      ok++;
+    });
+    if(!ok){ toastMsg('Nothing imported — check the format (channel,YYYY-MM-DD,count)'+(bad?'; '+bad+' bad row(s)':'')); return; }
+    reloadSoon(ok);
+  };
+  var pB=document.getElementById('intakePBtn');
+  pB.onclick=function(){
+    var rows=parseCSV(document.getElementById('intakeP').value);
+    var ok=0, bad=0;
+    rows.forEach(function(c){
+      if(c.length<7){ bad++; return; }
+      var d=c[0];
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) { if(!/^date$/i.test(d)) bad++; return; }
+      var entry={date:d,channel:c[1],format:c[2],title:c[3],likes:parseInt(c[4],10)||0,comments:parseInt(c[5],10)||0,shares:parseInt(c[6],10)||0,url:''};
+      var dup=TRACKER_EXTRA.some(function(p){return p.title===entry.title&&p.date===entry.date;}) ||
+              POSTS.some(function(p){return p.title===entry.title&&p.date===entry.date;});
+      if(dup){ bad++; return; }
+      TRACKER_EXTRA.push(entry); POSTS.unshift(entry); ok++;
+    });
+    if(!ok){ toastMsg('Nothing imported — check the format or duplicates'+(bad?' ('+bad+' skipped)':'')); return; }
+    reloadSoon(ok);
+  };
+})();
+
 // ---------- Amplify: distribution list + live-post email ----------
 var AMPLIFIERS=[
   {name:'Naomi Pinkston',email:'naomirpinkston@gmail.com',role:'Operator',channels:'All',status:'Active'},
@@ -3348,6 +3470,7 @@ var AMPLIFIERS=[
       targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),
       goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),
       amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),
+      trackerExtra:(typeof TRACKER_EXTRA!=='undefined'?TRACKER_EXTRA:[]),
       checks:collectChecks()
     };
   }
