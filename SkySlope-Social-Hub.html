@@ -404,6 +404,7 @@
       <button class="navlink active" data-view="overview" data-terms="overview dashboard summary home start here">Overview</button>
       <button class="navlink" data-view="studio" data-terms="content studio posts backlog drafts captions queue publish calendar schedule select export">Content Studio</button>
       <button class="navlink" data-view="social" data-terms="channels feeds linkedin instagram facebook youtube x followers growth log engagement tracker analytics consoles">Channel Performance</button>
+      <button class="navlink" data-view="amplify" data-terms="amplify sales enablement advocacy distribution email list reshare engagement targets share kit">Amplify</button>
       <button class="navlink" data-view="assets" data-terms="asset library videos images embeds youtube playlists footage b-roll shorts">Asset Library</button>
       <button class="navlink" data-view="next" data-terms="action tracker decisions checklist rob meeting access walkthrough">Action Tracker</button>
     </div>
@@ -1730,6 +1731,37 @@
       </div>
     </section>
 
+    <!-- ========== AMPLIFY (sales enablement) ========== -->
+    <section class="view" id="view-amplify">
+      <h1>Amplify</h1>
+      <div class="sub">The employee-advocacy engine from Doc 2 §6.2, operationalized: the first 100 engagements on every post are internal. Keep the amplifier list current, then generate the "live now" email each time posts publish — it builds itself from the pipeline.</div>
+
+      <h2>Amplifier distribution list</h2>
+      <p class="note-strip" style="margin:0 0 8px">Everyone who lifts posts in the first hour — sales, CS, exec voices, partners. Cells are editable (saves &amp; syncs); <b style="color:var(--crit)">red brackets are placeholders</b> until Rob nominates names (tracked in the Action Tracker).</p>
+      <div style="overflow-x:auto"><table id="ampTable">
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Channels</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <div class="filters"><button class="fbtn" id="ampAdd">+ Add amplifier</button><button class="fbtn" id="ampCopyList">⧉ Copy active emails</button></div>
+
+      <h2>The "live now" email</h2>
+      <p class="note-strip" style="margin:0 0 8px">Auto-built from posts marked <b>Scheduled or Published</b> in stage 3 (within a week of today). Send it the moment posts go live — the first 60 minutes decide LinkedIn distribution.</p>
+      <div class="filters">
+        <button class="fbtn on" id="ampGen">↺ Build email from pipeline</button>
+        <button class="fbtn" id="ampCopyEmail">⧉ Copy email text</button>
+        <button class="fbtn" id="ampMailto">✉ Open in email client (BCC actives)</button>
+      </div>
+      <textarea class="io" id="ampArea" style="display:none;height:300px" readonly></textarea>
+
+      <h2>The advocacy playbook</h2>
+      <div class="grid2">
+        <div class="ccard"><h3>The first-hour floor</h3>Every AE, CSM and exec engages within 60 minutes of publish: a real comment beats a like, a reshare-with-one-line beats both. Target: <b>3+ team engagements per post in hour one</b>, 10 active advocates weekly.</div>
+        <div class="ccard"><h3>Angles, not scripts</h3>The email gives comment angles — never copy-paste lines. Identical comments read as bots and hurt distribution. One personal sentence riffing on the angle is the ask.</div>
+        <div class="ccard"><h3>Warm signals to sales</h3>Anyone engaging from a prospect or customer account is a warm signal — AEs note engagers on target accounts and use Index stats as the non-pitch follow-up touch.</div>
+        <div class="ccard"><h3>Exec voices</h3>2–3 leaders post 1×/week from personal profiles (5–10× Page reach); the Page reshares and harvests followers. Nominations tracked in the Action Tracker.</div>
+      </div>
+    </section>
+
     <!-- ========== ACTION TRACKER ========== -->
     <section class="view" id="view-next">
       <h1>Action Tracker</h1>
@@ -2779,7 +2811,7 @@ try{
   // export everything
   document.getElementById('exportBtn').onclick=function(){
     var ta=document.getElementById('ioArea');
-    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement')};
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[])};
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
@@ -3194,6 +3226,106 @@ var GOAL_LEADER='Engagement';
   renderStack();
 })();
 
+// ---------- Amplify: distribution list + live-post email ----------
+var AMPLIFIERS=[
+  {name:'Naomi Pinkston',email:'naomirpinkston@gmail.com',role:'Operator',channels:'All',status:'Active'},
+  {name:'Dave Bussell',email:'dave@clickshift.ca',role:'Strategy',channels:'All',status:'Active'},
+  {name:'Rob Pedraza',email:'rpedraza@skyslope.com',role:'Client lead',channels:'LinkedIn',status:'Active'},
+  {name:'[AE name]',email:'[email]',role:'Sales',channels:'LinkedIn',status:'Invited'},
+  {name:'[CSM name]',email:'[email]',role:'CS',channels:'LinkedIn/IG',status:'Invited'},
+  {name:'[Exec voice 1]',email:'[email]',role:'Exec',channels:'LinkedIn',status:'Invited'},
+  {name:'[Exec voice 2]',email:'[email]',role:'Exec',channels:'LinkedIn',status:'Invited'}
+];
+(function(){
+  var tb=document.querySelector('#ampTable tbody'); if(!tb) return;
+  try{
+    var st=JSON.parse(localStorage.getItem('sshub_state')||'null');
+    if(st&&Array.isArray(st.amplifiers)&&st.amplifiers.length){ AMPLIFIERS.length=0; st.amplifiers.forEach(function(a){AMPLIFIERS.push(a);}); }
+  }catch(e){}
+  function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function markRed(s){ return esc(s).replace(/\[([^\]]{1,50})\]/g,'<mark class="tbd">[$1]</mark>'); }
+  function renderAmp(){
+    tb.innerHTML='';
+    AMPLIFIERS.forEach(function(a){
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td contenteditable="true"><b>'+markRed(a.name)+'</b></td><td contenteditable="true">'+markRed(a.email)+'</td><td contenteditable="true">'+esc(a.role)+'</td><td contenteditable="true">'+esc(a.channels)+'</td><td contenteditable="true">'+esc(a.status)+'</td>';
+      tb.appendChild(tr);
+    });
+  }
+  function syncAmp(){
+    var rows=tb.querySelectorAll('tr');
+    AMPLIFIERS.length=0;
+    Array.prototype.forEach.call(rows, function(tr){
+      var c=tr.querySelectorAll('td');
+      if(c.length>=5) AMPLIFIERS.push({name:c[0].textContent.trim(),email:c[1].textContent.trim(),role:c[2].textContent.trim(),channels:c[3].textContent.trim(),status:c[4].textContent.trim()});
+    });
+  }
+  document.getElementById('ampTable').addEventListener('focusout', syncAmp);
+  var add=document.getElementById('ampAdd');
+  if(add) add.onclick=function(){ AMPLIFIERS.push({name:'[Name]',email:'[email]',role:'Sales',channels:'LinkedIn',status:'Invited'}); renderAmp(); };
+  function actives(){ return AMPLIFIERS.filter(function(a){ return a.status.toLowerCase()==='active' && a.email.indexOf('@')>0 && a.email.indexOf('[')===-1; }); }
+  function ampToast(m){ var t=document.querySelector('.toast'); if(t){ t.textContent=m; t.style.opacity=1; setTimeout(function(){t.style.opacity=0;},2000); } }
+  function cp(txt,msg){ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){ampToast(msg);},function(){ampToast('Copy blocked');}); } }
+  var cl=document.getElementById('ampCopyList');
+  if(cl) cl.onclick=function(){ var a=actives(); cp(a.map(function(x){return x.email;}).join(', '), a.length+' active emails copied'); };
+  var CH_URL={LinkedIn:'https://www.linkedin.com/company/skyslope',Instagram:'https://www.instagram.com/skyslope/',Facebook:'https://www.facebook.com/SkySlope/',YouTube:'https://www.youtube.com/@SkySlope',X:'https://x.com/skyslope',TikTok:''};
+  function livePosts(){
+    var now=new Date(); var lo=new Date(now); lo.setDate(now.getDate()-7); var hi=new Date(now); hi.setDate(now.getDate()+7);
+    function iso(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+    var a=iso(lo), b=iso(hi);
+    return ccPosts.filter(function(p){
+      if(p.env!=='ready') return false;
+      if(p.status!=='Scheduled'&&p.status!=='Published') return false;
+      if(p.when && (p.when<a||p.when>b)) return false;
+      return true;
+    });
+  }
+  function angleFor(p){
+    if(p.pillar==='Data & Index') return 'React to the number itself — what it means for YOUR market or your ops week; disagree with the ranking if you do.';
+    if(p.pillar==='Testimonial') return 'Congratulate the customer by name; add one line about what their result says about the industry.';
+    if(p.pillar==='Zero-CTA') return 'Just be human — tag the colleague it reminds you of; no product talk in this thread.';
+    return 'Add the pain-point you see most in the field; keep product claims out of your comment.';
+  }
+  function buildAmpEmail(){
+    var posts=livePosts();
+    var L=[];
+    L.push('Subject: SkySlope social — live now ('+posts.length+' post'+(posts.length===1?'':'s')+') — first hour matters');
+    L.push('');
+    L.push('Team — the following posts are live or going live. The first 60 minutes decide reach: please engage within the hour. A real comment beats a like; a reshare with one personal line beats both.');
+    L.push('');
+    if(!posts.length){ L.push('(No posts currently marked Scheduled or Published in the pipeline — stage posts in the Content Studio first.)'); }
+    posts.forEach(function(p,i){
+      L.push((i+1)+'. ['+p.platform+'] '+p.title+(p.when?(' — '+p.when):''));
+      L.push('   Find it: '+(CH_URL[p.platform]||'')+(p.status==='Scheduled'?' (from its scheduled time)':''));
+      L.push('   First line: '+(p.cap||'').split('\n')[0].slice(0,110));
+      L.push('   Comment angle (make it yours — no copy-paste): '+angleFor(p));
+      L.push('   Reshare: '+(p.pillar==='Data & Index'?'YES — execs + sales, add one POV line':(p.pillar==='Testimonial'?'YES — tag the featured customer':'optional — only if it genuinely made you smile')));
+      L.push('');
+    });
+    L.push('ENGAGEMENT TARGETS (per post): 3+ team engagements in hour one · comment > like · zero identical comments · goal: comments > 0 on 80% of posts this quarter.');
+    L.push('Spot a prospect or customer engaging? Note it — that is a warm signal for sales (Index stats are the follow-up touch, never a pitch).');
+    L.push('');
+    L.push('— Naomi & the Click Shift team');
+    return L.join('\n');
+  }
+  window.buildAmpEmail=buildAmpEmail;
+  var ta=document.getElementById('ampArea');
+  var gen=document.getElementById('ampGen');
+  if(gen) gen.onclick=function(){ ta.value=buildAmpEmail(); ta.style.display='block'; ampToast('Email built from '+livePosts().length+' live post(s) — review, then copy or open in your client'); };
+  var ce=document.getElementById('ampCopyEmail');
+  if(ce) ce.onclick=function(){ if(!ta.value) ta.value=buildAmpEmail(); ta.style.display='block'; cp(ta.value,'Email copied — paste into Gmail'); };
+  var mo=document.getElementById('ampMailto');
+  if(mo) mo.onclick=function(){
+    if(!ta.value) ta.value=buildAmpEmail();
+    var lines=ta.value.split('\n');
+    var subject=lines[0].replace(/^Subject:\s*/,'');
+    var body=lines.slice(2).join('\n');
+    var bcc=actives().map(function(x){return x.email;}).join(',');
+    location.href='mailto:?bcc='+encodeURIComponent(bcc)+'&subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body.slice(0,1500));
+  };
+  renderAmp();
+})();
+
 // ---------- Persistence: auto-save edits to this browser ----------
 (function(){
   var KEY='sshub_state';
@@ -3215,6 +3347,7 @@ var GOAL_LEADER='Engagement';
       channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),
       targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),
       goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),
+      amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),
       checks:collectChecks()
     };
   }
