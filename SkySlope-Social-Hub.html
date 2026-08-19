@@ -296,6 +296,37 @@
   .pcard.pubdone{opacity:.55}
   .envnote{font-size:12px;color:var(--muted);margin:2px 0 10px}
   @media(max-width:700px){.crt input.clink{min-width:0;width:100%}.crt select,.crt input{font-size:16px}}
+  /* ---- v6: platform preview mode ---- */
+  .fbtn.ff{border-color:rgba(40,167,69,.55);color:var(--s3);font-weight:700}
+  .fbtn.ff.on{background:var(--s3);color:#fff;border-color:transparent}
+  .pv{margin:0 0 22px;max-width:540px}
+  .pvstrip{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+  .pvcard{background:var(--surface);border:1px solid var(--grid);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .pvhead{display:flex;gap:10px;align-items:center;padding:12px 14px 8px}
+  .pvavatar{width:38px;height:38px;background:var(--accentwash);border-radius:50%;padding:7px;flex-shrink:0}
+  .pvhead b{font-size:14px;color:var(--ink)}
+  .pvsub{font-size:11px;color:var(--muted)}
+  .pvcap{padding:2px 14px 12px;font-size:13.5px;white-space:pre-wrap;color:var(--ink)}
+  .pvmore{font-weight:600;text-decoration:none;color:var(--muted)}
+  .pvmedia{display:flex;align-items:center;justify-content:center;min-height:130px;background:var(--page);border-top:1px solid var(--grid);font-size:13px;color:var(--ink-2);text-decoration:none;padding:14px;text-align:center}
+  .pvmedia.has{font-weight:700;color:var(--blue)}
+  .pvmedia.ghost{flex-direction:column;gap:6px;font-size:12px;color:var(--muted);font-style:italic}
+  .pvmedia.ghost span{font-style:normal;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+  .pvmedia.img{padding:0;min-height:0}
+  .pvmedia.img img{width:100%;max-height:360px;object-fit:cover;display:block}
+  .pv-instagram .pvmedia{min-height:200px}
+  .pvact{padding:10px 14px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--grid)}
+  .pvtools{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+  .pvh{margin:26px 0 12px}
+  /* ---- v6: performance vs plan ---- */
+  .pbar{background:var(--grid);border-radius:999px;height:8px;min-width:90px;max-width:140px;overflow:hidden}
+  .pbar i{display:block;height:100%;background:var(--s3);border-radius:999px}
+  .pbar.mid i{background:var(--s4)}
+  .pbar.low i{background:var(--crit)}
+  .tgt{outline:none;border-radius:4px;padding:0 3px;cursor:text}
+  .tgt:focus{background:var(--surface);box-shadow:0 0 0 1px var(--blue)}
+  .tgt-l{font-size:10px;color:var(--muted);margin-left:3px}
+  #perfTable td{vertical-align:middle}
   /* ---- v2.2: studio selection + calendar ---- */
   .psel{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
   .psel input{accent-color:var(--s1);margin:0}
@@ -371,7 +402,7 @@
     <div class="navgroup"><div class="gt">Workspace</div>
       <button class="navlink active" data-view="overview" data-terms="overview dashboard summary home start here">Overview</button>
       <button class="navlink" data-view="studio" data-terms="content studio posts backlog drafts captions queue publish calendar schedule select export">Content Studio</button>
-      <button class="navlink" data-view="social" data-terms="channels feeds linkedin instagram facebook youtube x followers growth log engagement tracker analytics consoles">Channels &amp; Feeds</button>
+      <button class="navlink" data-view="social" data-terms="channels feeds linkedin instagram facebook youtube x followers growth log engagement tracker analytics consoles">Channel Performance</button>
       <button class="navlink" data-view="assets" data-terms="asset library videos images embeds youtube playlists footage b-roll shorts">Asset Library</button>
       <button class="navlink" data-view="next" data-terms="action tracker decisions checklist rob meeting access walkthrough">Action Tracker</button>
     </div>
@@ -425,6 +456,19 @@
     <section class="view active" id="view-overview">
       <h1>SkySlope Social Strategy — Overview</h1>
       <div class="sub">Two strategic documents, one engine: turn 3M+ transactions of proprietary data into the most shareable content in real estate — and build the audience to see it. Prepared for Robert Pedraza.</div>
+
+      <h2>The one-paragraph story</h2>
+      <details class="card" open><summary>How it all connects<span class="chev">▶</span></summary>
+        <div class="body"><p>The June audit proved SkySlope's channels are all ask and no give. The keyword data shows competitors own the research narrative — Paperless Pipeline owns the TC audience, Dotloop owns brand gravity — while SkySlope wins AI overviews on broker terms. The review platforms show a validation gap (3.9★ Capterra, half the review volume of rivals). The answer: publish the industry's only proprietary transaction data (the give nobody else can copy), deliver it through the personas' actual channels, activate 900K users + sales + execs as distribution, and fix the review surface in parallel. Awareness → credibility → referral, each stage reinforcing the next.</p></div>
+      </details>
+
+      <h2>Performance vs plan</h2>
+      <p class="note-strip" style="margin:0 0 8px">Live follower counts from the growth log · <b>monthly growth targets are Click Shift estimates pending Rob-confirmed commitments</b> (no numeric follower targets exist in the email record yet) — click a target to set the committed number; it saves and syncs to the team. Engagement = avg likes + comments per tracked post; the committed target from Doc 2: above the June baseline within 6 weeks.</p>
+      <div style="overflow-x:auto"><table id="perfTable">
+        <thead><tr><th>Channel</th><th>Followers now</th><th>Growth this month</th><th>Monthly target</th><th>Progress</th><th>Eng./post this month</th><th>June baseline</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+
       <div class="tiles">
         <div class="tile"><div class="v">900K+</div><div class="l">Real estate professionals on SkySlope</div></div>
         <div class="tile"><div class="v">3M+</div><div class="l">Transactions managed annually</div></div>
@@ -458,7 +502,7 @@
         <div class="ccard"><h3>Doc 1 · Social Media Strategy</h3>The plan Rob can green-light: the SkySlope Index data franchise, the June-audit fixes hard-wired in, platform lanes, and the 20-hour monthly scope. <a href="#" data-goto="d1">Open →</a></div>
         <div class="ccard"><h3>Doc 2 · Audience &amp; Path to Purchase</h3>The competitive set, four personas, the six-stage path to purchase, the Big Warning on review-platform social proof, and the Audience Growth Engine. <a href="#" data-goto="d2">Open →</a></div>
         <div class="ccard"><h3>Content Studio</h3>Naomi's workspace: the editable backlog across all four pillars with statuses, publish days, calendar view, and Copy + Compose handoff. <a href="#" data-goto="studio">Open →</a></div>
-        <div class="ccard"><h3>Channels &amp; Feeds</h3>Every channel and its analytics console one click away, follower and posts-per-month tiles, and the engagement tracker with the June baseline. <a href="#" data-goto="social">Open →</a></div>
+        <div class="ccard"><h3>Channel Performance</h3>Every channel and its analytics console one click away, follower growth tracking, posts-per-month tiles, and the engagement tracker with the June baseline. <a href="#" data-goto="social">Open →</a></div>
         <div class="ccard"><h3>Brand Guidelines</h3>Logo rules, palette, typography, components, and copy-paste tokens — the visual identity this hub runs on. <a href="#" data-goto="brand">Open →</a></div>
         <div class="ccard"><h3>Voice &amp; Tone</h3>Five voice attributes, six tone dials, exact product spellings, and the pre-publish checklist. <a href="#" data-goto="voice">Open →</a></div>
         <div class="ccard"><h3>Product Guide</h3>All ten products with pricing, the Smart Suite claims, and the accuracy watch-outs that prevent caption errors. <a href="#" data-goto="products">Open →</a></div>
@@ -466,10 +510,7 @@
         <div class="ccard"><h3>Inspiration</h3>Hooks that work, the monthly trend briefing, voices to study, and the citable-source library. <a href="#" data-goto="inspo">Open →</a></div>
       </div>
 
-      <h2>The one-paragraph story</h2>
-      <details class="card" open><summary>How it all connects<span class="chev">▶</span></summary>
-        <div class="body"><p>The June audit proved SkySlope's channels are all ask and no give. The keyword data shows competitors own the research narrative — Paperless Pipeline owns the TC audience, Dotloop owns brand gravity — while SkySlope wins AI overviews on broker terms. The review platforms show a validation gap (3.9★ Capterra, half the review volume of rivals). The answer: publish the industry's only proprietary transaction data (the give nobody else can copy), deliver it through the personas' actual channels, activate 900K users + sales + execs as distribution, and fix the review surface in parallel. Awareness → credibility → referral, each stage reinforcing the next.</p></div>
-      </details>
+
     </section>
 
     <!-- ========== DOC 1 ========== -->
@@ -642,7 +683,7 @@
 
     <!-- ========== SOCIAL CHANNELS & FEEDS ========== -->
     <section class="view" id="view-social">
-      <h1>Channels &amp; Feeds</h1>
+      <h1>Channel Performance</h1>
       <div class="sub">One place to reach every channel, its analytics console, and the post-by-post engagement picture. Baseline: June 2026 engagement audit.</div>
 
       <h2>Channel access</h2>
@@ -805,7 +846,7 @@
       <div class="ccard">
         <b>Push-live workflow (honest version):</b> no standalone page can post directly to LinkedIn/Instagram/Facebook — that requires an authenticated publishing app. <b>Copy + Compose</b> gets you one click away: paste, attach the visual, publish. Phase 2 moves scheduling into Meta Business Suite Planner or Buffer/Metricool with an approval step; this studio stays the drafting + QA layer.
         <div style="margin-top:8px"><b>QA before every publish (the "Johnny" rule):</b> caption matches the visual · names spelled right · zero-CTA posts have NO link (product mention goes in a comment reply) · alt text added.</div>
-        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses and checklists auto-save in this browser. Video and heavy images stay in Google Drive — only links are stored here.</span></div>
+        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn push" id="excelBtn">⬇ Excel export (rows by platform)</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses and checklists auto-save in this browser. Video and heavy images stay in Google Drive — only links are stored here.</span></div>
         <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button></div>
       </div>
       <textarea class="io" id="ioArea" style="display:none" readonly></textarea>
@@ -2283,7 +2324,33 @@ try{
   var activePillar='All', activeStatus='All', activeReady='To schedule', studioView='list';
   var activeEnv='copy';
   try{ activeEnv=localStorage.getItem('sshub_env')||'copy'; }catch(err){}
-  var ENVS=[['copy','1 \u00b7 Copy'],['creative','2 \u00b7 Creative'],['ready','3 \u00b7 Ready to schedule']];
+  var ENVS=[['copy','1 · Copy'],['creative','2 · Creative'],['ready','3 · Ready to schedule']];
+  var filterFree=false, pvPlatform='All';
+  var PLATFORM_ORDER=['LinkedIn','Instagram','Facebook','YouTube','X','TikTok'];
+  var PLATFORM_GUIDE={
+    LinkedIn:'Post natively; document/PDF carousel preferred for data posts. Hook inside the first 125 characters. External or methodology links go in the FIRST COMMENT, never the post body. Rally 3+ team engagements within the first hour.',
+    Instagram:'Vertical 4:5 or 9:16; video 20-45s with burned-in captions. Zero-CTA posts carry no link and no product name in the caption - the product answer lives in a comment reply. First frame carries the hook.',
+    Facebook:'Longer captions are fine. Prefer conversation starters; reply to every comment as a named human. Cross-post testimonials from Instagram.',
+    YouTube:'The full-length master lives here; cut 15-second vertical teasers for IG from it. Always link playlists, never the bare channel.',
+    X:'Maintenance mode: news distribution only, announcement register.',
+    TikTok:'Phase-2 test only - do NOT publish before the Month-3 go/no-go decision.'
+  };
+  function postBrief(p){
+    var L=[];
+    L.push('POST: '+p.title);
+    L.push('Stage: '+p.env+' | Status: '+p.status+' | Publish day: '+(p.when||'NOT ASSIGNED'));
+    L.push('Platform: '+p.platform+' | Pillar: '+p.pillar+' | Format: '+p.format);
+    L.push('');
+    L.push('CAPTION (use exactly; replace [bracketed] placeholders with validated values first):');
+    L.push(p.cap);
+    L.push('');
+    if(p.visual){ L.push('VISUAL / INSTRUCTIONS:'); L.push(p.visual); L.push(''); }
+    if(p.creative&&p.creative.link){ L.push('CREATIVE: '+(p.creative.kind||'asset')+' - '+p.creative.link+((p.creative.note)?(' ('+p.creative.note+')'):'')); L.push(''); }
+    L.push('PLATFORM RULES ('+p.platform+'): '+(PLATFORM_GUIDE[p.platform]||''));
+    if(p.note){ L.push('NOTE: '+p.note); }
+    L.push('QA: caption matches asset | names verified | zero-CTA has no link | alt text added | voice checklist run.');
+    return L.join('\n');
+  }
   var COPY_STATUSES=['Idea','Drafted','Approved'];
   var CAL_COLORS={LinkedIn:'#0a66c2',Instagram:'#dd2a7b',Facebook:'#1877f2',YouTube:'#ff0000',X:'#555555',TikTok:'#4a4a4a'};
   var toast=document.createElement('div');toast.className='toast';document.body.appendChild(toast);
@@ -2351,12 +2418,34 @@ try{
       var b=document.createElement('button');
       b.className='fbtn'+(pair[0]===activeEnv?' on':'');
       b.textContent=pair[1]+' ('+envCount(pair[0])+')';
-      b.onclick=function(){ activeEnv=pair[0]; try{localStorage.setItem('sshub_env',activeEnv);}catch(err){} filters(); syncView(); };
+      b.onclick=function(){ filterFree=false; activeEnv=pair[0]; try{localStorage.setItem('sshub_env',activeEnv);}catch(err){} filters(); syncView(); };
       t.appendChild(b);
     });
+    var ff=document.createElement('button');
+    ff.className='fbtn ff'+(filterFree?' on':'');
+    ff.textContent='Filter-free preview';
+    ff.title='See every post, styled the way each platform will render it';
+    ff.onclick=function(){
+      filterFree=!filterFree;
+      if(filterFree){ activePillar='All'; activeStatus='All'; activeReady='All'; studioView='list'; }
+      filters(); syncView();
+    };
+    t.appendChild(ff);
   }
   function filters(){
     var pf=document.getElementById('pillarFilters');
+    if(filterFree){
+      pf.innerHTML='<span class="note-strip">Experience:</span>';
+      var present={}; ccPosts.forEach(function(p){ present[p.platform]=1; });
+      ['All'].concat(PLATFORM_ORDER.filter(function(x){return present[x];})).forEach(function(c){
+        var b=document.createElement('button'); b.className='fbtn'+(c===pvPlatform?' on':''); b.textContent=c==='All'?'All platforms':c;
+        b.onclick=function(){ pvPlatform=c; filters(); syncView(); };
+        pf.appendChild(b);
+      });
+      document.getElementById('statusFilters').innerHTML='';
+      document.getElementById('readyFilters').innerHTML='';
+      return;
+    }
     pf.innerHTML='<span class="note-strip">Pillar:</span>';
     ['All'].concat(Object.keys(PILLARS)).forEach(function(c){
       var b=document.createElement('button');b.className='fbtn'+(c===activePillar?' on':'');b.textContent=c;
@@ -2416,7 +2505,65 @@ try{
   }
   function moveEnv(p,env,act,msg){ p.env=env; delete p.sel; stamp(p,act); tiles(); envTabs(); render(); showToast(msg+' \u2014 stamped as '+lastStamp(p).by); }
 
+  var PV_META={
+    LinkedIn:{name:'SkySlope',sub:'5,147 followers · 1h',actions:'\ud83d\udc4d Like \ud83d\udcac Comment ↻ Repost ➤ Send',fold:210},
+    Instagram:{name:'skyslope',sub:'Original audio',actions:'♥ \ud83d\udcac ➤',fold:125},
+    Facebook:{name:'SkySlope',sub:'Page · 1h',actions:'\ud83d\udc4d Like \ud83d\udcac Comment ↪ Share',fold:250},
+    YouTube:{name:'SkySlope',sub:'@SkySlope · 1.16K subscribers',actions:'\ud83d\udc4d \ud83d\udc4e ➤ Share',fold:0},
+    X:{name:'SkySlope',sub:'@SkySlope',actions:'\ud83d\udcac ↻ ♥ ⬆',fold:0},
+    TikTok:{name:'skyslope',sub:'phase-2 — not launched',actions:'♥ \ud83d\udcac ➤',fold:80}
+  };
+  function pvMedia(p){
+    if(p.creative&&p.creative.link){
+      var kind=p.creative.kind||'asset';
+      return '<a class="pvmedia has" href="'+p.creative.link.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+(kind==='video'?'▶':'\ud83d\uddbc️')+' '+kind+' attached — open in Drive</a>';
+    }
+    if(p.img) return '<div class="pvmedia img"><img src="'+p.img+'" alt=""></div>';
+    return '<div class="pvmedia ghost"><span>planned visual</span>'+capHTML((p.visual||'No visual brief yet').slice(0,150))+'</div>';
+  }
+  function renderPreview(){
+    var list=document.getElementById('plist');list.innerHTML='';
+    var groups = pvPlatform==='All' ? PLATFORM_ORDER : [pvPlatform];
+    var shown=0;
+    groups.forEach(function(plat){
+      var posts=ccPosts.filter(function(p){return p.platform===plat;});
+      if(!posts.length) return;
+      if(pvPlatform==='All'){
+        var hh=document.createElement('h2'); hh.className='pvh'; hh.textContent=plat+' · '+posts.length+' post'+(posts.length>1?'s':'');
+        list.appendChild(hh);
+      }
+      posts.forEach(function(p){
+        shown++;
+        var m=PV_META[plat]||PV_META.LinkedIn;
+        var d=document.createElement('div'); d.className='pv pv-'+plat.toLowerCase();
+        var folded = m.fold && p.cap.length>m.fold;
+        d.innerHTML=
+          '<div class="pvstrip">'+p.env+' · '+p.status+(p.when?' · '+p.when:'')+' · '+p.pillar+'</div>'+
+          '<div class="pvcard">'+
+            '<div class="pvhead"><svg class="pvavatar" viewBox="-0.7 -0.2 24.9 25.4" aria-hidden="true"><use href="#ss-mark"/></svg>'+
+            '<div><b>'+m.name+'</b><div class="pvsub">'+m.sub+'</div></div></div>'+
+            '<div class="pvcap">'+(folded
+              ? capHTML(p.cap.slice(0,m.fold))+'<a href="#" class="pvmore">… see more</a><span class="pvrest" style="display:none">'+capHTML(p.cap.slice(m.fold))+'</span>'
+              : capHTML(p.cap))+'</div>'+
+            pvMedia(p)+
+            '<div class="pvact">'+m.actions+'</div>'+
+          '</div>'+
+          '<div class="pvtools"></div>';
+        var more=d.querySelector('.pvmore');
+        if(more) more.onclick=function(ev){ ev.preventDefault(); more.style.display='none'; d.querySelector('.pvrest').style.display='inline'; };
+        var tools=d.querySelector('.pvtools');
+        var b1=document.createElement('button'); b1.className='cbtn push'; b1.textContent='⧉ Copy brief';
+        b1.onclick=function(){ copyText(postBrief(p),'Brief copied'); };
+        var b2=document.createElement('button'); b2.className='cbtn'; b2.textContent='⧉ Copy caption';
+        b2.onclick=function(){ copyText(p.cap,'Caption copied'); };
+        tools.appendChild(b1); tools.appendChild(b2);
+        list.appendChild(d);
+      });
+    });
+    if(!shown) list.innerHTML='<div class="envnote">No posts for this platform yet.</div>';
+  }
   function render(){
+    if(filterFree){ renderPreview(); return; }
     var list=document.getElementById('plist');list.innerHTML='';
     ccPosts.forEach(function(p,i){
       if(!visible(p))return;
@@ -2498,6 +2645,7 @@ try{
       di.onchange=function(){ p.when=di.value; tiles(); showToast(p.when?('Assigned to '+p.when):'Day cleared'); };
       ctrl.appendChild(di);
       function cbtn(label,cls,fn){ var b=document.createElement('button'); b.className='cbtn'+(cls?' '+cls:''); b.textContent=label; b.onclick=fn; ctrl.appendChild(b); return b; }
+      cbtn('⧉ Copy brief','',function(){ copyText(postBrief(p),'Brief copied — caption, instructions, creative link and platform rules'); });
       if(p.env==='copy'){
         var ord=document.createElement('div');ord.className='ordr';
         [['\u2191',-1],['\u2193',1]].forEach(function(a){
@@ -2616,11 +2764,38 @@ try{
   // export everything
   document.getElementById('exportBtn').onclick=function(){
     var ta=document.getElementById('ioArea');
-    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{})};
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{})};
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
-    try{document.execCommand('copy');showToast('State copied to clipboard \u2014 send to Click Shift');}catch(err){showToast('State shown below \u2014 copy and send to Click Shift');}
+    try{document.execCommand('copy');showToast('State copied to clipboard — send to Click Shift');}catch(err){showToast('State shown below — copy and send to Click Shift');}
+  };
+  function csvCell(v){ v=(v==null?'':String(v)); return '"'+v.replace(/"/g,'""')+'"'; }
+  function buildContentCSV(){
+    var head=['#','Platform','Stage','Status','Publish day','Pillar','Format','Title','Caption / prompt','Visual instructions','Creative type','Creative link','Creative note','Platform rules','Post note','Last action'];
+    var rows=[head.map(csvCell).join(',')];
+    var eo={copy:0,creative:1,ready:2};
+    var sorted=ccPosts.slice().sort(function(a,b){
+      var pa=PLATFORM_ORDER.indexOf(a.platform), pb=PLATFORM_ORDER.indexOf(b.platform);
+      if(pa!==pb) return pa-pb;
+      return (eo[a.env]||0)-(eo[b.env]||0);
+    });
+    sorted.forEach(function(p,i){
+      var ls=(p.history&&p.history.length)?p.history[p.history.length-1]:null;
+      rows.push([i+1,p.platform,p.env,p.status,p.when||'',p.pillar,p.format,p.title,p.cap,p.visual||'',(p.creative||{}).kind||'',(p.creative||{}).link||'',(p.creative||{}).note||'',PLATFORM_GUIDE[p.platform]||'',p.note||'',ls?(ls.act+' by '+ls.by+' '+ls.at):''].map(csvCell).join(','));
+    });
+    return '﻿'+rows.join('\r\n');
+  }
+  window.buildContentCSV=buildContentCSV;
+  window.postBrief=postBrief;
+  var xb=document.getElementById('excelBtn');
+  if(xb) xb.onclick=function(){
+    var blob=new Blob([buildContentCSV()],{type:'text/csv;charset=utf-8'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='skyslope-content-export-'+new Date().toISOString().slice(0,10)+'.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    showToast('Excel export downloaded — one row per post, grouped by platform, with platform rules');
   };
   filters();syncView();
 })();
@@ -2897,6 +3072,60 @@ var CH_HISTORY = {}; // {channel:[{d:'YYYY-MM-DD',f:'5,147'},...]} — every rec
   renderGrowth();
 })();
 
+// ---------- Overview: performance vs plan ----------
+var GROWTH_TARGETS={LinkedIn:150,Instagram:120,Facebook:80,YouTube:30,X:20};
+(function(){
+  var tb=document.querySelector('#perfTable tbody'); if(!tb) return;
+  try{
+    var st=JSON.parse(localStorage.getItem('sshub_state')||'null');
+    if(st&&st.targets){ for(var k in st.targets){ if(st.targets[k]!=null) GROWTH_TARGETS[k]=st.targets[k]; } }
+  }catch(e){}
+  function n2v(s){ var m=(s==null?'':String(s)).replace(/,/g,'').trim().match(/^([0-9.]+)\s*([KM])?$/i); if(!m) return null; return Math.round(parseFloat(m[1])*(((m[2]||'').toUpperCase()==='M')?1e6:((m[2]||'').toUpperCase()==='K')?1e3:1)); }
+  var now=new Date(); var ym=now.getFullYear()+'-'+('0'+(now.getMonth()+1)).slice(-2);
+  var CHS=['LinkedIn','Instagram','Facebook','YouTube','X'];
+  function followerInfo(ch){
+    var hh=(typeof CH_HISTORY!=='undefined')?CH_HISTORY[ch]:null;
+    if(!hh||!hh.length) return null;
+    var latest=hh[hh.length-1], base=null;
+    hh.forEach(function(e){ if(e.d.slice(0,7)<ym) base=e; });
+    var a=base?n2v(base.f):null, b=n2v(latest.f);
+    return {now:latest.f, delta:(a!=null&&b!=null)?(b-a):null};
+  }
+  function engAvg(fn){
+    var ps=POSTS.filter(fn);
+    if(!ps.length) return null;
+    return ps.reduce(function(a,p){return a+(p.likes||0)+(p.comments||0);},0)/ps.length;
+  }
+  function fmt1(x){ return x==null?'—':String(Math.round(x*10)/10); }
+  function renderPerf(){
+    tb.innerHTML='';
+    CHS.forEach(function(ch){
+      var fi=followerInfo(ch);
+      var target=GROWTH_TARGETS[ch]||0;
+      var pct=(fi&&fi.delta!=null&&target>0)?Math.max(0,Math.min(100,Math.round(fi.delta/target*100))):0;
+      var cls=pct>=67?'':(pct>=34?' mid':' low');
+      var curEng=engAvg(function(p){return p.channel===ch&&(p.date||'').indexOf(ym)===0;});
+      var baseEng=engAvg(function(p){return p.channel===ch&&p.baseline;});
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td><b>'+ch+'</b></td>'+
+        '<td><b>'+(fi?fi.now:'—')+'</b></td>'+
+        '<td>'+(fi&&fi.delta!=null?((fi.delta>=0?'+':'')+fi.delta):'—')+'</td>'+
+        '<td><b contenteditable="true" class="tgt" data-tch="'+ch+'">'+(target||'—')+'</b><small class="tgt-l">/mo est.</small></td>'+
+        '<td><div class="pbar'+cls+'"><i style="width:'+pct+'%"></i></div><small class="tgt-l">'+pct+'% of target</small></td>'+
+        '<td>'+fmt1(curEng)+'</td>'+
+        '<td>'+fmt1(baseEng)+'</td>';
+      tb.appendChild(tr);
+      var tEl=tr.querySelector('.tgt');
+      tEl.addEventListener('blur', function(){
+        var v=parseInt(tEl.textContent.replace(/[^0-9]/g,''),10);
+        if(!isNaN(v)&&v>0){ GROWTH_TARGETS[ch]=v; renderPerf(); }
+        else { tEl.textContent=GROWTH_TARGETS[ch]||'—'; }
+      });
+    });
+  }
+  renderPerf();
+})();
+
 // ---------- Persistence: auto-save edits to this browser ----------
 (function(){
   var KEY='sshub_state';
@@ -2916,6 +3145,7 @@ var CH_HISTORY = {}; // {channel:[{d:'YYYY-MM-DD',f:'5,147'},...]} — every rec
       follows:FOLLOWS,
       channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),
       channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),
+      targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),
       checks:collectChecks()
     };
   }
