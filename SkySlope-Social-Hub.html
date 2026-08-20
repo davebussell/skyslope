@@ -330,6 +330,19 @@
   .pv .pvcard{cursor:pointer;transition:box-shadow .12s ease}
   .pv.incart .pvcard{box-shadow:0 0 0 3px var(--blue)}
   .cb-flag{color:var(--blue);font-weight:700}
+  /* ---- v7.1: branded platform tabs + motion ---- */
+  .pvtab{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:13px;font-weight:700;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:7px 14px 7px 8px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;margin:0 6px 6px 0}
+  .pvtab:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+  .pvtab.on{color:#fff;border-color:transparent}
+  .pvtab.on .pvtab-n{background:rgba(255,255,255,.25);color:#fff}
+  .pvtab-badge{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+  .pvtab-n{background:var(--accentwash);color:var(--blue);border-radius:999px;font-size:11px;padding:1px 8px}
+  .pvbanner{border-radius:12px;color:#fff;padding:12px 16px;margin:4px 0 14px;display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow)}
+  .pvbanner b{font-size:15px}
+  .pvbanner span{font-size:12px;opacity:.9}
+  @keyframes pvin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .pv{animation:pvin .28s ease both}
+  @media(prefers-reduced-motion:reduce){.pv{animation:none}.pvtab{transition:none}}
   body.cart-open .main{padding-bottom:170px}
   @media(max-width:820px){
     body.cart-open .corner{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
@@ -2422,7 +2435,8 @@ try{
   var activeEnv='copy';
   try{ activeEnv=localStorage.getItem('sshub_env')||'copy'; }catch(err){}
   var ENVS=[['copy','1 · Copy'],['creative','2 · Creative'],['ready','3 · Ready to schedule']];
-  var filterFree=false, pvPlatform='All';
+  var filterFree=true, pvPlatform='All';
+  try{ filterFree = localStorage.getItem('sshub_ff')!=='0'; }catch(err){}
   var PLATFORM_ORDER=['LinkedIn','Instagram','Facebook','YouTube','X','TikTok'];
   var PLATFORM_GUIDE={
     LinkedIn:'Post natively; document/PDF carousel preferred for data posts. Hook inside the first 125 characters. External or methodology links go in the FIRST COMMENT, never the post body. Rally 3+ team engagements within the first hour.',
@@ -2432,6 +2446,26 @@ try{
     X:'Maintenance mode: news distribution only, announcement register.',
     TikTok:'Phase-2 test only - do NOT publish before the Month-3 go/no-go decision.'
   };
+  function aspectFor(p){
+    var f=(p.format||'').toLowerCase();
+    if(p.platform==='Instagram') return /reel|video/.test(f)?'9:16 vertical, 1080x1920':'4:5 portrait, 1080x1350';
+    if(p.platform==='LinkedIn') return /carousel|document/.test(f)?'1:1 square, 1080x1080 (first slide)':'1.91:1 landscape, 1200x627';
+    if(p.platform==='Facebook') return '4:5 portrait, 1080x1350';
+    if(p.platform==='YouTube') return '16:9, 1280x720';
+    if(p.platform==='TikTok') return '9:16 vertical, 1080x1920';
+    return '1:1 square, 1080x1080';
+  }
+  function genPrompt(p){
+    var isVideo=/reel|video|clip/i.test(p.format||'');
+    var L=[];
+    L.push('Generate one finished social media image now. Do not describe it, do not ask questions - output the image itself.');
+    L.push('Use: '+(isVideo?('cover/opening frame for a '+p.platform+' video post'):(p.platform+' feed graphic'))+'.');
+    L.push('Aspect ratio: '+aspectFor(p)+'.');
+    L.push('Composition: '+((p.visual||'Clean typographic stat card for a real estate software brand.').replace(/\[|\]/g,'')));
+    L.push('Style: modern flat design for a B2B real estate software brand; primary blue #0059DA on white, or white on deep navy #151A27 for dark scenes; supporting slate #3F5B77; generous white space; clean geometric sans-serif type; softly rounded corners.');
+    L.push('Rules: render any numbers or names literally without brackets; keep on-image text SHORT and spelled exactly as given; no company logos or wordmarks, no watermarks, no fake platform UI, no lorem ipsum.');
+    return L.join('\n');
+  }
   function postBrief(p){
     var L=[];
     L.push('POST: '+p.title);
@@ -2446,6 +2480,9 @@ try{
     L.push('PLATFORM RULES ('+p.platform+'): '+(PLATFORM_GUIDE[p.platform]||''));
     if(p.note){ L.push('NOTE: '+p.note); }
     L.push('QA: caption matches asset | names verified | zero-CTA has no link | alt text added | voice checklist run.');
+    L.push('');
+    L.push('----- IMAGE GENERATION PROMPT (paste this block on its own into Gemini or any image tool) -----');
+    L.push(genPrompt(p));
     return L.join('\n');
   }
   var COPY_STATUSES=['Idea','Drafted','Approved'];
@@ -2515,7 +2552,7 @@ try{
       var b=document.createElement('button');
       b.className='fbtn'+(pair[0]===activeEnv?' on':'');
       b.textContent=pair[1]+' ('+envCount(pair[0])+')';
-      b.onclick=function(){ filterFree=false; activeEnv=pair[0]; try{localStorage.setItem('sshub_env',activeEnv);}catch(err){} filters(); syncView(); };
+      b.onclick=function(){ filterFree=false; try{localStorage.setItem('sshub_ff','0');}catch(err){} activeEnv=pair[0]; try{localStorage.setItem('sshub_env',activeEnv);}catch(err){} filters(); syncView(); };
       t.appendChild(b);
     });
     var ff=document.createElement('button');
@@ -2524,6 +2561,7 @@ try{
     ff.title='See every post, styled the way each platform will render it';
     ff.onclick=function(){
       filterFree=!filterFree;
+      try{ localStorage.setItem('sshub_ff', filterFree?'1':'0'); }catch(err){}
       if(filterFree){ activePillar='All'; activeStatus='All'; activeReady='All'; studioView='list'; }
       filters(); syncView();
     };
@@ -2532,15 +2570,31 @@ try{
   function filters(){
     var pf=document.getElementById('pillarFilters');
     if(filterFree){
-      pf.innerHTML='<span class="note-strip">Experience:</span>';
-      var present={}; ccPosts.forEach(function(p){ present[p.platform]=1; });
-      ['All'].concat(PLATFORM_ORDER.filter(function(x){return present[x];})).forEach(function(c){
-        var b=document.createElement('button'); b.className='fbtn'+(c===pvPlatform?' on':''); b.textContent=c==='All'?'All platforms':c;
+      pf.innerHTML='';
+      var PV_COLORS={All:'#3F5B77',LinkedIn:'#0a66c2',Instagram:'linear-gradient(45deg,#f58529,#dd2a7b,#8134af)',Facebook:'#1877f2',YouTube:'#ff0000',X:'#0b0b0b',TikTok:'#010101'};
+      var PV_BADGE={All:'\u25a0',LinkedIn:'in',Instagram:'ig',Facebook:'f',YouTube:'\u25b6',X:'\ud835\udd4f',TikTok:'tt'};
+      var present={}; ccPosts.forEach(function(p){ present[p.platform]=(present[p.platform]||0)+1; });
+      var opts=['All'].concat(PLATFORM_ORDER.filter(function(x){return present[x];}));
+      opts.forEach(function(c){
+        var b=document.createElement('button');
+        b.className='pvtab'+(c===pvPlatform?' on':'');
+        var count = c==='All' ? ccPosts.length : present[c];
+        b.innerHTML='<span class="pvtab-badge" style="background:'+PV_COLORS[c]+'">'+PV_BADGE[c]+'</span><span>'+(c==='All'?'All platforms':c)+'</span><span class="pvtab-n">'+count+'</span>';
+        if(c===pvPlatform && c!=='Instagram') b.style.background=PV_COLORS[c];
+        if(c===pvPlatform && c==='Instagram') b.style.background='linear-gradient(45deg,#f58529,#dd2a7b,#8134af)';
         b.onclick=function(){ pvPlatform=c; filters(); syncView(); };
         pf.appendChild(b);
       });
       document.getElementById('statusFilters').innerHTML='';
-      document.getElementById('readyFilters').innerHTML='';
+      var rfEl=document.getElementById('readyFilters');
+      rfEl.innerHTML='';
+      if(pvPlatform!=='All'){
+        var bn=document.createElement('div'); bn.className='pvbanner';
+        if(pvPlatform!=='Instagram') bn.style.background=PV_COLORS[pvPlatform];
+        else bn.style.background=PV_COLORS.Instagram;
+        bn.innerHTML='<b>'+pvPlatform+' experience</b><span>'+(present[pvPlatform]||0)+' post'+((present[pvPlatform]||0)>1?'s':'')+' \u00b7 '+((PLATFORM_GUIDE[pvPlatform]||'').split('.')[0])+'.</span>';
+        rfEl.appendChild(bn);
+      }
       return;
     }
     pf.innerHTML='<span class="note-strip">Pillar:</span>';
@@ -2637,6 +2691,7 @@ try{
         var folded = m.fold && p.cap.length>m.fold;
         d.setAttribute('data-pvi', ccPosts.indexOf(p));
         d.className+=(p.sel?' incart':'');
+        d.style.animationDelay=Math.min(shown*35,350)+'ms';
         d.innerHTML=
           '<div class="pvstrip">'+p.env+' · '+p.status+(p.when?' · '+p.when:'')+' · '+p.pillar+' <span class="cb-flag"'+(p.sel?'':' style="display:none"')+'>✓ in cart</span></div>'+
           '<div class="pvcard">'+
@@ -2663,7 +2718,9 @@ try{
         b1.onclick=function(){ copyText(postBrief(p),'Brief copied'); };
         var b2=document.createElement('button'); b2.className='cbtn'; b2.textContent='⧉ Copy caption';
         b2.onclick=function(){ copyText(p.cap,'Caption copied'); };
-        tools.appendChild(b1); tools.appendChild(b2);
+        var b3=document.createElement('button'); b3.className='cbtn'; b3.textContent='⧉ Image prompt';
+        b3.onclick=function(){ copyText(genPrompt(p),'Generation-ready image prompt copied — paste into Gemini'); };
+        tools.appendChild(b1); tools.appendChild(b2); tools.appendChild(b3);
         list.appendChild(d);
       });
     });
@@ -2772,6 +2829,7 @@ try{
           if(!p.creative.kind){ p.creative.kind = /video|mp4|reel/i.test(p.creative.link)?'video':'image'; }
           moveEnv(p,'ready','to-ready','"'+p.title.slice(0,32)+'" \u2192 Ready to schedule');
         });
+        cbtn('\u29c9 Image prompt','',function(){ copyText(genPrompt(p),'Generation-ready image prompt copied \u2014 paste into Gemini'); });
         cbtn('\u2190 Back to Copy','',function(){ moveEnv(p,'copy','back-to-copy','Sent back to Copy'); });
       } else {
         cbtn('\u29c9 Copy caption','push',function(){ copyText(p.cap,'Caption copied'); });
