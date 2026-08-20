@@ -342,6 +342,35 @@
   .pvmedia.img img{width:100%;height:auto;max-height:600px;object-fit:contain;background:var(--page)}
   .pcard .img:has(img){height:auto;min-height:0}
   .pcard .img img{width:100%;height:auto;object-fit:contain;max-height:240px}
+  /* hover image-upload button */
+  .pvcard{position:relative}
+  .imgup{position:absolute;top:10px;right:10px;z-index:3;width:30px;height:30px;border-radius:50%;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .15s ease;box-shadow:var(--shadow);padding:0}
+  .pvcard:hover .imgup,.pcard:hover .imgup,.imgup:focus-visible{opacity:1}
+  .imgup:hover{color:var(--blue);border-color:var(--blue)}
+  .pcard .img .imgup{top:6px;right:6px;width:26px;height:26px}
+  @media(hover:none){.imgup{opacity:.85}}
+  /* ---- v8: three worlds ---- */
+  .worlds{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;margin:4px 10px 6px 0;flex:1}
+  .world{--wc:#0059DA;position:relative;flex:1 1 150px;min-width:150px;text-align:left;font-family:inherit;background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:transform .15s ease,box-shadow .15s ease}
+  .world:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .world.on{border-color:var(--wc);box-shadow:0 0 0 2px var(--wc)}
+  .w-num{position:absolute;top:8px;right:12px;font-size:24px;font-weight:800;color:var(--wc);opacity:.22}
+  .w-name{font-size:16px;font-weight:800;color:var(--wc)}
+  .w-tag{font-size:11px;color:var(--muted);font-style:italic}
+  .w-count{font-size:11.5px;color:var(--ink-2)}
+  .w-meter{height:6px;border-radius:99px;background:var(--grid);overflow:hidden;margin-top:4px}
+  .w-meter i{display:block;height:100%;background:var(--wc);transition:width .4s ease}
+  .w-arrow{align-self:center;color:var(--baseline);font-size:18px;flex-shrink:0}
+  #view-studio[data-world="copy"]{--wc2:#0059DA}
+  #view-studio[data-world="creative"]{--wc2:#533DB1}
+  #view-studio[data-world="ready"]{--wc2:#28A745}
+  #view-studio[data-world] .pcard{border-left:4px solid var(--wc2)}
+  #view-studio[data-world] #pillarFilters .fbtn.on,#view-studio[data-world] #readyFilters .fbtn.on{background:var(--wc2);color:#fff;border-color:transparent}
+  #view-studio[data-world] .cbtn.push{background:var(--wc2);color:#fff;border-color:transparent}
+  .cfx{position:fixed;width:8px;height:8px;border-radius:2px;z-index:99;pointer-events:none;animation:cfx .7s ease-out forwards}
+  @keyframes cfx{to{transform:translate(var(--dx),var(--dy)) rotate(240deg);opacity:0}}
+  @media(prefers-reduced-motion:reduce){.cfx{display:none}.world{transition:none}}
+  @media(max-width:700px){.w-arrow{display:none}.world{flex:1 1 100%}}
   /* ---- v7.1: branded platform tabs + motion ---- */
   .pvtab{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:13px;font-weight:700;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:7px 14px 7px 8px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;margin:0 6px 6px 0}
   .pvtab:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
@@ -2449,7 +2478,10 @@ try{
   var activePillar='All', activeStatus='All', activeReady='To schedule', studioView='list';
   var activeEnv='copy';
   try{ activeEnv=localStorage.getItem('sshub_env')||'copy'; }catch(err){}
-  var ENVS=[['copy','1 · Copy'],['creative','2 · Creative'],['ready','3 · Ready to schedule']];
+  var ENVS=[['copy','Compose'],['creative','Create'],['ready','Deploy']];
+  var ENV_LABEL={copy:'Compose',creative:'Create',ready:'Deploy'};
+  var ENV_TAG={copy:'Write it. Approve it.',creative:'Give it a face.',ready:'Ship it. Log it.'};
+  var ENV_COLOR={copy:'#0059DA',creative:'#533DB1',ready:'#28A745'};
   var filterFree=true, pvPlatform='All';
   try{ filterFree = localStorage.getItem('sshub_ff')!=='0'; }catch(err){}
   var PLATFORM_ORDER=['LinkedIn','Instagram','Facebook','YouTube','X','TikTok'];
@@ -2484,7 +2516,7 @@ try{
   function postBrief(p){
     var L=[];
     L.push('POST: '+p.title);
-    L.push('Stage: '+p.env+' | Status: '+p.status+' | Publish day: '+(p.when||'NOT ASSIGNED'));
+    L.push('Stage: '+(ENV_LABEL[p.env]||p.env)+' | Status: '+p.status+' | Publish day: '+(p.when||'NOT ASSIGNED'));
     L.push('Platform: '+p.platform+' | Pillar: '+p.pillar+' | Format: '+p.format);
     L.push('');
     L.push('CAPTION (use exactly; replace [bracketed] placeholders with validated values first):');
@@ -2528,7 +2560,7 @@ try{
   function stamp(p,act){ p.history.push({act:act,by:hubUser(),at:new Date().toISOString().slice(0,16).replace('T',' ')}); }
   function lastStamp(p){ return p.history.length?p.history[p.history.length-1]:null; }
   function fmtAct(s){
-    var m={'to-creative':'pushed to Creative','to-ready':'pushed to Ready','back-to-copy':'sent back to Copy','back-to-creative':'sent back to Creative','scheduled':'marked scheduled','published':'marked published'};
+    var m={'to-creative':'handed off to Create','to-ready':'handed off to Deploy','back-to-copy':'sent back to Compose','back-to-creative':'sent back to Create','scheduled':'marked scheduled','published':'shipped'};
     return (m[s.act]||s.act)+' by '+s.by+' \u00b7 '+s.at;
   }
   function visible(p){
@@ -2553,23 +2585,38 @@ try{
     var pub=ccPosts.filter(function(p){return p.status==='Published';}).length;
     var dated=ccPosts.filter(function(p){return p.when;}).length;
     t.innerHTML='<div class="tile"><div class="v">'+ccPosts.length+'</div><div class="l">Posts in pipeline</div></div>'+
-      '<div class="tile"><div class="v">'+envCount('copy')+'</div><div class="l">1 \u00b7 Copy</div></div>'+
-      '<div class="tile"><div class="v">'+envCount('creative')+'</div><div class="l">2 \u00b7 Creative</div></div>'+
-      '<div class="tile"><div class="v">'+toSched+'</div><div class="l">3 \u00b7 Awaiting scheduling</div></div>'+
+      '<div class="tile"><div class="v">'+envCount('copy')+'</div><div class="l">Compose</div></div>'+
+      '<div class="tile"><div class="v">'+envCount('creative')+'</div><div class="l">Create</div></div>'+
+      '<div class="tile"><div class="v">'+toSched+'</div><div class="l">Deploy · awaiting</div></div>'+
       '<div class="tile"><div class="v">'+sched+'</div><div class="l">Scheduled</div></div>'+
-      '<div class="tile"><div class="v">'+pub+'</div><div class="l">Published</div></div>'+
+      '<div class="tile"><div class="v">'+pub+'</div><div class="l">Shipped</div></div>'+
       '<div class="tile"><div class="v">'+dated+'</div><div class="l">Assigned to a day</div></div>';
+  }
+  function worldMeter(env){
+    var pool=ccPosts.filter(function(p){return p.env===env;});
+    if(env==='copy'){ var a=pool.filter(function(p){return p.status==='Approved';}).length; return {n:pool.length,done:a,label:a+' approved'}; }
+    if(env==='creative'){ var c=pool.filter(function(p){return p.creative&&p.creative.link;}).length; return {n:pool.length,done:c,label:c+' dressed'}; }
+    var sh=pool.filter(function(p){return p.status==='Scheduled'||p.status==='Published';}).length;
+    return {n:pool.length,done:sh,label:sh+' shipped'};
   }
   function envTabs(){
     var t=document.getElementById('envTabs'); if(!t) return;
-    t.innerHTML='<span class="note-strip">Stage:</span>';
-    ENVS.forEach(function(pair){
-      var b=document.createElement('button');
-      b.className='fbtn'+(pair[0]===activeEnv?' on':'');
-      b.textContent=pair[1]+' ('+envCount(pair[0])+')';
-      b.onclick=function(){ filterFree=false; try{localStorage.setItem('sshub_ff','0');}catch(err){} activeEnv=pair[0]; try{localStorage.setItem('sshub_env',activeEnv);}catch(err){} filters(); syncView(); };
-      t.appendChild(b);
+    t.innerHTML='';
+    var wrap=document.createElement('div'); wrap.className='worlds';
+    ENVS.forEach(function(pair,wi){
+      var env=pair[0], m=worldMeter(env);
+      var b=document.createElement('button'); b.type='button';
+      b.className='world'+(env===activeEnv&&!filterFree?' on':'');
+      b.style.setProperty('--wc', ENV_COLOR[env]);
+      var pct=m.n?Math.round(m.done/m.n*100):0;
+      b.innerHTML='<span class="w-num">'+(wi+1)+'</span><span class="w-name">'+pair[1]+'</span><span class="w-tag">'+ENV_TAG[env]+'</span>'+
+        '<span class="w-count">'+m.n+' post'+(m.n===1?'':'s')+' · '+m.label+'</span>'+
+        '<span class="w-meter"><i style="width:'+pct+'%"></i></span>';
+      b.onclick=function(){ filterFree=false; try{localStorage.setItem('sshub_ff','0');}catch(err){} activeEnv=env; try{localStorage.setItem('sshub_env',activeEnv);}catch(err){} filters(); syncView(); };
+      wrap.appendChild(b);
+      if(wi<2){ var ar=document.createElement('span'); ar.className='w-arrow'; ar.textContent='→'; wrap.appendChild(ar); }
     });
+    t.appendChild(wrap);
     var ff=document.createElement('button');
     ff.className='fbtn ff'+(filterFree?' on':'');
     ff.textContent='Filter-free preview';
@@ -2581,6 +2628,8 @@ try{
       filters(); syncView();
     };
     t.appendChild(ff);
+    var sec=document.getElementById('view-studio');
+    if(sec){ if(filterFree){ sec.removeAttribute('data-world'); } else { sec.setAttribute('data-world', activeEnv); } }
   }
   function filters(){
     var pf=document.getElementById('pillarFilters');
@@ -2646,7 +2695,9 @@ try{
     var t=document.getElementById('studioTools'); if(!t) return;
     t.innerHTML='<span class="note-strip">Bulk:</span>';
     function btn(label,fn){ var b=document.createElement('button'); b.className='fbtn'; b.textContent=label; b.onclick=fn; t.appendChild(b); return b; }
-    btn(studioView==='list'?'Calendar view':'List view', function(){ studioView=studioView==='list'?'cal':'list'; syncView(); });
+    if(activeEnv==='ready'&&!filterFree){
+      btn(studioView==='list'?'Calendar view':'List view', function(){ studioView=studioView==='list'?'cal':'list'; syncView(); });
+    } else if(studioView==='cal'){ studioView='list'; }
     btn('Select shown', function(){ ccPosts.forEach(function(p){ if(visible(p)) p.sel=true; }); syncView(); showToast(selCount()+' selected'); });
     btn('Clear selection', function(){ ccPosts.forEach(function(p){ delete p.sel; }); syncView(); });
     btn('Selected to top', function(){
@@ -2670,7 +2721,33 @@ try{
     if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){showToast(okMsg);},function(){showToast('Copy blocked \u2014 select manually');}); }
     else showToast('Copy not available \u2014 select manually');
   }
-  function moveEnv(p,env,act,msg){ p.env=env; delete p.sel; stamp(p,act); tiles(); envTabs(); render(); showToast(msg+' \u2014 stamped as '+lastStamp(p).by); }
+  function bumpStreak(){
+    var today=new Date().toISOString().slice(0,10), st={d:today,n:0};
+    try{ st=JSON.parse(localStorage.getItem('sshub_streak')||'null')||st; }catch(err){}
+    if(st.d!==today) st={d:today,n:0};
+    st.n++;
+    try{ localStorage.setItem('sshub_streak',JSON.stringify(st)); }catch(err){}
+    return st.n;
+  }
+  function fxConfetti(){
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var colors=['#0059DA','#079EFF','#28A745','#FFC107','#533DB1'];
+    for(var ci=0;ci<14;ci++){
+      var c=document.createElement('i'); c.className='cfx';
+      c.style.background=colors[ci%colors.length];
+      c.style.left=(window.innerWidth/2+(Math.random()*80-40))+'px';
+      c.style.top=(window.innerHeight*0.45)+'px';
+      c.style.setProperty('--dx',(Math.random()*180-90)+'px');
+      c.style.setProperty('--dy',(Math.random()*-150-40)+'px');
+      document.body.appendChild(c);
+      setTimeout((function(cc){return function(){cc.remove();};})(c),760);
+    }
+  }
+  function moveEnv(p,env,act,msg){
+    p.env=env; delete p.sel; stamp(p,act); tiles(); envTabs(); render();
+    var n=bumpStreak();
+    showToast(msg+' — by '+lastStamp(p).by+' · handoff #'+n+' today'+(n>0&&n%5===0?' — on a heater!':''));
+  }
 
   var PV_META={
     LinkedIn:{name:'SkySlope',sub:'5,147 followers · 1h',actions:'\ud83d\udc4d Like \ud83d\udcac Comment ↻ Repost ➤ Send',fold:210},
@@ -2680,6 +2757,18 @@ try{
     X:{name:'SkySlope',sub:'@SkySlope',actions:'\ud83d\udcac ↻ ♥ ⬆',fold:0},
     TikTok:{name:'skyslope',sub:'phase-2 — not launched',actions:'♥ \ud83d\udcac ➤',fold:80}
   };
+  function makeImgUp(p, cardGetter){
+    var b=document.createElement('button');
+    b.type='button'; b.className='imgup'; b.title='Upload an image for this post';
+    b.innerHTML='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.6"></circle><path d="M21 15.5l-5.5-5.5L4.5 21"></path></svg>';
+    b.onclick=function(ev){
+      ev.stopPropagation(); ev.preventDefault();
+      var fi=document.createElement('input'); fi.type='file'; fi.accept='image/*';
+      fi.onchange=function(){ if(fi.files[0]) attachImage(p, fi.files[0], cardGetter()); };
+      fi.click();
+    };
+    return b;
+  }
   function pvMedia(p){
     if(p.creative&&p.creative.link){
       var kind=p.creative.kind||'asset';
@@ -2708,7 +2797,7 @@ try{
         d.className+=(p.sel?' incart':'');
         d.style.animationDelay=Math.min(shown*35,350)+'ms';
         d.innerHTML=
-          '<div class="pvstrip">'+p.env+' · '+p.status+(p.when?' · '+p.when:'')+' · '+p.pillar+' <span class="cb-flag"'+(p.sel?'':' style="display:none"')+'>✓ in cart</span></div>'+
+          '<div class="pvstrip">'+(ENV_LABEL[p.env]||p.env)+' · '+p.status+(p.when?' · '+p.when:'')+' · '+p.pillar+' <span class="cb-flag"'+(p.sel?'':' style="display:none"')+'>✓ in cart</span></div>'+
           '<div class="pvcard">'+
             '<div class="pvhead"><svg class="pvavatar" viewBox="-0.7 -0.2 24.9 25.4" aria-hidden="true"><use href="#ss-mark"/></svg>'+
             '<div><b>'+m.name+'</b><div class="pvsub">'+m.sub+'</div></div></div>'+
@@ -2736,6 +2825,7 @@ try{
         var b3=document.createElement('button'); b3.className='cbtn'; b3.textContent='⧉ Image prompt';
         b3.onclick=function(){ copyText(genPrompt(p),'Generation-ready image prompt copied — paste into Gemini'); };
         tools.appendChild(b1); tools.appendChild(b2); tools.appendChild(b3);
+        d.querySelector('.pvcard').appendChild(makeImgUp(p, function(){ return d; }));
         list.appendChild(d);
       });
     });
@@ -2754,6 +2844,8 @@ try{
       if(p.env==='ready'){
         img.textContent=p.creative.kind?('creative: '+p.creative.kind):'no creative';
         if(p.creative.link){ img.style.cursor='pointer'; img.title='Open creative link'; img.onclick=function(){ window.open(p.creative.link,'_blank'); }; }
+        img.style.position='relative';
+        img.appendChild(makeImgUp(p, function(){ return d; }));
       } else {
         if(p.img){var im=document.createElement('img');im.src=p.img;img.appendChild(im);}
         else img.textContent='+ preview image (click \u2014 session only)';
@@ -2833,19 +2925,19 @@ try{
           ord.appendChild(b);
         });
         ctrl.appendChild(ord);
-        cbtn('\u2192 Push to Creative','push',function(){
+        cbtn('\u2192 Hand off to Create','push',function(){
           if(p.status!=='Approved'){ showToast('Set status to Approved first \u2014 only approved copy moves on'); return; }
-          moveEnv(p,'creative','to-creative','"'+p.title.slice(0,32)+'" \u2192 Creative');
+          moveEnv(p,'creative','to-creative','"'+p.title.slice(0,32)+'" \u2192 Create');
         });
         cbtn('\u2715 remove','',function(){ if(confirm('Remove "'+p.title+'" from the pipeline?')){ccPosts.splice(i,1);tiles();envTabs();render();} });
       } else if(p.env==='creative'){
-        cbtn('\u2192 Push to Ready','push',function(){
-          if(!p.creative.link){ showToast('Add the Drive/asset link first \u2014 stage 3 needs a collectible creative'); return; }
+        cbtn('\u2192 Hand off to Deploy','push',function(){
+          if(!p.creative.link){ showToast('Add the Drive/asset link first \u2014 Deploy needs a collectible creative'); return; }
           if(!p.creative.kind){ p.creative.kind = /video|mp4|reel/i.test(p.creative.link)?'video':'image'; }
-          moveEnv(p,'ready','to-ready','"'+p.title.slice(0,32)+'" \u2192 Ready to schedule');
+          moveEnv(p,'ready','to-ready','"'+p.title.slice(0,32)+'" \u2192 Deploy');
         });
         cbtn('\u29c9 Image prompt','',function(){ copyText(genPrompt(p),'Generation-ready image prompt copied \u2014 paste into Gemini'); });
-        cbtn('\u2190 Back to Copy','',function(){ moveEnv(p,'copy','back-to-copy','Sent back to Copy'); });
+        cbtn('\u2190 Back to Compose','',function(){ moveEnv(p,'copy','back-to-copy','Sent back to Compose'); });
       } else {
         cbtn('\u29c9 Copy caption','push',function(){ copyText(p.cap,'Caption copied'); });
         if(p.creative.link) cbtn('\u2197 Open creative','',function(){ window.open(p.creative.link,'_blank'); });
@@ -2857,9 +2949,9 @@ try{
           cbtn('\u23f0 Mark scheduled','',function(){ p.status='Scheduled'; stamp(p,'scheduled'); tiles(); render(); showToast('Scheduled \u2014 stamped as '+lastStamp(p).by); });
         }
         if(p.status!=='Published'){
-          cbtn('\u2713 Mark published','',function(){ p.status='Published'; stamp(p,'published'); tiles(); render(); showToast('Published \u2014 stamped as '+lastStamp(p).by); });
+          cbtn('\u2713 Mark published','',function(){ p.status='Published'; stamp(p,'published'); tiles(); envTabs(); render(); fxConfetti(); showToast('SHIPPED \u2014 '+lastStamp(p).by+' logs another one'); });
         }
-        cbtn('\u2190 Back to Creative','',function(){ p.status='Approved'; moveEnv(p,'creative','back-to-creative','Sent back to Creative'); });
+        cbtn('\u2190 Back to Create','',function(){ p.status='Approved'; moveEnv(p,'creative','back-to-creative','Sent back to Create'); });
       }
       d.appendChild(img);d.appendChild(mid);d.appendChild(ctrl);
       list.appendChild(d);
@@ -2867,9 +2959,9 @@ try{
     var list2=document.getElementById('plist');
     if(!list2.children.length){
       var empty=document.createElement('div'); empty.className='envnote';
-      empty.textContent = activeEnv==='copy' ? 'Nothing here \u2014 add a post or loosen the filters.' :
-        activeEnv==='creative' ? 'Nothing awaiting creative \u2014 approve copy in stage 1 and push it here.' :
-        'Nothing ready to schedule \u2014 attach creative in stage 2 and push it here.';
+      empty.textContent = activeEnv==='copy' ? 'Compose is quiet \u2014 the muse is waiting. Hit + New post.' :
+        activeEnv==='creative' ? 'Create is empty \u2014 approve something in Compose and hand it off.' :
+        'Deploy is clear \u2014 nothing on the launchpad. Dress a post in Create.';
       list2.appendChild(empty);
     }
   }
@@ -3075,7 +3167,7 @@ try{
     });
     sorted.forEach(function(p,i){
       var ls=(p.history&&p.history.length)?p.history[p.history.length-1]:null;
-      rows.push([i+1,p.platform,p.env,p.status,p.when||'',p.pillar,p.format,p.title,p.cap,p.visual||'',(p.creative||{}).kind||'',(p.creative||{}).link||'',(p.creative||{}).note||'',PLATFORM_GUIDE[p.platform]||'',p.note||'',ls?(ls.act+' by '+ls.by+' '+ls.at):''].map(csvCell).join(','));
+      rows.push([i+1,p.platform,(ENV_LABEL[p.env]||p.env),p.status,p.when||'',p.pillar,p.format,p.title,p.cap,p.visual||'',(p.creative||{}).kind||'',(p.creative||{}).link||'',(p.creative||{}).note||'',PLATFORM_GUIDE[p.platform]||'',p.note||'',ls?(ls.act+' by '+ls.by+' '+ls.at):''].map(csvCell).join(','));
     });
     return '﻿'+rows.join('\r\n');
   }
@@ -3337,7 +3429,7 @@ var CH_HISTORY = {}; // {channel:[{d:'YYYY-MM-DD',f:'5,147'},...]} — every rec
   var CH_LIST=['LinkedIn','Instagram','Facebook','YouTube','X'];
   var BASELINE={LinkedIn:'5,147',Instagram:'1,991',Facebook:'9.9K',YouTube:'1.16K',X:'1,385'};
   var BASE_DATE='2026-08-12';
-  CH_LIST.forEach(function(c){ CH_HISTORY[c]=[{d:BASE_DATE,f:BASELINE[c]}]; });
+  CH_LIST.forEach(function(c){ CH_HISTORY[c]=[{d:BASE_DATE,f:BASELINE[c]},{d:'2026-08-20',f:BASELINE[c]}]; });
   try{
     var st=JSON.parse(localStorage.getItem('sshub_state')||'null');
     if(st){
