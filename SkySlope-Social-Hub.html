@@ -318,6 +318,11 @@
   .pvact{padding:10px 14px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--grid)}
   .pvtools{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
   .pvh{margin:26px 0 12px}
+  /* ---- compact studio stat strip ---- */
+  #studioTiles{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  #studioTiles .tile{flex:1 1 auto;min-width:0;padding:7px 12px;display:flex;align-items:baseline;gap:7px;box-shadow:none}
+  #studioTiles .tile .v{font-size:17px}
+  #studioTiles .tile .l{font-size:11px;margin-top:0;white-space:nowrap}
   /* ---- v7: export cart ---- */
   .cartbar{position:fixed;left:0;right:0;bottom:0;z-index:66;background:var(--surface);border-top:2px solid var(--blue);box-shadow:0 -6px 24px rgba(21,26,39,.16);padding:10px 18px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
   .cb-info{font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
@@ -490,6 +495,15 @@
       <h1>SkySlope Social Strategy — Overview</h1>
       <div class="sub">Two strategic documents, one engine: turn 3M+ transactions of proprietary data into the most shareable content in real estate — and build the audience to see it. Prepared for Robert Pedraza.</div>
 
+      <h2 style="font-size:16px">Visibility detail — follower growth vs targets</h2>
+      <p class="note-strip" style="margin:0 0 8px">Live counts from the growth log · <b>monthly targets are Click Shift estimates pending Rob-confirmed commitments</b> (none exist in the email record yet) — click a target to set the committed number; goal format: direction + metric + baseline + target + deadline + owner.</p>
+      <div style="overflow-x:auto"><table id="perfTable">
+        <thead><tr><th>Channel</th><th>Followers now</th><th>Growth this month</th><th>Monthly target</th><th>Progress</th><th>Eng./post this month</th><th>June baseline</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <div class="note-card"><b>Operating cadence (per the framework):</b> Weekly, 15 min — leading indicators only (fold into the Friday tracker session) · Monthly, 1 hr — lagging metrics + content analysis (the analytics pull) · Quarterly — score every goal, reassess the constraint, re-pick the leader.</div>
+
+
       <h2>Strategic Positioning to Win on Social</h2>
       <details class="card" open><summary>How it all connects<span class="chev">▶</span></summary>
         <div class="body"><p><b>Where we start.</b> The June audit told one story clearly: SkySlope's channels have been all ask and no give — a press-release feed where every post ends in a CTA, sampled posts earn 2–9 likes and zero comments, and the only format that ever performed was a human being talking (the two customer Spotlight videos). Engagement is a content problem, not a frequency or budget problem — which means it is fixable with content.</p>
@@ -508,13 +522,7 @@
       </div>
       <div class="grid2" id="stackCards"></div>
 
-      <h2 style="font-size:16px">Visibility detail — follower growth vs targets</h2>
-      <p class="note-strip" style="margin:0 0 8px">Live counts from the growth log · <b>monthly targets are Click Shift estimates pending Rob-confirmed commitments</b> (none exist in the email record yet) — click a target to set the committed number; goal format: direction + metric + baseline + target + deadline + owner.</p>
-      <div style="overflow-x:auto"><table id="perfTable">
-        <thead><tr><th>Channel</th><th>Followers now</th><th>Growth this month</th><th>Monthly target</th><th>Progress</th><th>Eng./post this month</th><th>June baseline</th></tr></thead>
-        <tbody></tbody>
-      </table></div>
-      <div class="note-card"><b>Operating cadence (per the framework):</b> Weekly, 15 min — leading indicators only (fold into the Friday tracker session) · Monthly, 1 hr — lagging metrics + content analysis (the analytics pull) · Quarterly — score every goal, reassess the constraint, re-pick the leader.</div>
+
 
       <div class="tiles">
         <div class="tile"><div class="v">900K+</div><div class="l">Real estate professionals on SkySlope</div></div>
