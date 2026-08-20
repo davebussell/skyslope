@@ -2482,8 +2482,7 @@ try{
   var ENV_LABEL={copy:'Compose',creative:'Create',ready:'Deploy'};
   var ENV_TAG={copy:'Write it. Approve it.',creative:'Give it a face.',ready:'Ship it. Log it.'};
   var ENV_COLOR={copy:'#0059DA',creative:'#533DB1',ready:'#28A745'};
-  var filterFree=true, pvPlatform='All';
-  try{ filterFree = localStorage.getItem('sshub_ff')!=='0'; }catch(err){}
+  var filterFree=true, pvPlatform='All'; // filter-free preview is ALWAYS the default on load
   var PLATFORM_ORDER=['LinkedIn','Instagram','Facebook','YouTube','X','TikTok'];
   var PLATFORM_GUIDE={
     LinkedIn:'Post natively; document/PDF carousel preferred for data posts. Hook inside the first 125 characters. External or methodology links go in the FIRST COMMENT, never the post body. Rally 3+ team engagements within the first hour.',
