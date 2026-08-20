@@ -335,6 +335,8 @@
   .pv .pvcard{cursor:pointer;transition:box-shadow .12s ease}
   .pv.incart .pvcard{box-shadow:0 0 0 3px var(--blue)}
   .cb-flag{color:var(--blue);font-weight:700}
+  .pcard.dropping{outline:3px dashed var(--blue);outline-offset:3px}
+  .pv.dropping .pvcard{box-shadow:0 0 0 3px var(--blue);outline:3px dashed var(--blue);outline-offset:3px}
   /* ---- v7.1: branded platform tabs + motion ---- */
   .pvtab{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:13px;font-weight:700;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:7px 14px 7px 8px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;margin:0 6px 6px 0}
   .pvtab:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
@@ -916,7 +918,7 @@
       <div class="ccard">
         <b>Push-live workflow (honest version):</b> no standalone page can post directly to LinkedIn/Instagram/Facebook — that requires an authenticated publishing app. <b>Copy + Compose</b> gets you one click away: paste, attach the visual, publish. Phase 2 moves scheduling into Meta Business Suite Planner or Buffer/Metricool with an approval step; this studio stays the drafting + QA layer.
         <div style="margin-top:8px"><b>QA before every publish (the "Johnny" rule):</b> caption matches the visual · names spelled right · zero-CTA posts have NO link (product mention goes in a comment reply) · alt text added.</div>
-        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn push" id="excelBtn">⬇ Excel export (rows by platform)</button> <button class="cbtn push" id="llmBtn">⬇ LLM task export</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses and checklists auto-save in this browser. Video and heavy images stay in Google Drive — only links are stored here.</span></div>
+        <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn push" id="excelBtn">⬇ Excel export (rows by platform)</button> <button class="cbtn push" id="llmBtn">⬇ LLM task export</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses, checklists and dropped images (auto-compressed) save and sync. Oversized images stay session-only — masters and all video live in Google Drive, linked not hosted.</span></div>
         <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button></div>
       </div>
       <textarea class="io" id="ioArea" style="display:none" readonly></textarea>
@@ -2927,6 +2929,55 @@ try{
     if(studioView==='cal'){ calChFilters(); renderCal(); } else { render(); }
     tiles();
   }
+  // ----- drag & drop image attach (works on every stage + preview cards) -----
+  function attachImage(p, file, card){
+    if(!file || (file.type||'').indexOf('image/')!==0){ showToast('Drop an image file (PNG or JPG)'); return; }
+    var rd=new FileReader();
+    rd.onload=function(){
+      var im=new Image();
+      im.onload=function(){
+        var MAX=1200, scale=Math.min(1, MAX/Math.max(im.width, im.height));
+        var cv=document.createElement('canvas');
+        cv.width=Math.round(im.width*scale); cv.height=Math.round(im.height*scale);
+        cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+        var out=cv.toDataURL('image/jpeg',0.82);
+        if(rd.result.length<out.length) out=rd.result;
+        p.img=out;
+        if(out.length>400000){ showToast('Image attached (this session only \u2014 too large to sync; keep the master in Drive)'); }
+        else { showToast('Image attached \u2014 saves and syncs with the post'); }
+        if(card){
+          if(card.classList.contains('pv')){
+            var m=card.querySelector('.pvmedia');
+            if(m){ var tmp=document.createElement('div'); tmp.innerHTML=pvMedia(p); m.replaceWith(tmp.firstChild); }
+          } else {
+            var slot=card.querySelector('.img');
+            if(slot){ slot.innerHTML='<img src="'+p.img+'" alt="">'; }
+          }
+        }
+      };
+      im.src=rd.result;
+    };
+    rd.readAsDataURL(file);
+  }
+  var plistEl=document.getElementById('plist');
+  if(plistEl){
+    plistEl.addEventListener('dragover', function(ev){
+      var card=ev.target.closest('.pcard,.pv'); if(!card) return;
+      ev.preventDefault();
+      card.classList.add('dropping');
+    });
+    plistEl.addEventListener('dragleave', function(ev){
+      var card=ev.target.closest('.pcard,.pv'); if(card && !card.contains(ev.relatedTarget)) card.classList.remove('dropping');
+    });
+    plistEl.addEventListener('drop', function(ev){
+      var card=ev.target.closest('.pcard,.pv'); if(!card) return;
+      ev.preventDefault(); card.classList.remove('dropping');
+      var idx = card.hasAttribute('data-pvi') ? parseInt(card.getAttribute('data-pvi'),10) : parseInt(card.getAttribute('data-idx'),10);
+      var p=ccPosts[idx]; if(!p){ showToast('Could not match this card to a post'); return; }
+      var f=ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+      attachImage(p, f, card);
+    });
+  }
   // ----- export cart -----
   function cartItems(){ return ccPosts.filter(function(p){return p.sel;}); }
   function refreshSelViews(){
@@ -3631,7 +3682,7 @@ var AMPLIFIERS=[
   function state(){
     return {
       savedAt:new Date().toISOString(),
-      posts:ccPosts.map(function(p){ var q={}; for(var k in p){ if(k!=='img') q[k]=p[k]; } return q; }),
+      posts:ccPosts.map(function(p){ var q={}; for(var k in p){ if(k==='img'){ if(p.img&&p.img.length<=400000) q.img=p.img; } else { q[k]=p[k]; } } return q; }),
       follows:FOLLOWS,
       channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),
       channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),
