@@ -506,6 +506,11 @@
   .dschip:hover{opacity:.85}
   .dsnone{font-size:12px;color:var(--muted);padding:4px 0}
   .pv.flash .pvcard{animation:flashcard 1.6s}
+  /* ---- v10: video uploads ---- */
+  .pvmedia.vid{padding:0;min-height:0;position:relative;display:block}
+  .pvmedia.vid video{width:100%;max-height:480px;display:block;background:#000}
+  .imgup.vidup{right:46px}
+  .pvmedia.vid:hover .vidrm,.vidrm:focus-visible{opacity:1}
   .sc-more{font-size:9px;color:var(--muted)}
   @media(max-width:700px){.schedm .calday{min-height:46px}.sc-chip{display:inline-block;width:9px;height:9px;min-width:0;border-radius:50%;padding:0;font-size:0;margin-right:2px}}
 </style>
@@ -2960,10 +2965,69 @@ try{
     };
     return b;
   }
+  function uploadVideo(p, file, card){
+    if(!file) return;
+    var okType=/^video\/(mp4|quicktime|webm)$/.test(file.type||'')||/\.(mp4|mov|webm)$/i.test(file.name||'');
+    if(!okType){ showToast('Use an MP4 video file (MOV and WebM also work)'); return; }
+    var store=window.__sshubStore;
+    if(!store){ showToast('Video upload needs the shared database connected \u2014 use a Drive link instead, or connect Supabase in the sync card'); return; }
+    if(file.size>52428800){ showToast('Video is over the 50MB per-file storage cap \u2014 compress it, or keep the master in Drive and paste the link'); return; }
+    var ext=(file.name.match(/\.(\w+)$/)||[0,'mp4'])[1].toLowerCase();
+    var safe=(p.title||'post').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'post';
+    var path=Date.now()+'-'+safe+'.'+ext;
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST', store.url+'/storage/v1/object/videos/'+path);
+    xhr.setRequestHeader('apikey', store.anonKey);
+    xhr.setRequestHeader('Authorization','Bearer '+store.anonKey);
+    xhr.setRequestHeader('Content-Type', file.type||'video/mp4');
+    xhr.upload.onprogress=function(ev){ if(ev.lengthComputable) showToast('Uploading video\u2026 '+Math.round(ev.loaded/ev.total*100)+'%'); };
+    xhr.onload=function(){
+      if(xhr.status>=200&&xhr.status<300){
+        p.creative.kind='video';
+        p.creative.link=store.url+'/storage/v1/object/public/videos/'+path;
+        var r=syncEnv(p);
+        refreshAll();
+        showToast('Video uploaded \u2014 it plays right on the card'+(r?' \u2014 moved to '+ENV_LABEL[r.to]:''));
+      } else if(xhr.status===404){
+        showToast('Video storage is not set up yet \u2014 the videos bucket is missing in Supabase (ask Dave)');
+      } else if(xhr.status===400||xhr.status===403){
+        showToast('Storage refused the upload ('+xhr.status+') \u2014 the videos bucket needs its upload policy (ask Dave)');
+      } else {
+        showToast('Upload failed ('+xhr.status+') \u2014 try again, or paste a Drive link');
+      }
+    };
+    xhr.onerror=function(){ showToast('Upload failed \u2014 network error; try again'); };
+    showToast('Uploading video\u2026');
+    xhr.send(file);
+  }
+  function removeVideo(p){
+    p.creative.link=''; p.creative.kind='';
+    var demoted='';
+    var r=syncEnv(p);
+    if(r) demoted=' \u2014 back to '+ENV_LABEL[r.to];
+    refreshAll();
+    showToast('Video removed'+demoted);
+  }
+  function makeVidUp(p, cardGetter){
+    var b=document.createElement('button');
+    b.type='button'; b.className='imgup vidup'; b.title='Upload a video (MP4) for this post';
+    b.innerHTML='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="14" height="14" rx="3"></rect><path d="M16 11l6-4v10l-6-4z"></path></svg>';
+    b.onclick=function(ev){
+      ev.stopPropagation(); ev.preventDefault();
+      var fi=document.createElement('input'); fi.type='file'; fi.accept='video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm';
+      fi.onchange=function(){ if(fi.files[0]) uploadVideo(p, fi.files[0], cardGetter()); };
+      fi.click();
+    };
+    return b;
+  }
   function pvMedia(p){
     if(p.creative&&p.creative.link){
       var kind=p.creative.kind||'asset';
-      return '<a class="pvmedia has" href="'+p.creative.link.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+(kind==='video'?'\u25b6':'\ud83d\uddbc\ufe0f')+' '+kind+' attached \u2014 open in Drive</a>';
+      var lk=p.creative.link;
+      if(kind==='video' && (/\/storage\/v1\/object\/public\//.test(lk) || /\.(mp4|webm|mov)(\?|$)/i.test(lk))){
+        return '<div class="pvmedia vid"><video controls playsinline preload="metadata" src="'+lk.replace(/"/g,'&quot;')+'"></video><button type="button" class="imgrm vidrm" title="Remove video (the post may move back a stage)">\u2715</button></div>';
+      }
+      return '<a class="pvmedia has" href="'+lk.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+(kind==='video'?'\u25b6':'\ud83d\uddbc\ufe0f')+' '+kind+' attached \u2014 open in Drive</a>';
     }
     if(p.img) return '<div class="pvmedia img"><img src="'+p.img+'" alt=""><button type="button" class="imgrm" title="Remove image (moves the post back a stage)">✕</button></div>';
     return '<div class="pvmedia ghost"><span>planned visual</span>'+capHTML((p.visual||'No visual brief yet').slice(0,150))+'</div>';
@@ -3048,8 +3112,10 @@ try{
           (ls?'<div class="stamp">'+fmtAct(ls)+'</div>':'')+
           '<div class="pvtools"></div>'+
           '<div class="pvedit" style="display:none"></div>';
-        var rmb=d.querySelector('.imgrm');
+        var rmb=d.querySelector('.imgrm:not(.vidrm)');
         if(rmb) rmb.onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); removeImage(p); };
+        var vrb=d.querySelector('.vidrm');
+        if(vrb) vrb.onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); removeVideo(p); };
         var more=d.querySelector('.pvmore');
         if(more) more.onclick=function(ev){ ev.preventDefault(); more.style.display='none'; d.querySelector('.pvrest').style.display='inline'; };
         var dx=d.querySelector('.delx');
@@ -3077,6 +3143,7 @@ try{
         // universal tools
         tbtn('\u29c9 Image prompt','push',function(){ copyText(genPrompt(p),'Image prompt copied \u2014 self-contained, paste straight into Gemini or any image tool'); });
         d.querySelector('.pvcard').appendChild(makeImgUp(p, function(){ return d; }));
+        d.querySelector('.pvcard').appendChild(makeVidUp(p, function(){ return d; }));
         // world tools follow the post
         if(p.env==='copy'){
           var sel=document.createElement('select'); sel.className='status';
@@ -3336,7 +3403,8 @@ try{
       var idx = card.hasAttribute('data-pvi') ? parseInt(card.getAttribute('data-pvi'),10) : parseInt(card.getAttribute('data-idx'),10);
       var p=ccPosts[idx]; if(!p){ showToast('Could not match this card to a post'); return; }
       var f=ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
-      attachImage(p, f, card);
+      if(f && ((f.type||'').indexOf('video/')===0 || /\.(mp4|mov|webm)$/i.test(f.name||''))) uploadVideo(p, f, card);
+      else attachImage(p, f, card);
     });
   }
   // ----- export cart -----
@@ -3705,6 +3773,7 @@ try{
   try{ cfg=JSON.parse(localStorage.getItem('sshub_sync')||'null'); }catch(err){}
   var BAKED={url:'',anonKey:''}; // Click Shift can bake project credentials here at deploy time
   cfg=cfg||BAKED;
+  try{ if(cfg&&cfg.url&&cfg.anonKey) window.__sshubStore={url:String(cfg.url).replace(/\/+$/,''),anonKey:cfg.anonKey}; }catch(err){}
   var st=document.getElementById('syncStatus');
   var btn=document.getElementById('syncConfig');
   function setSt(t){ if(st) st.textContent=t; }
