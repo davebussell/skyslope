@@ -484,6 +484,19 @@
   @media(max-width:700px){.nprow2{grid-template-columns:1fr}.npm input,.npm select,.npm textarea{font-size:16px}}
   .pvcap[contenteditable]:hover{outline:1px dashed var(--baseline);outline-offset:3px;border-radius:4px}
   .pvcap[contenteditable]:focus{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+  /* ---- v9: top date chip + popup scheduler ---- */
+  .pvdate{font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.04em;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:2px 9px;cursor:pointer;text-transform:uppercase;transition:box-shadow .12s ease}
+  .pvdate:hover{box-shadow:0 0 0 2px var(--ring)}
+  .pvdate.has{background:var(--accentwash);color:var(--blue);border-color:transparent}
+  .modal.schedm{max-width:640px}
+  .sc-nav{display:flex;align-items:center;justify-content:space-between;margin:8px 0 6px}
+  .sc-nav b{font-size:14px;color:var(--ink)}
+  .schedm .calday{min-height:64px;cursor:pointer;font-family:inherit;text-align:left;transition:border-color .1s ease}
+  .schedm .calday:hover{border-color:var(--blue)}
+  .schedm .calday.mine{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+  .sc-chip{cursor:default;pointer-events:none}
+  .sc-more{font-size:9px;color:var(--muted)}
+  @media(max-width:700px){.schedm .calday{min-height:46px}.sc-chip{display:inline-block;width:9px;height:9px;min-width:0;border-radius:50%;padding:0;font-size:0;margin-right:2px}}
 </style>
 </head>
 <body>
@@ -2922,7 +2935,7 @@ try{
         var folded = m.fold && p.cap.length>m.fold;
         var ls=(p.history&&p.history.length)?p.history[p.history.length-1]:null;
         d.innerHTML=
-          '<div class="pvstrip"><span class="pvenv" style="background:'+(ENV_COLOR[p.env]||'#888')+'">'+(ENV_LABEL[p.env]||p.env)+'</span> '+p.status+(p.when?' \u00b7 '+p.when:'')+' \u00b7 '+p.pillar+' <span class="cb-flag"'+(p.sel?'':' style="display:none"')+'>\u2713 in cart</span><button class="delx" type="button" title="Delete this post" aria-label="Delete this post">\u2715</button></div>'+
+          '<div class="pvstrip"><span class="pvenv" style="background:'+(ENV_COLOR[p.env]||'#888')+'">'+(ENV_LABEL[p.env]||p.env)+'</span><button class="pvdate'+(p.when?' has':'')+'" type="button" title="'+(p.when?'Scheduled for '+p.when+' \u2014 click to change the day or see what else is booked':'Schedule this post \u2014 pick a day and see what else is booked')+'">\ud83d\udcc5 '+(p.when?fmtDay(p.when):'Schedule')+'</button> '+p.status+' \u00b7 '+p.pillar+' <span class="cb-flag"'+(p.sel?'':' style="display:none"')+'>\u2713 in cart</span><button class="delx" type="button" title="Delete this post" aria-label="Delete this post">\u2715</button></div>'+
           '<div class="pvcard">'+
             '<div class="pvhead"><svg class="pvavatar" viewBox="-0.7 -0.2 24.9 25.4" aria-hidden="true"><use href="#ss-mark"/></svg>'+
             '<div><b>'+m.name+'</b><div class="pvsub">'+m.sub+'</div></div></div>'+
@@ -2941,6 +2954,8 @@ try{
         if(more) more.onclick=function(ev){ ev.preventDefault(); more.style.display='none'; d.querySelector('.pvrest').style.display='inline'; };
         var dx=d.querySelector('.delx');
         if(dx) dx.onclick=function(ev){ ev.preventDefault(); ev.stopPropagation(); openDelModal(p); };
+        var dch=d.querySelector('.pvdate');
+        if(dch) dch.onclick=function(ev){ ev.preventDefault(); ev.stopPropagation(); openScheduler(p); };
         var capEl=d.querySelector('.pvcap');
         capEl.addEventListener('focus', function(){
           var mr=d.querySelector('.pvmore');
@@ -2969,9 +2984,6 @@ try{
           COPY_STATUSES.forEach(function(st){ var o=document.createElement('option'); o.textContent=st; o.selected=(st===p.status); sel.appendChild(o); });
           sel.onchange=function(){ p.status=sel.value; tiles(); envTabs(); showToast('Status \u2192 '+p.status); };
           tools.appendChild(sel);
-          var dic=document.createElement('input');dic.type='date';dic.className='pdate';dic.value=p.when||'';dic.title='Pick a publish day \u2014 scheduling moves it to Deploy';
-          dic.onchange=function(){ p.when=dic.value; dateChanged(p); };
-          tools.appendChild(dic);
           tbtn('\u270e Edit details','',function(){ var ed=d.querySelector('.pvedit'); ed.style.display=ed.style.display==='none'?'block':'none'; buildEdit(p,d); });
         } else if(p.env==='creative'){
           var crt=document.createElement('div'); crt.className='crt';
@@ -2984,14 +2996,8 @@ try{
           COPY_STATUSES.forEach(function(st){ var o=document.createElement('option'); o.textContent=st; o.selected=(st===p.status); sel2.appendChild(o); });
           sel2.onchange=function(){ p.status=sel2.value; tiles(); envTabs(); showToast('Status \u2192 '+p.status); };
           tools.appendChild(sel2);
-          var did=document.createElement('input');did.type='date';did.className='pdate';did.value=p.when||'';did.title='Pick a publish day \u2014 scheduling moves it to Deploy';
-          did.onchange=function(){ p.when=did.value; dateChanged(p); };
-          tools.appendChild(did);
           tbtn('\u270e Edit details','',function(){ var ed=d.querySelector('.pvedit'); ed.style.display=ed.style.display==='none'?'block':'none'; buildEdit(p,d); });
         } else {
-          var di=document.createElement('input');di.type='date';di.className='pdate';di.value=p.when||'';di.title='Publish day';
-          di.onchange=function(){ p.when=di.value; dateChanged(p); };
-          tools.appendChild(di);
           tbtn('\u29c9 Copy caption','push',function(){ copyText(p.cap,'Caption copied'); });
           tbtn('Copy + Compose \u2197','',function(){
             copyText(p.cap,'Caption copied \u2014 composer opening');
@@ -3054,6 +3060,53 @@ try{
     m.addEventListener('click', function(ev){ if(ev.target===m) closeDelModal(); });
     document.addEventListener('keydown', function(ev){ if(ev.key==='Escape'&&m.style.display!=='none') closeDelModal(); });
   })();
+  function fmtDay(iso){ var q=iso.split('-'); var M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return M[parseInt(q[1],10)-1]+' '+parseInt(q[2],10); }
+  function openScheduler(p){
+    var old=document.getElementById('schedOverlay'); if(old) old.remove();
+    var base = p.when ? new Date(p.when+'T12:00:00') : new Date();
+    var mon = new Date(base.getFullYear(), base.getMonth(), 1);
+    var ov=document.createElement('div'); ov.id='schedOverlay'; ov.className='modal-back'; ov.style.display='flex';
+    var box=document.createElement('div'); box.className='modal schedm';
+    ov.appendChild(box);
+    function close(){ ov.remove(); document.removeEventListener('keydown', onKey); }
+    function onKey(ev){ if(ev.key==='Escape') close(); }
+    function assign(ds){ p.when=ds; close(); dateChanged(p); }
+    function draw(){
+      var MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var bymap={}; ccPosts.forEach(function(q){ if(q.when){ (bymap[q.when]=bymap[q.when]||[]).push(q); } });
+      var html='<h3>\ud83d\udcc5 Schedule \u2014 \u201c'+escAttr(p.title.slice(0,44))+'\u201d</h3>'+
+        '<p>Pick a day. Chips show what the team already has booked.</p>'+
+        '<div class="sc-nav"><button class="cbtn" id="scPrev" type="button">\u2039 prev</button><b>'+MN[mon.getMonth()]+' '+mon.getFullYear()+'</b><button class="cbtn" id="scNext" type="button">next \u203a</button></div>'+
+        '<div class="calhead">'+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(function(w){return '<span>'+w+'</span>';}).join('')+'</div>'+
+        '<div class="calgrid">';
+      var start=new Date(mon); start.setDate(1-mon.getDay());
+      var todayStr=isoDate(new Date());
+      for(var i=0;i<42;i++){
+        var dd=new Date(start); dd.setDate(start.getDate()+i);
+        var ds=isoDate(dd);
+        var list=bymap[ds]||[];
+        var chips='';
+        list.slice(0,3).forEach(function(q){
+          chips+='<span class="calchip sc-chip" style="background:'+(CAL_COLORS[q.platform]||'#888')+'" title="'+escAttr(q.platform+' \u00b7 '+q.title)+'">'+escAttr(q.title)+'</span>';
+        });
+        if(list.length>3) chips+='<span class="sc-more">+'+(list.length-3)+' more</span>';
+        html+='<button type="button" class="calday scday'+(dd.getMonth()!==mon.getMonth()?' out':'')+(ds===todayStr?' today':'')+(ds===p.when?' mine':'')+'" data-ds="'+ds+'" title="'+ds+(list.length?' \u00b7 '+list.length+' scheduled':'')+'"><span class="dn">'+dd.getDate()+'</span>'+chips+'</button>';
+      }
+      html+='</div><div class="mrow">'+(p.when?'<button class="mbtn" id="scClear" type="button">\u2715 Clear date ('+fmtDay(p.when)+')</button>':'')+'<button class="mbtn" id="scClose" type="button">Close</button></div>';
+      box.innerHTML=html;
+      box.querySelector('#scPrev').onclick=function(){ mon=new Date(mon.getFullYear(),mon.getMonth()-1,1); draw(); };
+      box.querySelector('#scNext').onclick=function(){ mon=new Date(mon.getFullYear(),mon.getMonth()+1,1); draw(); };
+      box.querySelector('#scClose').onclick=close;
+      var sc=box.querySelector('#scClear'); if(sc) sc.onclick=function(){ p.when=''; close(); dateChanged(p); };
+      Array.prototype.forEach.call(box.querySelectorAll('.scday'), function(bd){
+        bd.onclick=function(){ assign(bd.getAttribute('data-ds')); };
+      });
+    }
+    draw();
+    ov.onclick=function(ev){ if(ev.target===ov) close(); };
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(ov);
+  }
   function renderPreview(){ render(); }
   // ----- calendar view -----
   var calMonth=(function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),1);})();
