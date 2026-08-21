@@ -489,7 +489,7 @@
 <body>
 <script>try{var __t=localStorage.getItem('sshub_theme');if(__t)document.documentElement.setAttribute('data-theme',__t);}catch(e){}</script>
 <div class="corner">
-  <button class="logout show" id="clearBtn" title="Clear cache — wipes this browser's saved edits (posts, deletions, statuses, dates, checklists, follower history) and reloads the latest shipped version"><span class="ic">↺</span><span class="lbl">Clear cache</span></button>
+  <button class="logout show" id="clearBtn" title="Clear cache — wipes this browser's saved copy and re-syncs the latest team version (or shipped defaults if sync is off)"><span class="ic">↺</span><span class="lbl">Clear cache</span></button>
   <button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device"><span class="ic">⎋</span><span class="lbl">Log out</span></button>
 </div>
 <div class="modal-back" id="delModal" role="dialog" aria-modal="true" aria-labelledby="delTitle" style="display:none">
@@ -1004,7 +1004,7 @@
         <b>Push-live workflow (honest version):</b> no standalone page can post directly to LinkedIn/Instagram/Facebook — that requires an authenticated publishing app. <b>Copy + Compose</b> gets you one click away: paste, attach the visual, publish. Phase 2 moves scheduling into Meta Business Suite Planner or Buffer/Metricool with an approval step; this studio stays the drafting + QA layer.
         <div style="margin-top:8px"><b>QA before every publish (the "Johnny" rule):</b> caption matches the visual · names spelled right · zero-CTA posts have NO link (product mention goes in a comment reply) · alt text added.</div>
         <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn push" id="excelBtn">⬇ Excel export (rows by platform)</button> <button class="cbtn push" id="llmBtn">⬇ LLM task export</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses, checklists and dropped images (auto-compressed) save and sync. Oversized images stay session-only — masters and all video live in Google Drive, linked not hosted.</span></div>
-        <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button></div>
+        <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button> <button class="cbtn" id="forcePush" type="button" title="Overwrite the team database with THIS browser's version — use from a device that still has the good copy">⇧ Push my version to the team</button></div>
       </div>
       <textarea class="io" id="ioArea" style="display:none" readonly></textarea>
       <div id="cartBar" class="cartbar" style="display:none">
@@ -3537,6 +3537,14 @@ try{
   var EP=cfg.url.replace(/\/+$/,'')+'/rest/v1/hub_state';
   function localState(){ try{return localStorage.getItem('sshub_state');}catch(err){return null;} }
   var lastPushed=localState(), remoteNewerShown=false;
+  var pullSettled=false, freshStart=false;
+  try{ freshStart=sessionStorage.getItem('sshub_fresh')==='1'; sessionStorage.removeItem('sshub_fresh'); }catch(err){}
+  function adoptRemote(remote){
+    if(window.__sshubSuspend) window.__sshubSuspend();
+    try{ localStorage.setItem('sshub_state', remote); }catch(err){}
+    try{ sessionStorage.setItem('sshub_adopted','1'); }catch(err){}
+    location.reload();
+  }
   function savedAtOf(s){ try{ return (JSON.parse(s||'null')||{}).savedAt||''; }catch(err){ return ''; } }
   var lastRemoteAt='';
   function pull(initial){
@@ -3557,6 +3565,7 @@ try{
       if(!r.ok) throw new Error(r.status);
       return r.json();
     }).then(function(rows){
+      pullSettled=true;
       var row=rows&&rows[0];
       if(!row||!row.state){ setSt('connected \u2014 no team state yet; your next edit seeds it'); return; }
       lastRemoteAt=row.updated_at||'';
@@ -3564,20 +3573,22 @@ try{
       var local=localState();
       if(remote===local){ setSt('synced \u00b7 up to date'); return; }
       var rAt=savedAtOf(remote), lAt=savedAtOf(local);
-      if(initial && !local){
-        // fresh browser, existing team state: adopt it outright
-        try{ localStorage.setItem('sshub_state', remote); }catch(err){}
-        if(!sessionStorage.getItem('sshub_adopted')){ sessionStorage.setItem('sshub_adopted','1'); location.reload(); }
+      if(initial && (freshStart || !local)){
+        // fresh browser or just-cleared cache: adopt the team state outright.
+        // saves are suspended first so the unload save can't clobber the adoption.
+        if(!sessionStorage.getItem('sshub_adopted')){ adoptRemote(remote); }
+        else { if(window.__sshubSuspend) window.__sshubSuspend(); try{ localStorage.setItem('sshub_state', remote); }catch(err){} }
       } else if(rAt>lAt && !remoteNewerShown && st){
         remoteNewerShown=true;
         setSt('a newer team version exists \u2014 ');
         var b=document.createElement('button'); b.className='cbtn'; b.textContent='\u21bb Load team version';
-        b.onclick=function(){ try{ localStorage.setItem('sshub_state', remote); }catch(err){} location.reload(); };
+        b.onclick=function(){ adoptRemote(remote); };
         st.appendChild(b);
       }
-    }).catch(function(){ setSt('sync error \u2014 check connection and keys'); });
+    }).catch(function(){ pullSettled=true; setSt('sync error \u2014 check connection and keys'); });
   }
   function push(){
+    if(!pullSettled) return; // never overwrite the team before we've even seen their state
     var cur=localState(); if(!cur||cur===lastPushed) return;
     var body; try{ body=JSON.parse(cur); }catch(err){ return; }
     fetch(EP,{method:'POST',headers:Object.assign({'Prefer':'resolution=merge-duplicates'},H),body:JSON.stringify([{id:1,state:body,updated_at:new Date().toISOString()}])})
@@ -3587,6 +3598,12 @@ try{
       })
       .catch(function(){ setSt('sync error \u2014 offline?'); });
   }
+  var fpb=document.getElementById('forcePush');
+  if(fpb) fpb.onclick=function(){
+    if(!confirm('Overwrite the TEAM database with this browser\u2019s current version? Every device will get this copy. Use this from the device that still has the good images and dates.')) return;
+    pullSettled=true; lastPushed='';
+    push();
+  };
   setSt('connecting\u2026');
   pull(true);
   setInterval(function(){ pull(false); }, 45000);
@@ -4088,7 +4105,10 @@ var AMPLIFIERS=[
       checks:collectChecks()
     };
   }
-  var last='', suspended=false, quotaWarned=false;
+  var last='', lastProbe='', suspended=false, quotaWarned=false;
+  // the sync layer suspends saves before adopting the team state, so the
+  // unload save can't clobber what was just adopted
+  window.__sshubSuspend=function(){ suspended=true; };
   function miniToast(m){
     try{
       var t=document.querySelector('.toast');
@@ -4097,9 +4117,16 @@ var AMPLIFIERS=[
       setTimeout(function(){ t.style.opacity=0; }, 4000);
     }catch(e){}
   }
+  function probeOf(st){ return JSON.stringify(st, function(k,v){ return k==='savedAt'?undefined:v; }); }
   function save(){
     if(suspended) return; // reset in progress — don't resurrect cleared state on unload
-    try{ var s=JSON.stringify(state()); if(s!==last){ localStorage.setItem(KEY,s); last=s; } }
+    try{
+      var stt=state();
+      var probe=probeOf(stt);
+      if(probe===lastProbe) return; // nothing actually changed — keep savedAt meaningful
+      var s=JSON.stringify(stt);
+      localStorage.setItem(KEY,s); last=s; lastProbe=probe;
+    }
     catch(e){
       // storage quota blown (almost always images) — save everything except
       // images rather than silently losing every edit
@@ -4107,7 +4134,7 @@ var AMPLIFIERS=[
         var lite=state();
         lite.posts=lite.posts.map(function(p){ if(!p.img) return p; var q={}; for(var k in p){ if(k!=='img') q[k]=p[k]; } return q; });
         var s2=JSON.stringify(lite);
-        localStorage.setItem(KEY,s2); last=s2;
+        localStorage.setItem(KEY,s2); last=s2; lastProbe=probeOf(lite);
         if(!quotaWarned){ quotaWarned=true; miniToast('Browser storage is full — everything saved except post images. Remove an image or two; keep masters in Drive.'); }
       }catch(e2){}
     }
@@ -4141,18 +4168,20 @@ var AMPLIFIERS=[
   // clear-saved-edits button (Content Studio handoff card)
   var rb=document.getElementById('resetBtn');
   if(rb) rb.onclick=function(){
-    if(confirm('Clear all saved edits in this browser and restore the shipped defaults?')){
+    if(confirm('Clear all saved edits in this browser? If team sync is on, the latest team version loads back in.')){
       suspended=true;
       try{ localStorage.removeItem(KEY); }catch(e){}
+      try{ sessionStorage.removeItem('sshub_adopted'); sessionStorage.setItem('sshub_fresh','1'); }catch(e){}
       location.reload();
     }
   };
   // corner Clear cache button — full local reset, shares the suspended flag
   var cb=document.getElementById('clearBtn');
   if(cb) cb.onclick=function(){
-    if(confirm('Clear the saved hub data in this browser?\n\nThis wipes local edits — post changes, statuses, publish days, selections, checklists, follow-list rows, and follower history — and reloads the latest shipped version. Export state first if you need to keep anything.')){
+    if(confirm('Clear the saved hub data in this browser?\n\nThis wipes this browser\u2019s local copy. If team sync is connected, the latest TEAM version loads back in \u2014 images, dates and stages included. Export state first if you need a backup.')){
       suspended=true;
       try{ localStorage.removeItem(KEY); localStorage.removeItem('sshub_view'); }catch(e){}
+      try{ sessionStorage.removeItem('sshub_adopted'); sessionStorage.setItem('sshub_fresh','1'); }catch(e){}
       location.reload();
     }
   };
