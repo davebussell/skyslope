@@ -456,6 +456,22 @@
   .tokenpre{background:#151A27;color:#DCEEFF;border-radius:12px;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.6;margin:10px 0}
   .gradrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0}
   .gradrow .g{border-radius:10px;height:56px;display:flex;align-items:flex-end;padding:8px 10px;color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em}
+  /* ---- v8.1: delete post (X on every card) + confirmation modal ---- */
+  .pvstrip{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .delx{margin-left:auto;flex-shrink:0;width:22px;height:22px;border-radius:50%;border:1px solid var(--grid);background:var(--surface);color:var(--muted);font-size:11px;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-family:inherit;padding:0;transition:color .12s,background .12s,border-color .12s}
+  .delx:hover{color:#fff;background:var(--crit);border-color:var(--crit)}
+  @media(hover:none){.delx{color:var(--ink-2)}}
+  .modal-back{position:fixed;inset:0;background:rgba(10,16,28,.52);z-index:120;display:flex;align-items:center;justify-content:center;padding:20px}
+  .modal{background:var(--surface);border:1px solid var(--grid);border-radius:14px;box-shadow:var(--shadow);max-width:400px;width:100%;padding:20px 22px;animation:pvin .18s ease both}
+  .modal h3{margin:0 0 8px;font-size:16px;color:var(--ink)}
+  .modal p{margin:0 0 12px;font-size:13px;color:var(--ink-2);line-height:1.5}
+  .modal p b{overflow-wrap:anywhere}
+  .mrow{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
+  .mbtn{font-family:inherit;font-size:13px;border:1px solid var(--grid);border-radius:999px;background:var(--page);color:var(--ink-2);padding:7px 16px;cursor:pointer}
+  .mbtn:hover{background:var(--accentwash);color:var(--blue)}
+  .mbtn.danger{background:var(--crit);border-color:transparent;color:#fff;font-weight:700}
+  .mbtn.danger:hover{background:var(--crit);color:#fff;opacity:.9}
+  @media(prefers-reduced-motion:reduce){.modal{animation:none}}
   /* ---- v6: new-post modal + editable captions + compact corner ---- */
   .npov{position:fixed;inset:0;background:rgba(10,14,22,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
   .npm{background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:18px 18px 16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:var(--shadow)}
@@ -473,8 +489,16 @@
 <body>
 <script>try{var __t=localStorage.getItem('sshub_theme');if(__t)document.documentElement.setAttribute('data-theme',__t);}catch(e){}</script>
 <div class="corner">
-  <button class="logout show" id="clearBtn" title="Clear cache — wipes this browser's saved edits (posts, statuses, dates, checklists, follower history) and reloads the latest shipped version"><span class="ic">↺</span><span class="lbl">Clear cache</span></button>
+  <button class="logout show" id="clearBtn" title="Clear cache — wipes this browser's saved edits (posts, deletions, statuses, dates, checklists, follower history) and reloads the latest shipped version"><span class="ic">↺</span><span class="lbl">Clear cache</span></button>
   <button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device"><span class="ic">⎋</span><span class="lbl">Log out</span></button>
+</div>
+<div class="modal-back" id="delModal" role="dialog" aria-modal="true" aria-labelledby="delTitle" style="display:none">
+  <div class="modal">
+    <h3 id="delTitle">Delete this post?</h3>
+    <p>&ldquo;<b id="delName"></b>&rdquo;<br><span id="delWhere" class="note-strip"></span></p>
+    <p>It comes off the pipeline, the calendar and the export cart, and stays deleted after reloads and team sync. Export state first if you might want it back.</p>
+    <div class="mrow"><button class="mbtn" id="delCancel" type="button">Cancel</button><button class="mbtn danger" id="delOk" type="button">Delete post</button></div>
+  </div>
 </div>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ss-logo" viewBox="0 0 153 25">
             <path d="M31.8214059,16.4730902 C32.9218046,17.693805 34.6820338,18.7684539 36.9561134,18.7684539 C39.5966032,18.7684539 40.5259131,17.4255801 40.5259131,16.2532624 C40.5259131,14.5442033 38.6675852,14.0558591 36.5894111,13.5188262 C33.972862,12.8351443 30.9411453,12.0782836 30.9411453,8.75754279 C30.9411453,6.07179526 33.3127396,4.11841832 36.7117425,4.11841832 C39.2299009,4.11841832 41.2105603,4.92425919 42.6531366,6.38900035 L41.2350849,8.19572825 C39.9878301,6.87734459 38.2763583,6.29162306 36.516129,6.29162306 C34.7065585,6.29162306 33.4595957,7.21933133 33.4595957,8.58669519 C33.4595957,10.0517279 35.2201168,10.515582 37.2495336,11.0284164 C39.9145481,11.7362969 43.0198388,12.5666278 43.0198388,16.0340177 C43.0198388,18.5731162 41.2593176,20.941367 36.8580147,20.941367 C33.9486293,20.941367 31.8214059,19.8917914 30.4275869,18.3532884 L31.8214059,16.4730902 Z" id="Fill-1" style="fill:var(--logo-word,#3F5B77)"></path>
@@ -2492,15 +2516,18 @@ var FOLLOWS = [
 // ---- v2 persistence: hydrate saved edits before first render ----
 // MERGE, don't override: your saved edits win for posts you've touched, but
 // posts newly shipped in the file (matched by title) are appended so content
-// updates reach browsers that already have saved state. A post you deleted
-// will reappear after a redeploy unless it's also removed from the shipped
-// defaults — flag deletions to Click Shift via Export state.
+// updates reach browsers that already have saved state. v8.1: deleted posts
+// are tombstoned by title in ccDeleted (saved + synced as state.deleted), so
+// a delete survives reloads, redeploys and team sync. Export state includes
+// the list so Click Shift can prune the shipped defaults for real.
+var ccDeleted=[];
 try{
   var __ssState = JSON.parse(localStorage.getItem('sshub_state')||'null');
   if(__ssState){
+    if(Array.isArray(__ssState.deleted)) __ssState.deleted.forEach(function(t){ if(typeof t==='string'&&ccDeleted.indexOf(t)===-1) ccDeleted.push(t); });
     if(Array.isArray(__ssState.posts)&&__ssState.posts.length){
       var __have={}; __ssState.posts.forEach(function(p){ __have[p.title]=1; });
-      var __shippedNew=ccPosts.filter(function(p){ return !__have[p.title]; });
+      var __shippedNew=ccPosts.filter(function(p){ return !__have[p.title] && ccDeleted.indexOf(p.title)===-1; });
       ccPosts.length=0;
       __ssState.posts.forEach(function(p){ ccPosts.push(p); });
       __shippedNew.forEach(function(p){ ccPosts.push(p); });
@@ -2546,6 +2573,10 @@ try{
     L.push('Generate one finished social media image now. Do not describe it, do not ask questions - output the image itself.');
     L.push('Use: '+(isVideo?('cover/opening frame for a '+p.platform+' video post'):(p.platform+' feed graphic'))+'.');
     L.push('Aspect ratio: '+aspectFor(p)+'.');
+    var cap=(p.cap||'').replace(/\[|\]/g,'').trim();
+    L.push('This image accompanies the following '+p.platform+' post ('+p.pillar+' pillar). THE POST:');
+    L.push('"'+cap+'"');
+    L.push('Bring the post to life: pull the single strongest idea, number or moment out of that post and make it the hero of the image - one focal stat, claim or scene, not a summary of everything. A scrolling reader should feel the hook of the post from the image alone; the caption carries the detail, the image carries the impact. If the post names a number, render that exact number large. If it tells a story, show its most human moment.');
     L.push('Composition: '+((p.visual||'Clean typographic stat card for a real estate software brand.').replace(/\[|\]/g,'')));
     L.push('Style: modern flat design for a B2B real estate software brand; primary blue #0059DA on white, or white on deep navy #151A27 for dark scenes; supporting slate #3F5B77; generous white space; clean geometric sans-serif type; softly rounded corners.');
     L.push('Rules: render any numbers or names literally without brackets; keep on-image text SHORT and spelled exactly as given; no company logos or wordmarks, no watermarks, no fake platform UI, no lorem ipsum.');
@@ -2858,7 +2889,7 @@ try{
         var folded = m.fold && p.cap.length>m.fold;
         var ls=(p.history&&p.history.length)?p.history[p.history.length-1]:null;
         d.innerHTML=
-          '<div class="pvstrip"><span class="pvenv" style="background:'+(ENV_COLOR[p.env]||'#888')+'">'+(ENV_LABEL[p.env]||p.env)+'</span> '+p.status+(p.when?' \u00b7 '+p.when:'')+' \u00b7 '+p.pillar+' <span class="cb-flag"'+(p.sel?'':' style="display:none"')+'>\u2713 in cart</span></div>'+
+          '<div class="pvstrip"><span class="pvenv" style="background:'+(ENV_COLOR[p.env]||'#888')+'">'+(ENV_LABEL[p.env]||p.env)+'</span> '+p.status+(p.when?' \u00b7 '+p.when:'')+' \u00b7 '+p.pillar+' <span class="cb-flag"'+(p.sel?'':' style="display:none"')+'>\u2713 in cart</span><button class="delx" type="button" title="Delete this post" aria-label="Delete this post">\u2715</button></div>'+
           '<div class="pvcard">'+
             '<div class="pvhead"><svg class="pvavatar" viewBox="-0.7 -0.2 24.9 25.4" aria-hidden="true"><use href="#ss-mark"/></svg>'+
             '<div><b>'+m.name+'</b><div class="pvsub">'+m.sub+'</div></div></div>'+
@@ -2875,6 +2906,8 @@ try{
         if(rmb) rmb.onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); removeImage(p); };
         var more=d.querySelector('.pvmore');
         if(more) more.onclick=function(ev){ ev.preventDefault(); more.style.display='none'; d.querySelector('.pvrest').style.display='inline'; };
+        var dx=d.querySelector('.delx');
+        if(dx) dx.onclick=function(ev){ ev.preventDefault(); ev.stopPropagation(); openDelModal(p); };
         var capEl=d.querySelector('.pvcap');
         capEl.addEventListener('focus', function(){
           var mr=d.querySelector('.pvmore');
@@ -2966,10 +2999,36 @@ try{
     ti.onchange=function(){ p.title=ti.value; };
     var vi=document.createElement('textarea'); vi.className='pe-vis'; vi.value=p.visual||''; vi.placeholder='Visual brief / image instructions';
     vi.onchange=function(){ p.visual=vi.value; };
-    var del=document.createElement('button'); del.className='cbtn'; del.textContent='\u2715 Remove post';
-    del.onclick=function(){ if(confirm('Remove "'+p.title+'" from the pipeline?')){ var ix=ccPosts.indexOf(p); if(ix>-1) ccPosts.splice(ix,1); tiles(); envTabs(); render(); } };
+    var del=document.createElement('button'); del.className='cbtn'; del.textContent='\u2715 Delete post';
+    del.onclick=function(){ openDelModal(p); };
     ed.appendChild(ti); ed.appendChild(vi); ed.appendChild(del);
   }
+  // ----- v8.1: delete post \u2014 X on every card, one confirmation modal -----
+  var delTarget=null;
+  function openDelModal(p){
+    var m=document.getElementById('delModal'); if(!m) return;
+    delTarget=p;
+    var n=document.getElementById('delName'); if(n) n.textContent=p.title;
+    var w=document.getElementById('delWhere'); if(w) w.textContent=p.platform+' \u00b7 '+(ENV_LABEL[p.env]||p.env)+' \u00b7 '+p.status+(p.when?' \u00b7 '+p.when:'');
+    m.style.display='flex';
+    var c=document.getElementById('delCancel'); if(c) c.focus();
+  }
+  function closeDelModal(){ var m=document.getElementById('delModal'); if(m) m.style.display='none'; delTarget=null; }
+  function reallyDelete(p){
+    var ix=ccPosts.indexOf(p); if(ix>-1) ccPosts.splice(ix,1);
+    if(ccDeleted.indexOf(p.title)===-1) ccDeleted.push(p.title);
+    delete p.sel;
+    tiles(); envTabs(); filters(); syncView(); updateCart();
+    showToast('Deleted \u2014 \u201c'+p.title.slice(0,40)+(p.title.length>40?'\u2026':'')+'\u201d');
+  }
+  (function(){
+    var m=document.getElementById('delModal'); if(!m) return;
+    var ok=document.getElementById('delOk'), ca=document.getElementById('delCancel');
+    if(ca) ca.onclick=closeDelModal;
+    if(ok) ok.onclick=function(){ var t=delTarget; closeDelModal(); if(t) reallyDelete(t); };
+    m.addEventListener('click', function(ev){ if(ev.target===m) closeDelModal(); });
+    document.addEventListener('keydown', function(ev){ if(ev.key==='Escape'&&m.style.display!=='none') closeDelModal(); });
+  })();
   function renderPreview(){ render(); }
   // ----- calendar view -----
   var calMonth=(function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),1);})();
@@ -3191,7 +3250,7 @@ try{
   // export everything
   document.getElementById('exportBtn').onclick=function(){
     var ta=document.getElementById('ioArea');
-    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),trackerExtra:(typeof TRACKER_EXTRA!=='undefined'?TRACKER_EXTRA:[])};
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),deleted:(typeof ccDeleted!=='undefined'?ccDeleted:[]),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),trackerExtra:(typeof TRACKER_EXTRA!=='undefined'?TRACKER_EXTRA:[])};
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
@@ -3824,6 +3883,7 @@ var AMPLIFIERS=[
     return {
       savedAt:new Date().toISOString(),
       posts:ccPosts.map(function(p){ var q={}; for(var k in p){ if(k==='img'){ if(p.img&&p.img.length<=400000) q.img=p.img; } else { q[k]=p[k]; } } return q; }),
+      deleted:(typeof ccDeleted!=='undefined'?ccDeleted:[]),
       follows:FOLLOWS,
       channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),
       channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),
