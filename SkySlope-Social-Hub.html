@@ -184,7 +184,10 @@
     .sidebar.open{max-height:80vh;overflow-y:auto}
     .main{padding:20px 16px 60px}
     .search,.toolbar input[type=search],.toolbar select{font-size:16px}
-    .corner{top:auto;bottom:16px;right:14px}
+    .corner.corner{top:auto;bottom:16px;right:12px;flex-direction:column;align-items:flex-end;gap:8px}
+    .corner .lbl{display:none}
+    .corner .logout{width:42px;height:42px;padding:0;border-radius:50%;font-size:17px;line-height:42px;text-align:center}
+    .corner .logout .ic{margin-right:0}
   }
   @media print{.sidebar,.mode-toggle,.tbtn{display:none}.view{display:block!important}.card{break-inside:avoid}}
 
@@ -231,6 +234,7 @@
   .logout{display:none;font-size:12.5px;border:1px solid var(--grid);background:var(--surface);color:var(--ink-2);border-radius:20px;padding:6px 14px;cursor:pointer;font-family:inherit;box-shadow:0 2px 10px rgba(0,0,0,.10)}
   .logout.show{display:inline-block}
   .logout:hover{background:var(--accentwash);color:var(--blue)}
+  .logout .ic{margin-right:5px}
   th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
   th.sortable:hover{color:var(--ink)}
   th .arr{opacity:.55;font-size:9px;margin-left:3px}
@@ -269,13 +273,12 @@
     .pcard input.pdate{font-size:16px;max-width:160px;padding:7px 8px}
     .pcard .psel{font-size:13.5px}
     .pcard .psel input{width:18px;height:18px}
-    .logout{padding:9px 16px}
     .main{padding-bottom:120px}
     .fbtn{padding:7px 15px}
     details.card{scroll-margin-top:88px}
     h1,h2{scroll-margin-top:88px}
     .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
-    .corner{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+    .corner.corner{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
     .check input{width:19px;height:19px;flex-shrink:0}
     .tbtn{padding:7px 13px}
     .chart-head .tbtn{margin-left:0}
@@ -325,6 +328,10 @@
   .pe-vis{min-height:64px;resize:vertical}
   .pv .crt{margin:8px 0 0}
   .pv .pvcap[contenteditable]:focus{outline:2px solid var(--blue);outline-offset:-2px;border-radius:6px}
+  .pvmedia{position:relative}
+  .imgrm{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:1px solid var(--grid);background:var(--surface);color:var(--crit);font-size:12px;font-weight:700;cursor:pointer;opacity:0;transition:opacity .15s ease;font-family:inherit;display:flex;align-items:center;justify-content:center;padding:0}
+  .pvmedia:hover .imgrm,.imgrm:focus-visible{opacity:1}
+  @media(hover:none){.imgrm{opacity:.85}}
   /* ---- compact studio stat strip ---- */
   #studioTiles{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
   #studioTiles .tile{flex:1 1 auto;min-width:0;padding:7px 12px;display:flex;align-items:baseline;gap:7px;box-shadow:none}
@@ -361,9 +368,8 @@
   .world{--wc:#0059DA;position:relative;flex:1 1 150px;min-width:150px;text-align:left;font-family:inherit;background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:transform .15s ease,box-shadow .15s ease}
   .world:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
   .world.on{border-color:var(--wc);box-shadow:0 0 0 2px var(--wc)}
-  .w-num{position:absolute;top:8px;right:12px;font-size:24px;font-weight:800;color:var(--wc);opacity:.22}
-  .w-name{font-size:16px;font-weight:800;color:var(--wc)}
-  .w-tag{font-size:11px;color:var(--muted);font-style:italic}
+  .w-num{position:absolute;top:8px;right:12px;font-size:22px;font-weight:800;color:var(--wc);opacity:.14}
+  .w-name{font-size:17px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:var(--wc)}
   .w-count{font-size:11.5px;color:var(--ink-2)}
   .w-meter{height:6px;border-radius:99px;background:var(--grid);overflow:hidden;margin-top:4px}
   .w-meter i{display:block;height:100%;background:var(--wc);transition:width .4s ease}
@@ -393,7 +399,7 @@
   @media(prefers-reduced-motion:reduce){.pv{animation:none}.pvtab{transition:none}}
   body.cart-open .main{padding-bottom:170px}
   @media(max-width:820px){
-    body.cart-open .corner{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+    body.cart-open .corner{bottom:calc(var(--carth,84px) + 10px + env(safe-area-inset-bottom,0px))}
     .cartbar{padding-left:12px;padding-right:12px}
     .cb-chip{max-width:120px}
   }
@@ -450,13 +456,25 @@
   .tokenpre{background:#151A27;color:#DCEEFF;border-radius:12px;padding:14px 16px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.6;margin:10px 0}
   .gradrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0}
   .gradrow .g{border-radius:10px;height:56px;display:flex;align-items:flex-end;padding:8px 10px;color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em}
+  /* ---- v6: new-post modal + editable captions + compact corner ---- */
+  .npov{position:fixed;inset:0;background:rgba(10,14,22,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+  .npm{background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:18px 18px 16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:var(--shadow)}
+  .npm h3{margin:0 0 4px;font-size:16px}
+  .npm label{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:10px 0 3px}
+  .npm input,.npm select,.npm textarea{width:100%;padding:8px 10px;border:1px solid var(--grid);border-radius:8px;background:var(--page);color:var(--ink);font-family:inherit;font-size:13.5px;box-sizing:border-box}
+  .npm textarea{min-height:80px;resize:vertical}
+  .npm .npr{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
+  .nprow2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:700px){.nprow2{grid-template-columns:1fr}.npm input,.npm select,.npm textarea{font-size:16px}}
+  .pvcap[contenteditable]:hover{outline:1px dashed var(--baseline);outline-offset:3px;border-radius:4px}
+  .pvcap[contenteditable]:focus{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
 </style>
 </head>
 <body>
 <script>try{var __t=localStorage.getItem('sshub_theme');if(__t)document.documentElement.setAttribute('data-theme',__t);}catch(e){}</script>
 <div class="corner">
-  <button class="logout show" id="clearBtn" title="Clear cache — wipes this browser's saved edits (posts, statuses, dates, checklists, follower history) and reloads the latest shipped version">↺ Clear cache</button>
-  <button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device">⎋ Log out</button>
+  <button class="logout show" id="clearBtn" title="Clear cache — wipes this browser's saved edits (posts, statuses, dates, checklists, follower history) and reloads the latest shipped version"><span class="ic">↺</span><span class="lbl">Clear cache</span></button>
+  <button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device"><span class="ic">⎋</span><span class="lbl">Log out</span></button>
 </div>
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="ss-logo" viewBox="0 0 153 25">
             <path d="M31.8214059,16.4730902 C32.9218046,17.693805 34.6820338,18.7684539 36.9561134,18.7684539 C39.5966032,18.7684539 40.5259131,17.4255801 40.5259131,16.2532624 C40.5259131,14.5442033 38.6675852,14.0558591 36.5894111,13.5188262 C33.972862,12.8351443 30.9411453,12.0782836 30.9411453,8.75754279 C30.9411453,6.07179526 33.3127396,4.11841832 36.7117425,4.11841832 C39.2299009,4.11841832 41.2105603,4.92425919 42.6531366,6.38900035 L41.2350849,8.19572825 C39.9878301,6.87734459 38.2763583,6.29162306 36.516129,6.29162306 C34.7065585,6.29162306 33.4595957,7.21933133 33.4595957,8.58669519 C33.4595957,10.0517279 35.2201168,10.515582 37.2495336,11.0284164 C39.9145481,11.7362969 43.0198388,12.5666278 43.0198388,16.0340177 C43.0198388,18.5731162 41.2593176,20.941367 36.8580147,20.941367 C33.9486293,20.941367 31.8214059,19.8917914 30.4275869,18.3532884 L31.8214059,16.4730902 Z" id="Fill-1" style="fill:var(--logo-word,#3F5B77)"></path>
@@ -475,7 +493,7 @@
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-head">
       <div><svg class="sslogo" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
-      <div class="brand">Social Hub<small>Command Center v2 · Aug 2026<br>Operator: Naomi Pinkston · <a href="mailto:naomi@soldonsocial.com">naomi@soldonsocial.com</a><br>Backup — PM: Jess · <a href="mailto:jess@clickshift.ca">jess@clickshift.ca</a><br>Backup — Client Manager: Dave · <a href="mailto:dave@clickshift.ca">dave@clickshift.ca</a></small></div></div>
+      <div class="brand">Social Hub<small><a href="#" data-goto="support">Support &amp; contacts →</a></small></div></div>
       <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="sidebar">Menu</button>
     </div>
     <input class="search" id="searchBox" type="search" placeholder="Search sections…  ( / )" aria-label="Search sections">
@@ -486,6 +504,7 @@
       <button class="navlink" data-view="amplify" data-terms="amplify sales enablement advocacy distribution email list reshare engagement targets share kit">Amplify</button>
       <button class="navlink" data-view="assets" data-terms="asset library videos images embeds youtube playlists footage b-roll shorts">Asset Library</button>
       <button class="navlink" data-view="next" data-terms="action tracker decisions checklist rob meeting access walkthrough">Action Tracker</button>
+      <button class="navlink" data-view="support" data-terms="support contacts help operator naomi jess dave email version who">Support</button>
     </div>
     <div class="navgroup"><div class="gt">Playbook</div>
       <button class="navlink" data-view="strategy" data-terms="strategy documents doc 1 doc 2 social media index audience">Strategy</button>
@@ -966,6 +985,7 @@
       <div id="cartBar" class="cartbar" style="display:none">
         <div class="cb-info"><b id="cbCount">0</b>&nbsp;in export cart<span id="cbItems" class="cb-items"></span></div>
         <div class="cb-actions">
+          <button class="cbtn push" id="cbAdvance" type="button">→ Advance stage</button>
           <button class="cbtn push" id="cbLLM" type="button">⬇ LLM tasks</button>
           <button class="cbtn push" id="cbCSV" type="button">⬇ Excel (CSV)</button>
           <button class="cbtn" id="cbBriefs" type="button">⧉ Copy briefs</button>
@@ -1763,6 +1783,19 @@
     </section>
 
     <!-- ========== STRATEGY (interstitial) ========== -->
+    <!-- ========== SUPPORT ========== -->
+    <section class="view" id="view-support">
+      <h1>Support &amp; Contacts</h1>
+      <div class="sub">Who runs this hub and who to reach when something needs a human.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:14px 0">
+        <div class="ccard"><h3>Operator</h3><b>Naomi Pinkston</b><br><a href="mailto:naomi@soldonsocial.com">naomi@soldonsocial.com</a><br>Day-to-day publishing, community engagement, DM triage, and tracker upkeep. First call for anything content-related.</div>
+        <div class="ccard"><h3>Backup · Project Manager</h3><b>Jess</b><br><a href="mailto:jess@clickshift.ca">jess@clickshift.ca</a><br>Scheduling, scope, and delivery questions when Naomi is away.</div>
+        <div class="ccard"><h3>Backup · Client Manager</h3><b>Dave</b><br><a href="mailto:dave@clickshift.ca">dave@clickshift.ca</a><br>Escalations, strategy calls, and anything account-level.</div>
+        <div class="ccard"><h3>Site &amp; access</h3>Password-gated at skyslope.soldonsocial.com. <b>⎋ Log out</b> clears the remembered password on this device; <b>↺ Clear cache</b> wipes local edits and reloads the latest shipped version. Team edits sync automatically when online.</div>
+      </div>
+      <div class="note-strip">Hub version: Command Center v2 · Aug 2026 · Built and maintained by Click Shift.</div>
+    </section>
+
     <section class="view" id="view-strategy">
       <h1>Strategy</h1>
       <div class="sub">The two strategy documents behind everything in this hub — Word versions live in the repo for sharing with Rob.</div>
@@ -2485,9 +2518,8 @@ try{
   var activePillar='All', activeStatus='All', activeReady='To schedule', studioView='list';
   var activeEnv='copy';
   try{ activeEnv=localStorage.getItem('sshub_env')||'copy'; }catch(err){}
-  var ENVS=[['copy','Compose'],['creative','Create'],['ready','Deploy']];
-  var ENV_LABEL={copy:'Compose',creative:'Create',ready:'Deploy'};
-  var ENV_TAG={copy:'Write it. Approve it.',creative:'Give it a face.',ready:'Ship it. Log it.'};
+  var ENVS=[['copy','Compose'],['creative','Visualize'],['ready','Deploy']];
+  var ENV_LABEL={copy:'Compose',creative:'Visualize',ready:'Deploy'};
   var ENV_COLOR={copy:'#0059DA',creative:'#533DB1',ready:'#28A745'};
   var filterFree=true, pvPlatform='All'; // filter-free preview is ALWAYS the default on load
   var PLATFORM_ORDER=['LinkedIn','Instagram','Facebook','YouTube','X','TikTok'];
@@ -2609,7 +2641,7 @@ try{
       b.className='world'+(env===activeEnv&&!filterFree?' on':'');
       b.style.setProperty('--wc', ENV_COLOR[env]);
       var pct=m.n?Math.round(m.done/m.n*100):0;
-      b.innerHTML='<span class="w-num">'+(wi+1)+'</span><span class="w-name">'+pair[1]+'</span><span class="w-tag">'+ENV_TAG[env]+'</span>'+
+      b.innerHTML='<span class="w-num">'+(wi+1)+'</span><span class="w-name">'+pair[1]+'</span>'+
         '<span class="w-count">'+m.n+' post'+(m.n===1?'':'s')+' · '+m.label+'</span>'+
         '<span class="w-meter"><i style="width:'+pct+'%"></i></span>';
       b.onclick=function(){ filterFree=false; try{localStorage.setItem('sshub_ff','0');}catch(err){} activeEnv=env; try{localStorage.setItem('sshub_env',activeEnv);}catch(err){} filters(); syncView(); };
@@ -2658,15 +2690,43 @@ try{
       rfEl.appendChild(bn);
     }
   }
+  function openNewPost(){
+    var old=document.getElementById('npOverlay'); if(old) old.remove();
+    var pillars={}, formats={};
+    ccPosts.forEach(function(p){ if(p.pillar) pillars[p.pillar]=1; if(p.format) formats[p.format]=1; });
+    var pOpts=Object.keys(pillars); if(!pOpts.length) pOpts=['Zero-CTA'];
+    var fOpts=Object.keys(formats); if(!fOpts.length) fOpts=['Static / graphic'];
+    var defPlat = pvPlatform==='All'?'Instagram':pvPlatform;
+    var ov=document.createElement('div'); ov.id='npOverlay'; ov.className='npov';
+    ov.innerHTML='<div class="npm" role="dialog" aria-modal="true" aria-label="New post">'+
+      '<h3>New post</h3><div class="note-strip">Born in Compose \u2014 it advances once the copy is approved.</div>'+
+      '<div class="nprow2"><div><label>Platform</label><select id="npPlat">'+PLATFORM_ORDER.map(function(x){return '<option'+(x===defPlat?' selected':'')+'>'+x+'</option>';}).join('')+'</select></div>'+
+      '<div><label>Pillar</label><select id="npPil">'+pOpts.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div></div>'+
+      '<div class="nprow2"><div><label>Format</label><select id="npFmt">'+fOpts.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div>'+
+      '<div><label>Publish day (optional)</label><input type="date" id="npWhen"></div></div>'+
+      '<label>Internal title</label><input type="text" id="npTitle" placeholder="e.g. DigiSign speed stat \u2014 agent hook">'+
+      '<label>Caption</label><textarea id="npCap" placeholder="Draft the caption\u2026 use [SQUARE BRACKETS] around numbers that still need verifying."></textarea>'+
+      '<label>Visual brief</label><textarea id="npVis" placeholder="Describe the visual: format, composition, colors."></textarea>'+
+      '<div class="npr"><button class="cbtn" id="npCancel" type="button">Cancel</button><button class="cbtn push" id="npGo" type="button">Create in Compose \u2192</button></div>'+
+    '</div>';
+    document.body.appendChild(ov);
+    ov.onclick=function(ev){ if(ev.target===ov) ov.remove(); };
+    document.getElementById('npCancel').onclick=function(){ ov.remove(); };
+    document.getElementById('npGo').onclick=function(){
+      var t=document.getElementById('npTitle').value.trim()||'New post idea';
+      var p={pillar:document.getElementById('npPil').value,platform:document.getElementById('npPlat').value,format:document.getElementById('npFmt').value,status:'Idea',env:'copy',creative:{kind:'',link:'',note:''},history:[],title:t,cap:document.getElementById('npCap').value.trim()||'Draft the caption here\u2026',visual:document.getElementById('npVis').value.trim()||'Describe the visual: format, composition, colors.',note:'',when:document.getElementById('npWhen').value||''};
+      stamp(p,'created');
+      ccPosts.unshift(p);
+      ov.remove();
+      tiles(); envTabs(); filters(); syncView(); updateCart();
+      showToast('"'+t.slice(0,32)+'" born in Compose'+(p.when?' \u2014 assigned to '+p.when:''));
+    };
+    document.getElementById('npTitle').focus();
+  }
   function toolsBar(){
     var t=document.getElementById('studioTools'); if(!t) return;
     t.innerHTML='<span class="note-strip">Actions:</span>';
-    btn('+ New post', function(){
-      filterFree=false; activeEnv='copy';
-      try{localStorage.setItem('sshub_env','copy');}catch(err){}
-      ccPosts.unshift({pillar:'Zero-CTA',platform:pvPlatform==='All'?'Instagram':pvPlatform,format:'Static / graphic',status:'Idea',env:'copy',creative:{kind:'',link:'',note:''},history:[],title:'New post idea',cap:'Draft the caption here\u2026',visual:'Describe the visual: format, composition, colors.',note:'',when:''});
-      filters(); syncView(); showToast('New post born in Compose');
-    });
+    btn('+ New post', openNewPost);
     function btn(label,fn){ var b=document.createElement('button'); b.className='fbtn'; b.textContent=label; b.onclick=fn; t.appendChild(b); return b; }
     if(activeEnv==='ready'&&!filterFree){
       btn(studioView==='list'?'Calendar view':'List view', function(){ studioView=studioView==='list'?'cal':'list'; syncView(); });
@@ -2716,6 +2776,33 @@ try{
       setTimeout((function(cc){return function(){cc.remove();};})(c),760);
     }
   }
+  function creativeFulfilled(p){ return !!(p.img || (p.creative&&p.creative.link)); }
+  function inferKind(p){ if(!p.creative.kind && (p.img||p.creative.link)){ p.creative.kind = (!p.img && /video|mp4|reel/i.test(p.creative.link||''))?'video':'image'; } }
+  function advancePost(p){
+    if(p.env==='copy'){
+      if(p.status!=='Approved') return {ok:false,why:'needs Approved status first'};
+      p.env='creative'; stamp(p,'to-creative'); bumpStreak();
+      if(creativeFulfilled(p)){ inferKind(p); p.env='ready'; stamp(p,'to-ready'); }
+      return {ok:true,to:p.env};
+    }
+    if(p.env==='creative'){
+      if(!creativeFulfilled(p)) return {ok:false,why:'needs an attached image or a Drive link'};
+      inferKind(p);
+      p.env='ready'; stamp(p,'to-ready'); bumpStreak();
+      return {ok:true,to:'ready'};
+    }
+    return {ok:false,why:'already in Deploy'};
+  }
+  function refreshAll(){ tiles(); envTabs(); filters(); render(); updateCart(); }
+  function autoAdvanceOnDate(p){
+    if(!p.when){ refreshAll(); showToast('Day cleared'); return; }
+    if(p.env==='ready'){ refreshAll(); showToast('Assigned to '+p.when); return; }
+    if(p.env==='copy' && p.status!=='Approved'){ p.status='Approved'; stamp(p,'approved'); }
+    inferKind(p);
+    p.env='ready'; stamp(p,'to-ready'); bumpStreak();
+    refreshAll(); fxConfetti();
+    showToast('Assigned to '+p.when+' \u2014 moved to Deploy. Set platform + time there.');
+  }
   function moveEnv(p,env,act,msg){
     p.env=env; delete p.sel; stamp(p,act); tiles(); envTabs(); render();
     var n=bumpStreak();
@@ -2747,7 +2834,7 @@ try{
       var kind=p.creative.kind||'asset';
       return '<a class="pvmedia has" href="'+p.creative.link.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+(kind==='video'?'\u25b6':'\ud83d\uddbc\ufe0f')+' '+kind+' attached \u2014 open in Drive</a>';
     }
-    if(p.img) return '<div class="pvmedia img"><img src="'+p.img+'" alt=""></div>';
+    if(p.img) return '<div class="pvmedia img"><img src="'+p.img+'" alt=""><button type="button" class="imgrm" title="Remove image (moves the post back a stage)">✕</button></div>';
     return '<div class="pvmedia ghost"><span>planned visual</span>'+capHTML((p.visual||'No visual brief yet').slice(0,150))+'</div>';
   }
   function escAttr(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
@@ -2775,7 +2862,7 @@ try{
           '<div class="pvcard">'+
             '<div class="pvhead"><svg class="pvavatar" viewBox="-0.7 -0.2 24.9 25.4" aria-hidden="true"><use href="#ss-mark"/></svg>'+
             '<div><b>'+m.name+'</b><div class="pvsub">'+m.sub+'</div></div></div>'+
-            '<div class="pvcap"'+(p.env==='copy'?' contenteditable="true" title="Click to edit the caption"':'')+'>'+(folded&&p.env!=='copy'
+            '<div class="pvcap" contenteditable="true" title="Tap to edit the caption; it saves when you click away">'+(folded&&p.env!=='copy'
               ? capHTML(p.cap.slice(0,m.fold))+'<a href="#" class="pvmore">\u2026 see more</a><span class="pvrest" style="display:none">'+capHTML(p.cap.slice(m.fold))+'</span>'
               : capHTML(p.cap))+'</div>'+
             pvMedia(p)+
@@ -2784,11 +2871,19 @@ try{
           (ls?'<div class="stamp">'+fmtAct(ls)+'</div>':'')+
           '<div class="pvtools"></div>'+
           '<div class="pvedit" style="display:none"></div>';
+        var rmb=d.querySelector('.imgrm');
+        if(rmb) rmb.onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); removeImage(p); };
         var more=d.querySelector('.pvmore');
         if(more) more.onclick=function(ev){ ev.preventDefault(); more.style.display='none'; d.querySelector('.pvrest').style.display='inline'; };
-        if(p.env==='copy'){
-          d.querySelector('.pvcap').addEventListener('blur', function(ev){ p.cap=ev.target.innerText; });
-        }
+        var capEl=d.querySelector('.pvcap');
+        capEl.addEventListener('focus', function(){
+          var mr=d.querySelector('.pvmore');
+          if(mr&&mr.style.display!=='none'){ mr.style.display='none'; var rs=d.querySelector('.pvrest'); if(rs) rs.style.display='inline'; }
+        });
+        capEl.addEventListener('blur', function(){
+          var t=capEl.innerText;
+          if(t!==p.cap){ p.cap=t; stamp(p,'edited copy'); showToast('Caption updated'); }
+        });
         d.querySelector('.pvcard').addEventListener('click', function(ev){
           if(ev.target.closest('a,button,select,input,textarea,[contenteditable]')) return;
           if(p.sel){ delete p.sel; } else { p.sel=true; }
@@ -2808,9 +2903,13 @@ try{
           COPY_STATUSES.forEach(function(st){ var o=document.createElement('option'); o.textContent=st; o.selected=(st===p.status); sel.appendChild(o); });
           sel.onchange=function(){ p.status=sel.value; tiles(); envTabs(); showToast('Status \u2192 '+p.status); };
           tools.appendChild(sel);
-          tbtn('\u2192 Hand off to Create','push',function(){
-            if(p.status!=='Approved'){ showToast('Set status to Approved first \u2014 only approved copy moves on'); return; }
-            moveEnv(p,'creative','to-creative','"'+p.title.slice(0,32)+'" \u2192 Create');
+          var dic=document.createElement('input');dic.type='date';dic.className='pdate';dic.value=p.when||'';dic.title='Pick a publish day \u2014 scheduling moves it to Deploy';
+          dic.onchange=function(){ p.when=dic.value; autoAdvanceOnDate(p); };
+          tools.appendChild(dic);
+          tbtn('Advance \u2192','push',function(){
+            var r=advancePost(p);
+            if(r.ok){ refreshAll(); if(p.env==='ready') fxConfetti(); showToast('"'+p.title.slice(0,32)+'" \u2192 '+ENV_LABEL[p.env]); }
+            else showToast('Held in Compose \u2014 '+r.why);
           });
           tbtn('\u270e Edit details','',function(){ var ed=d.querySelector('.pvedit'); ed.style.display=ed.style.display==='none'?'block':'none'; buildEdit(p,d); });
         } else if(p.env==='creative'){
@@ -2820,16 +2919,19 @@ try{
           crt.querySelector('.ckind').onchange=function(ev){ p.creative.kind=ev.target.value; };
           crt.querySelector('.clink').onchange=function(ev){ p.creative.link=ev.target.value.trim(); };
           d.insertBefore(crt, tools);
-          tbtn('\u2192 Hand off to Deploy','push',function(){
-            if(!p.creative.link){ showToast('Add the Drive/asset link first \u2014 Deploy needs a collectible creative'); return; }
-            if(!p.creative.kind){ p.creative.kind = /video|mp4|reel/i.test(p.creative.link)?'video':'image'; }
-            moveEnv(p,'ready','to-ready','"'+p.title.slice(0,32)+'" \u2192 Deploy');
+          var did=document.createElement('input');did.type='date';did.className='pdate';did.value=p.when||'';did.title='Pick a publish day \u2014 scheduling moves it to Deploy';
+          did.onchange=function(){ p.when=did.value; autoAdvanceOnDate(p); };
+          tools.appendChild(did);
+          tbtn('Advance \u2192','push',function(){
+            var r=advancePost(p);
+            if(r.ok){ refreshAll(); fxConfetti(); showToast('"'+p.title.slice(0,32)+'" \u2192 Deploy'); }
+            else showToast('Held in Visualize \u2014 '+r.why);
           });
           tbtn('\u2190 Back to Compose','',function(){ moveEnv(p,'copy','back-to-copy','Sent back to Compose'); });
           tbtn('\u270e Edit details','',function(){ var ed=d.querySelector('.pvedit'); ed.style.display=ed.style.display==='none'?'block':'none'; buildEdit(p,d); });
         } else {
           var di=document.createElement('input');di.type='date';di.className='pdate';di.value=p.when||'';di.title='Publish day';
-          di.onchange=function(){ p.when=di.value; tiles(); showToast(p.when?('Assigned to '+p.when):'Day cleared'); };
+          di.onchange=function(){ p.when=di.value; autoAdvanceOnDate(p); };
           tools.appendChild(di);
           tbtn('\u29c9 Copy caption','push',function(){ copyText(p.cap,'Caption copied'); });
           tbtn('Copy + Compose \u2197','',function(){
@@ -2842,7 +2944,7 @@ try{
           if(p.status!=='Published'){
             tbtn('\u2713 Mark published','',function(){ p.status='Published'; stamp(p,'published'); tiles(); envTabs(); render(); fxConfetti(); showToast('SHIPPED \u2014 '+lastStamp(p).by+' logs another one'); });
           }
-          tbtn('\u2190 Back to Create','',function(){ p.status='Approved'; moveEnv(p,'creative','back-to-creative','Sent back to Create'); });
+          tbtn('\u2190 Back to Visualize','',function(){ p.status='Approved'; moveEnv(p,'creative','back-to-creative','Sent back to Visualize'); });
         }
         list.appendChild(d);
       });
@@ -2851,8 +2953,8 @@ try{
       var empty=document.createElement('div'); empty.className='envnote';
       empty.textContent = filterFree ? 'No posts for this platform yet.' :
         activeEnv==='copy' ? 'Compose is quiet \u2014 the muse is waiting. Hit + New post.' :
-        activeEnv==='creative' ? 'Create is empty \u2014 approve something in Compose and hand it off.' :
-        'Deploy is clear \u2014 nothing on the launchpad. Dress a post in Create.';
+        activeEnv==='creative' ? 'Visualize is empty \u2014 approve something in Compose and advance it.' :
+        'Deploy is clear \u2014 nothing on the launchpad. Dress a post in Visualize.';
       list.appendChild(empty);
     }
   }
@@ -2931,6 +3033,17 @@ try{
     tiles();
   }
   // ----- drag & drop image attach (works on every stage + preview cards) -----
+  function removeImage(p){
+    delete p.img;
+    var demoted='';
+    if(p.env==='ready' && !(p.creative&&p.creative.link)){
+      p.env='creative'; p.status='Approved'; stamp(p,'back-to-creative'); demoted=' — moved back to Create (no creative left)';
+    } else if(p.env==='creative' && !(p.creative&&p.creative.link)){
+      p.env='copy'; stamp(p,'back-to-copy'); demoted=' — moved back to Compose';
+    }
+    tiles(); envTabs(); render(); updateCart();
+    showToast('Image removed'+demoted);
+  }
   function attachImage(p, file, card){
     if(!file || (file.type||'').indexOf('image/')!==0){ showToast('Drop an image file (PNG or JPG)'); return; }
     var rd=new FileReader();
@@ -2944,17 +3057,28 @@ try{
         var out=cv.toDataURL('image/jpeg',0.82);
         if(rd.result.length<out.length) out=rd.result;
         p.img=out;
-        if(out.length>400000){ showToast('Image attached (this session only \u2014 too large to sync; keep the master in Drive)'); }
-        else { showToast('Image attached \u2014 saves and syncs with the post'); }
-        if(card){
+        var note = out.length>400000 ? 'Image attached (this session only — too large to sync; keep the master in Drive)' : 'Image attached — saves and syncs with the post';
+        // creative delivered -> the post advances on its own
+        var advanced='';
+        if(p.env==='creative' || (p.env==='copy'&&p.status==='Approved')){
+          var ar=advancePost(p);
+          if(ar.ok) advanced=' — auto-advanced to '+ENV_LABEL[p.env];
+        } else if(p.env==='copy'){
+          advanced=' — approve the copy (or set a publish day) and it will advance';
+        }
+        if(advanced.indexOf('auto-advanced')>-1){
+          refreshAll(); fxConfetti();
+        } else if(card){
           if(card.classList.contains('pv')){
-            var m=card.querySelector('.pvmedia');
-            if(m){ var tmp=document.createElement('div'); tmp.innerHTML=pvMedia(p); m.replaceWith(tmp.firstChild); }
+            var m2=card.querySelector('.pvmedia');
+            if(m2){ var tmp=document.createElement('div'); tmp.innerHTML=pvMedia(p); m2.replaceWith(tmp.firstChild);
+              var rb=card.querySelector('.imgrm'); if(rb) rb.onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); removeImage(p); }; }
           } else {
             var slot=card.querySelector('.img');
             if(slot){ slot.innerHTML='<img src="'+p.img+'" alt="">'; }
           }
         }
+        showToast(note+advanced);
       };
       im.src=rd.result;
     };
@@ -2996,6 +3120,7 @@ try{
     var items=cartItems();
     bar.style.display=items.length?'flex':'none';
     document.body.classList.toggle('cart-open', items.length>0);
+    if(items.length){ setTimeout(function(){ document.documentElement.style.setProperty('--carth', bar.offsetHeight+'px'); },0); }
     document.getElementById('cbCount').textContent=items.length;
     var chips=document.getElementById('cbItems'); chips.innerHTML='';
     items.slice(0,3).forEach(function(p){
@@ -3018,6 +3143,21 @@ try{
     document.body.appendChild(a); a.click(); a.remove();
     showToast(msg);
   }
+  var cbA=document.getElementById('cbAdvance');
+  if(cbA) cbA.onclick=function(){
+    var items=cartItems();
+    if(!items.length) return showToast('Cart is empty — click cards to select posts first');
+    var moved=0, held={};
+    items.forEach(function(p){
+      var r=advancePost(p);
+      if(r.ok){ moved++; } else { held[r.why]=(held[r.why]||0)+1; }
+    });
+    refreshAll();
+    var msg=moved+' advanced';
+    for(var w in held){ msg+=' · '+held[w]+' held ('+w+')'; }
+    showToast(msg);
+    if(moved) fxConfetti();
+  };
   var cbL=document.getElementById('cbLLM');
   if(cbL) cbL.onclick=function(){
     if(!cartItems().length) return showToast('Cart is empty \u2014 click preview cards or tick list checkboxes');
