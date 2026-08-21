@@ -3123,7 +3123,7 @@ try{
     delete p.img;
     var demoted='';
     if(p.env==='ready' && !(p.creative&&p.creative.link)){
-      p.env='creative'; p.status='Approved'; stamp(p,'back-to-creative'); demoted=' — moved back to Create (no creative left)';
+      p.env='creative'; p.status='Approved'; stamp(p,'back-to-creative'); demoted=' — moved back to Visualize (no creative left)';
     } else if(p.env==='creative' && !(p.creative&&p.creative.link)){
       p.env='copy'; stamp(p,'back-to-copy'); demoted=' — moved back to Compose';
     }
@@ -3136,14 +3136,21 @@ try{
     rd.onload=function(){
       var im=new Image();
       im.onload=function(){
-        var MAX=1200, scale=Math.min(1, MAX/Math.max(im.width, im.height));
-        var cv=document.createElement('canvas');
-        cv.width=Math.round(im.width*scale); cv.height=Math.round(im.height*scale);
-        cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
-        var out=cv.toDataURL('image/jpeg',0.82);
+        // compress in steps until the preview fits the save/sync budget -
+        // the full-quality master should live in Drive anyway
+        var steps=[[1200,.82],[1000,.72],[900,.62],[800,.52],[640,.45]], out=null;
+        for(var si=0;si<steps.length;si++){
+          var scale=Math.min(1, steps[si][0]/Math.max(im.width, im.height));
+          var cv=document.createElement('canvas');
+          cv.width=Math.round(im.width*scale); cv.height=Math.round(im.height*scale);
+          cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+          var t=cv.toDataURL('image/jpeg',steps[si][1]);
+          if(out===null||t.length<out.length) out=t;
+          if(t.length<=280000){ out=t; break; }
+        }
         if(rd.result.length<out.length) out=rd.result;
         p.img=out;
-        var note = out.length>400000 ? 'Image attached (this session only — too large to sync; keep the master in Drive)' : 'Image attached — saves and syncs with the post';
+        var note = out.length>400000 ? 'Image attached (preview could not be shrunk enough to save — it lasts this session only; keep the master in Drive)' : 'Image attached — saves with the post and syncs to the team';
         // creative delivered -> the post advances on its own
         var advanced='';
         if(p.env==='creative' || (p.env==='copy'&&p.status==='Approved')){
@@ -3555,13 +3562,28 @@ try{
   function localState(){ try{return localStorage.getItem('sshub_state');}catch(err){return null;} }
   var lastPushed=localState(), remoteNewerShown=false;
   function savedAtOf(s){ try{ return (JSON.parse(s||'null')||{}).savedAt||''; }catch(err){ return ''; } }
+  var lastRemoteAt='';
   function pull(initial){
+    if(initial) return pullFull(initial);
+    // light poll: only download the state blob when it actually changed
+    fetch(EP+'?id=eq.1&select=updated_at',{headers:H}).then(function(r){
+      if(!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function(rows){
+      var row=rows&&rows[0];
+      if(!row) return pullFull(false);
+      if(row.updated_at===lastRemoteAt) return;
+      pullFull(false);
+    }).catch(function(){ setSt('sync error \u2014 check connection and keys'); });
+  }
+  function pullFull(initial){
     fetch(EP+'?id=eq.1&select=state,updated_at',{headers:H}).then(function(r){
       if(!r.ok) throw new Error(r.status);
       return r.json();
     }).then(function(rows){
       var row=rows&&rows[0];
       if(!row||!row.state){ setSt('connected \u2014 no team state yet; your next edit seeds it'); return; }
+      lastRemoteAt=row.updated_at||'';
       var remote=JSON.stringify(row.state);
       var local=localState();
       if(remote===local){ setSt('synced \u00b7 up to date'); return; }
@@ -4090,10 +4112,29 @@ var AMPLIFIERS=[
       checks:collectChecks()
     };
   }
-  var last='', suspended=false;
+  var last='', suspended=false, quotaWarned=false;
+  function miniToast(m){
+    try{
+      var t=document.querySelector('.toast');
+      if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
+      t.textContent=m; t.style.opacity=1;
+      setTimeout(function(){ t.style.opacity=0; }, 4000);
+    }catch(e){}
+  }
   function save(){
     if(suspended) return; // reset in progress — don't resurrect cleared state on unload
-    try{ var s=JSON.stringify(state()); if(s!==last){ localStorage.setItem(KEY,s); last=s; } }catch(e){}
+    try{ var s=JSON.stringify(state()); if(s!==last){ localStorage.setItem(KEY,s); last=s; } }
+    catch(e){
+      // storage quota blown (almost always images) — save everything except
+      // images rather than silently losing every edit
+      try{
+        var lite=state();
+        lite.posts=lite.posts.map(function(p){ if(!p.img) return p; var q={}; for(var k in p){ if(k!=='img') q[k]=p[k]; } return q; });
+        var s2=JSON.stringify(lite);
+        localStorage.setItem(KEY,s2); last=s2;
+        if(!quotaWarned){ quotaWarned=true; miniToast('Browser storage is full — everything saved except post images. Remove an image or two; keep masters in Drive.'); }
+      }catch(e2){}
+    }
   }
   // restore Action Tracker checkboxes
   try{
