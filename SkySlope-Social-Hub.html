@@ -1010,7 +1010,6 @@
       <div id="cartBar" class="cartbar" style="display:none">
         <div class="cb-info"><b id="cbCount">0</b>&nbsp;in export cart<span id="cbItems" class="cb-items"></span></div>
         <div class="cb-actions">
-          <button class="cbtn push" id="cbAdvance" type="button">→ Advance stage</button>
           <button class="cbtn push" id="cbLLM" type="button">⬇ LLM tasks</button>
           <button class="cbtn push" id="cbCSV" type="button">⬇ Excel (CSV)</button>
           <button class="cbtn" id="cbBriefs" type="button">⧉ Copy briefs</button>
@@ -2684,7 +2683,7 @@ try{
   function worldMeter(env){
     var pool=ccPosts.filter(function(p){return p.env===env;});
     if(env==='copy'){ var a=pool.filter(function(p){return p.status==='Approved';}).length; return {n:pool.length,done:a,label:a+' approved'}; }
-    if(env==='creative'){ var c=pool.filter(function(p){return p.creative&&p.creative.link;}).length; return {n:pool.length,done:c,label:c+' dressed'}; }
+    if(env==='creative'){ var c=pool.filter(function(p){return p.status==='Approved';}).length; return {n:pool.length,done:c,label:c+' approved'}; }
     var sh=pool.filter(function(p){return p.status==='Scheduled'||p.status==='Published';}).length;
     return {n:pool.length,done:sh,label:sh+' shipped'};
   }
@@ -2756,7 +2755,7 @@ try{
     var defPlat = pvPlatform==='All'?'Instagram':pvPlatform;
     var ov=document.createElement('div'); ov.id='npOverlay'; ov.className='npov';
     ov.innerHTML='<div class="npm" role="dialog" aria-modal="true" aria-label="New post">'+
-      '<h3>New post</h3><div class="note-strip">Born in Compose \u2014 it advances once the copy is approved.</div>'+
+      '<h3>New post</h3><div class="note-strip">Stages are automatic \u2014 attach an image for Visualize, set a publish day for Deploy.</div>'+
       '<div class="nprow2"><div><label>Platform</label><select id="npPlat">'+PLATFORM_ORDER.map(function(x){return '<option'+(x===defPlat?' selected':'')+'>'+x+'</option>';}).join('')+'</select></div>'+
       '<div><label>Pillar</label><select id="npPil">'+pOpts.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div></div>'+
       '<div class="nprow2"><div><label>Format</label><select id="npFmt">'+fOpts.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div>'+
@@ -2773,10 +2772,12 @@ try{
       var t=document.getElementById('npTitle').value.trim()||'New post idea';
       var p={pillar:document.getElementById('npPil').value,platform:document.getElementById('npPlat').value,format:document.getElementById('npFmt').value,status:'Idea',env:'copy',creative:{kind:'',link:'',note:''},history:[],title:t,cap:document.getElementById('npCap').value.trim()||'Draft the caption here\u2026',visual:document.getElementById('npVis').value.trim()||'Describe the visual: format, composition, colors.',note:'',when:document.getElementById('npWhen').value||''};
       stamp(p,'created');
+      p.env=derivedEnv(p);
+      if(creativeFulfilled(p)) inferKind(p);
       ccPosts.unshift(p);
       ov.remove();
       tiles(); envTabs(); filters(); syncView(); updateCart();
-      showToast('"'+t.slice(0,32)+'" born in Compose'+(p.when?' \u2014 assigned to '+p.when:''));
+      showToast('"'+t.slice(0,32)+'"'+(p.when?' scheduled for '+p.when+' \u2014 straight to Deploy':' born in Compose'));
     };
     document.getElementById('npTitle').focus();
   }
@@ -2836,31 +2837,36 @@ try{
   }
   function creativeFulfilled(p){ return !!(p.img || (p.creative&&p.creative.link)); }
   function inferKind(p){ if(!p.creative.kind && (p.img||p.creative.link)){ p.creative.kind = (!p.img && /video|mp4|reel/i.test(p.creative.link||''))?'video':'image'; } }
-  function advancePost(p){
-    if(p.env==='copy'){
-      if(p.status!=='Approved') return {ok:false,why:'needs Approved status first'};
-      p.env='creative'; stamp(p,'to-creative'); bumpStreak();
-      if(creativeFulfilled(p)){ inferKind(p); p.env='ready'; stamp(p,'to-ready'); }
-      return {ok:true,to:p.env};
-    }
-    if(p.env==='creative'){
-      if(!creativeFulfilled(p)) return {ok:false,why:'needs an attached image or a Drive link'};
-      inferKind(p);
-      p.env='ready'; stamp(p,'to-ready'); bumpStreak();
-      return {ok:true,to:'ready'};
-    }
-    return {ok:false,why:'already in Deploy'};
+  // The stage is DERIVED from the post's content \u2014 nobody moves cards by hand:
+  //   publish day (or Scheduled/Published status) -> Deploy
+  //   image or Drive link -> Visualize
+  //   otherwise -> Compose
+  function derivedEnv(p){
+    if(p.status==='Scheduled'||p.status==='Published') return 'ready';
+    if(p.when) return 'ready';
+    if(creativeFulfilled(p)) return 'creative';
+    return 'copy';
+  }
+  function syncEnv(p){
+    var e=derivedEnv(p);
+    if(e===p.env) return null;
+    var ORDER={copy:0,creative:1,ready:2};
+    var fwd=ORDER[e]>ORDER[p.env], prev=p.env;
+    p.env=e;
+    stamp(p,(fwd?'to-':'back-to-')+(e==='ready'?'ready':e==='creative'?'creative':'copy'));
+    if(creativeFulfilled(p)) inferKind(p);
+    if(fwd){ bumpStreak(); if(e==='ready') fxConfetti(); }
+    return {from:prev,to:e,fwd:fwd};
+  }
+  function dateChanged(p){
+    var r=syncEnv(p);
+    refreshAll();
+    if(p.when) showToast('Assigned to '+p.when+(r&&r.to==='ready'?' \u2014 moved to Deploy':''));
+    else showToast('Day cleared'+(r?' \u2014 back to '+ENV_LABEL[r.to]:''));
   }
   function refreshAll(){ tiles(); envTabs(); filters(); render(); updateCart(); }
-  function autoAdvanceOnDate(p){
-    if(!p.when){ refreshAll(); showToast('Day cleared'); return; }
-    if(p.env==='ready'){ refreshAll(); showToast('Assigned to '+p.when); return; }
-    if(p.env==='copy' && p.status!=='Approved'){ p.status='Approved'; stamp(p,'approved'); }
-    inferKind(p);
-    p.env='ready'; stamp(p,'to-ready'); bumpStreak();
-    refreshAll(); fxConfetti();
-    showToast('Assigned to '+p.when+' \u2014 moved to Deploy. Set platform + time there.');
-  }
+  // normalize whatever state was loaded (shipped, saved, or team-synced)
+  ccPosts.forEach(function(p){ var e=derivedEnv(p); if(e!==p.env) p.env=e; if(creativeFulfilled(p)) inferKind(p); });
   function moveEnv(p,env,act,msg){
     p.env=env; delete p.sel; stamp(p,act); tiles(); envTabs(); render();
     var n=bumpStreak();
@@ -2964,34 +2970,27 @@ try{
           sel.onchange=function(){ p.status=sel.value; tiles(); envTabs(); showToast('Status \u2192 '+p.status); };
           tools.appendChild(sel);
           var dic=document.createElement('input');dic.type='date';dic.className='pdate';dic.value=p.when||'';dic.title='Pick a publish day \u2014 scheduling moves it to Deploy';
-          dic.onchange=function(){ p.when=dic.value; autoAdvanceOnDate(p); };
+          dic.onchange=function(){ p.when=dic.value; dateChanged(p); };
           tools.appendChild(dic);
-          tbtn('Advance \u2192','push',function(){
-            var r=advancePost(p);
-            if(r.ok){ refreshAll(); if(p.env==='ready') fxConfetti(); showToast('"'+p.title.slice(0,32)+'" \u2192 '+ENV_LABEL[p.env]); }
-            else showToast('Held in Compose \u2014 '+r.why);
-          });
           tbtn('\u270e Edit details','',function(){ var ed=d.querySelector('.pvedit'); ed.style.display=ed.style.display==='none'?'block':'none'; buildEdit(p,d); });
         } else if(p.env==='creative'){
           var crt=document.createElement('div'); crt.className='crt';
           crt.innerHTML='<select class="ckind"><option value=""'+(p.creative.kind===''?' selected':'')+'>creative type\u2026</option><option value="image"'+(p.creative.kind==='image'?' selected':'')+'>Image</option><option value="video"'+(p.creative.kind==='video'?' selected':'')+'>Video (Drive link)</option></select>'+
-            '<input class="clink" type="url" placeholder="Google Drive / asset link \u2014 required to hand off" value="'+escAttr(p.creative.link)+'">';
+            '<input class="clink" type="url" placeholder="Google Drive / asset link (optional \u2014 video masters etc.)" value="'+escAttr(p.creative.link)+'">';
           crt.querySelector('.ckind').onchange=function(ev){ p.creative.kind=ev.target.value; };
-          crt.querySelector('.clink').onchange=function(ev){ p.creative.link=ev.target.value.trim(); };
+          crt.querySelector('.clink').onchange=function(ev){ p.creative.link=ev.target.value.trim(); var r=syncEnv(p); if(r){ refreshAll(); showToast(r.fwd?'Creative linked \u2014 moved to '+ENV_LABEL[r.to]:'Link removed \u2014 back to '+ENV_LABEL[r.to]); } };
           d.insertBefore(crt, tools);
+          var sel2=document.createElement('select'); sel2.className='status';
+          COPY_STATUSES.forEach(function(st){ var o=document.createElement('option'); o.textContent=st; o.selected=(st===p.status); sel2.appendChild(o); });
+          sel2.onchange=function(){ p.status=sel2.value; tiles(); envTabs(); showToast('Status \u2192 '+p.status); };
+          tools.appendChild(sel2);
           var did=document.createElement('input');did.type='date';did.className='pdate';did.value=p.when||'';did.title='Pick a publish day \u2014 scheduling moves it to Deploy';
-          did.onchange=function(){ p.when=did.value; autoAdvanceOnDate(p); };
+          did.onchange=function(){ p.when=did.value; dateChanged(p); };
           tools.appendChild(did);
-          tbtn('Advance \u2192','push',function(){
-            var r=advancePost(p);
-            if(r.ok){ refreshAll(); fxConfetti(); showToast('"'+p.title.slice(0,32)+'" \u2192 Deploy'); }
-            else showToast('Held in Visualize \u2014 '+r.why);
-          });
-          tbtn('\u2190 Back to Compose','',function(){ moveEnv(p,'copy','back-to-copy','Sent back to Compose'); });
           tbtn('\u270e Edit details','',function(){ var ed=d.querySelector('.pvedit'); ed.style.display=ed.style.display==='none'?'block':'none'; buildEdit(p,d); });
         } else {
           var di=document.createElement('input');di.type='date';di.className='pdate';di.value=p.when||'';di.title='Publish day';
-          di.onchange=function(){ p.when=di.value; autoAdvanceOnDate(p); };
+          di.onchange=function(){ p.when=di.value; dateChanged(p); };
           tools.appendChild(di);
           tbtn('\u29c9 Copy caption','push',function(){ copyText(p.cap,'Caption copied'); });
           tbtn('Copy + Compose \u2197','',function(){
@@ -3004,7 +3003,6 @@ try{
           if(p.status!=='Published'){
             tbtn('\u2713 Mark published','',function(){ p.status='Published'; stamp(p,'published'); tiles(); envTabs(); render(); fxConfetti(); showToast('SHIPPED \u2014 '+lastStamp(p).by+' logs another one'); });
           }
-          tbtn('\u2190 Back to Visualize','',function(){ p.status='Approved'; moveEnv(p,'creative','back-to-creative','Sent back to Visualize'); });
         }
         list.appendChild(d);
       });
@@ -3013,8 +3011,8 @@ try{
       var empty=document.createElement('div'); empty.className='envnote';
       empty.textContent = filterFree ? 'No posts for this platform yet.' :
         activeEnv==='copy' ? 'Compose is quiet \u2014 the muse is waiting. Hit + New post.' :
-        activeEnv==='creative' ? 'Visualize is empty \u2014 approve something in Compose and advance it.' :
-        'Deploy is clear \u2014 nothing on the launchpad. Dress a post in Visualize.';
+        activeEnv==='creative' ? 'Visualize is empty \u2014 attach an image (or Drive link) to a post and it lands here on its own.' :
+        'Deploy is clear \u2014 set a publish day on any post and it lands here on its own.';
       list.appendChild(empty);
     }
   }
@@ -3122,12 +3120,9 @@ try{
   function removeImage(p){
     delete p.img;
     var demoted='';
-    if(p.env==='ready' && !(p.creative&&p.creative.link)){
-      p.env='creative'; p.status='Approved'; stamp(p,'back-to-creative'); demoted=' — moved back to Visualize (no creative left)';
-    } else if(p.env==='creative' && !(p.creative&&p.creative.link)){
-      p.env='copy'; stamp(p,'back-to-copy'); demoted=' — moved back to Compose';
-    }
-    tiles(); envTabs(); render(); updateCart();
+    var r=syncEnv(p);
+    if(r) demoted=' — back to '+ENV_LABEL[r.to];
+    refreshAll();
     showToast('Image removed'+demoted);
   }
   function attachImage(p, file, card){
@@ -3153,14 +3148,10 @@ try{
         var note = out.length>400000 ? 'Image attached (preview could not be shrunk enough to save — it lasts this session only; keep the master in Drive)' : 'Image attached — saves with the post and syncs to the team';
         // creative delivered -> the post advances on its own
         var advanced='';
-        if(p.env==='creative' || (p.env==='copy'&&p.status==='Approved')){
-          var ar=advancePost(p);
-          if(ar.ok) advanced=' — auto-advanced to '+ENV_LABEL[p.env];
-        } else if(p.env==='copy'){
-          advanced=' — approve the copy (or set a publish day) and it will advance';
-        }
-        if(advanced.indexOf('auto-advanced')>-1){
-          refreshAll(); fxConfetti();
+        var movedTo=syncEnv(p);
+        if(movedTo) advanced=' — moved to '+ENV_LABEL[movedTo.to];
+        if(movedTo){
+          refreshAll();
         } else if(card){
           if(card.classList.contains('pv')){
             var m2=card.querySelector('.pvmedia');
@@ -3236,21 +3227,6 @@ try{
     document.body.appendChild(a); a.click(); a.remove();
     showToast(msg);
   }
-  var cbA=document.getElementById('cbAdvance');
-  if(cbA) cbA.onclick=function(){
-    var items=cartItems();
-    if(!items.length) return showToast('Cart is empty — click cards to select posts first');
-    var moved=0, held={};
-    items.forEach(function(p){
-      var r=advancePost(p);
-      if(r.ok){ moved++; } else { held[r.why]=(held[r.why]||0)+1; }
-    });
-    refreshAll();
-    var msg=moved+' advanced';
-    for(var w in held){ msg+=' · '+held[w]+' held ('+w+')'; }
-    showToast(msg);
-    if(moved) fxConfetti();
-  };
   var cbL=document.getElementById('cbLLM');
   if(cbL) cbL.onclick=function(){
     if(!cartItems().length) return showToast('Cart is empty \u2014 click preview cards or tick list checkboxes');
