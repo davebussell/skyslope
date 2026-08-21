@@ -1834,14 +1834,14 @@
     <!-- ========== PROMPT RESOURCES ========== -->
     <section class="view" id="view-prompts">
       <h1>Prompt Resources</h1>
-      <div class="sub">Downloadable knowledge files for AI image generation. Attach them in Gemini (or any image tool that accepts files), paste a post's image prompt, and get on-brand social images without re-explaining SkySlope every time.</div>
+      <div class="sub">Every post's &#10697; Image prompt is fully self-contained &mdash; copy it from any Content Studio card and paste it straight into Gemini or any image tool. No setup, nothing to attach. The files below are the optional deep-reference pack for designers and long working sessions.</div>
       <div class="ccard" style="margin:14px 0">
         <h3>How it works</h3>
         <ol style="margin:8px 0;padding-left:20px">
-          <li><b>Download</b> the full pack below (or the individual files).</li>
-          <li><b>Attach</b> the file(s) to a new Gemini chat.</li>
-          <li><b>Paste a post's prompt</b> &mdash; the &#10697; Image prompt button on any Content Studio card.</li>
-          <li><b>Iterate</b>: ask for the same image &ldquo;with a bigger number&rdquo;, &ldquo;in dark mode&rdquo;, &ldquo;as a 9:16 cover&rdquo;.</li>
+          <li><b>Copy a post's prompt</b> &mdash; the &#10697; Image prompt button on any Content Studio card. It carries the post, the composition, and the whole brand system inside it.</li>
+          <li><b>Paste it into Gemini</b> (or any image tool). That's it.</li>
+          <li><b>Iterate</b>: &ldquo;bigger number&rdquo;, &ldquo;dark mode&rdquo;, &ldquo;as a 9:16 cover&rdquo;.</li>
+          <li><b>Optional, for long sessions:</b> attach the files below and paste the Master Prompt first to lock the style across many images in one chat.</li>
         </ol>
         <button class="cbtn push" id="dlPack" type="button">&#11015; Download the full pack &mdash; all 5 files in one</button>
       </div>
@@ -2615,20 +2615,63 @@ try{
     if(p.platform==='TikTok') return '9:16 vertical, 1080x1920';
     return '1:1 square, 1080x1080';
   }
+  function heroNumber(cap){
+    var m=cap.match(/\$[\d,.]+ ?[MBK]?\b|\d+(?:\.\d+)?%|\b\d[\d,]*(?:\.\d+)?\s*(?:days?|hours?|hrs|minutes?|weeks?|deals?|transactions?|agents?|brokers?|states?|pages?|x)\b|\b\d{1,3}(?:,\d{3})+\b/i);
+    return m?m[0].trim():'';
+  }
   function genPrompt(p){
     var isVideo=/reel|video|clip/i.test(p.format||'');
-    var L=[];
-    L.push('Generate one finished social media image now. Do not describe it, do not ask questions - output the image itself.');
-    L.push('Use: '+(isVideo?('cover/opening frame for a '+p.platform+' video post'):(p.platform+' feed graphic'))+'.');
-    L.push('Aspect ratio: '+aspectFor(p)+'.');
     var cap=(p.cap||'').replace(/\[|\]/g,'').trim();
-    L.push('This image accompanies the following '+p.platform+' post ('+p.pillar+' pillar). THE POST:');
+    var vis=(p.visual||'').replace(/\[|\]/g,'').trim();
+    var hook=cap.split('\n')[0]; var dot=hook.indexOf('. '); if(dot>24) hook=hook.slice(0,dot+1); hook=hook.slice(0,150).trim();
+    var num=heroNumber(cap);
+    var fmt=(p.format||'').toLowerCase(), pil=(p.pillar||'');
+    var qm=cap.match(/["\u201c]([^"\u201d]{10,180})["\u201d]/);
+    var dark=/data|index/i.test(pil);
+    var direction;
+    if(/poll/.test(fmt)){
+      direction='Template: SPLIT POLL - two clean option zones (muted slate vs hero blue) with short bold labels for the two choices the post asks about; the question as a compact headline on top.';
+    } else if(/meme/.test(fmt)){
+      direction='Template: RELATABLE SCENE - one instantly recognizable agent-life moment with meme energy but premium craft; leave one clean high-contrast zone for the short punchline: "'+hook+'"';
+    } else if(/testimonial/i.test(pil) || /testimonial/.test(fmt)){
+      direction='Template: QUOTE CARD - oversized quotation marks, this line set large in a classic serif (Libre Baskerville look): "'+(qm?qm[1]:hook)+'". Attribution small beneath. Optional: a warm candid portrait of a real-estate professional on one side, soft natural light.';
+    } else if(/data|index/i.test(pil)){
+      direction=num
+        ? 'Template: STAT CARD - the number '+num+' IS the design: render it exactly, about a third of the canvas tall, one-line label beneath it, small kicker top-left. Nothing else competes with it.'
+        : 'Template: LEADERBOARD - 3 to 5 ranked rows or bars drawn from the post, top row highlighted in the hero blue, the rest in slate; clean, tabular, confident.';
+    } else if(/education/i.test(pil)){
+      direction=/carousel|document/.test(fmt)
+        ? 'Template: CAROUSEL TITLE SLIDE - a bold title promising the specific outcome of the lesson ("'+hook+'"), a subtle swipe cue bottom-right, big margins.'
+        : 'Template: TEACHING CARD - either bold numbered steps or a two-zone myth-vs-fact split (muted slate zone vs hero blue zone); the promise of the lesson as a max-7-word headline.';
+    } else {
+      direction='Template: SCENE - one warm, candid residential real-estate moment that embodies the post (closing table, keys changing hands, an agent mid-hustle, a golden-hour home exterior); soft natural light, documentary warmth, zero product and zero selling.';
+    }
+    var L=[];
+    L.push('Generate one finished social media image now. Do not describe it or ask questions - output the image itself.');
+    L.push('Format: '+(isVideo?('the cover/opening frame for a '+p.platform+' video post'):(p.platform+' feed graphic'))+'. Aspect ratio: '+aspectFor(p)+'.');
+    L.push('');
+    L.push('THE POST THIS IMAGE ACCOMPANIES:');
     L.push('"'+cap+'"');
-    L.push('Bring the post to life: pull the single strongest idea, number or moment out of that post and make it the hero of the image - one focal stat, claim or scene, not a summary of everything. A scrolling reader should feel the hook of the post from the image alone; the caption carries the detail, the image carries the impact. If the post names a number, render that exact number large. If it tells a story, show its most human moment.');
-    L.push('Composition: '+((p.visual||'Clean typographic stat card for a real estate software brand.').replace(/\[|\]/g,'')));
-    L.push('Style: the premium space-mission aesthetic of skyslope.com. Either LIGHT (white to ice #F4F8FC, Science Blue #0059DA elements, slate #3F5B77 support) or DARK (space navy #161B28 easing into electric blue #006BED, white type, #87C6FF accents, gentle glow). Clean geometric sans headlines, one hero element, margins at least 8% of canvas, softly rounded panels, soft shadows.');
-    L.push('Rules: render any numbers or names literally without brackets; keep on-image text SHORT and spelled exactly as given; no company logos or wordmarks, no watermarks, no fake platform UI, no lorem ipsum.');
-    L.push('If SkySlope prompt-resource files are attached to this chat, follow them; where they conflict with this prompt, this prompt wins.');
+    L.push('');
+    L.push('WHAT THE IMAGE MUST DO');
+    L.push('A scrolling reader must feel this hook from the image alone: "'+hook+'"');
+    L.push(direction);
+    if(isVideo) L.push('It is a video cover: keep all text inside the middle 80% of the frame and make the hook text the dominant element.');
+    if(vis) L.push('Art direction from the team: '+vis);
+    L.push('');
+    L.push('BRAND LOOK (follow exactly - the brand must be recognizable with no logo anywhere)');
+    L.push('The brand is SkySlope, real estate transaction software. Its visual world is a calm, premium "mission control" space theme: quiet confidence, launchpad-at-night energy, never sci-fi clutter.');
+    L.push(dark
+      ? 'Scene mode: DARK - deep space-navy background, #161B28 at the top easing into electric blue #006BED near the bottom edge; white type; accents in Sky Light #87C6FF; gentle blue glows, a hint of faint stars welcome.'
+      : 'Scene mode: LIGHT - white easing into ice blue #F4F8FC (or a daylight-sky wash #DAEEFE to #9BCAFD); primary elements in Science Blue #0059DA; secondary text in Slope Slate #3F5B77.');
+    L.push('Fixed palette - never substitute: Science Blue #0059DA, Electric Blue #006BED, Sky Light #87C6FF, Slope Slate #3F5B77, Mirage Navy #151A27, white; Success Green #28A745 only for positive change, Alert Red #DC3545 only for risk. ONE hero accent per image.');
+    L.push('Type: clean geometric sans-serif (Proxima Nova look), bold, sentence case, headlines of at most 7 words.');
+    L.push('Craft: margins of at least 8% of the canvas on every side; softly rounded panels (16px feel); soft long shadows; depth from layered palette gradients, never busy textures. Everything legible at 200px wide.');
+    L.push('');
+    L.push('HARD RULES');
+    L.push('- No logos, wordmarks or watermarks of any company, including SkySlope. No fake social platform UI. No lorem ipsum or gibberish text anywhere.');
+    L.push('- On-image text stays short and spelled exactly as written above. Use ONLY numbers that appear in this prompt - never invent or round one.');
+    L.push('- If photography appears: warm, candid, diverse residential real estate - never stock handshakes, gavels, courtrooms or robots.');
     return L.join('\n');
   }
   function postBrief(p){
@@ -3032,8 +3075,7 @@ try{
         var tools=d.querySelector('.pvtools');
         function tbtn(label,cls,fn){ var b=document.createElement('button'); b.className='cbtn'+(cls?' '+cls:''); b.textContent=label; b.onclick=fn; tools.appendChild(b); return b; }
         // universal tools
-        tbtn('\u29c9 Brief','',function(){ copyText(postBrief(p),'Brief copied \u2014 caption, instructions, creative link and platform rules'); });
-        tbtn('\u29c9 Image prompt','',function(){ copyText(genPrompt(p),'Generation-ready image prompt copied \u2014 paste into Gemini'); });
+        tbtn('\u29c9 Image prompt','push',function(){ copyText(genPrompt(p),'Image prompt copied \u2014 self-contained, paste straight into Gemini or any image tool'); });
         d.querySelector('.pvcard').appendChild(makeImgUp(p, function(){ return d; }));
         // world tools follow the post
         if(p.env==='copy'){
