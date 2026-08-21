@@ -2620,6 +2620,18 @@ try{
     if(p.platform==='TikTok') return '9:16 vertical, 1080x1920';
     return '1:1 square, 1080x1080';
   }
+  function sceneFor(p, cap){
+    var t=((p.title||'')+' '+cap).toLowerCase();
+    if(/document|signature|paperwork|file review|audit|compliance/.test(t)) return 'a transaction coordinator at a modern desk beside a tall stack of paper contracts, pen and laptop in frame, warm office light';
+    if(/checklist|coordinator|workload|\btc\b/.test(t)) return 'a focused transaction coordinator working across two monitors in a bright modern brokerage office, sticky notes and coffee in frame';
+    if(/income|commission|earn|salary|gap|median/.test(t)) return 'a confident, diverse real estate agent in a blazer reviewing numbers on a tablet in a bright brokerage office';
+    if(/keys|closing day|hand-?off|move|moving/.test(t)) return 'a close-up of house keys passing between two hands in front of a sunlit front door';
+    if(/email|inbox|friday|urgent|unread/.test(t)) return 'a laptop glowing in a dim office at dusk, one agent silhouetted mid-reply, coffee beside the keyboard';
+    if(/speed|faster|days|hours|deadline|clock|light speed/.test(t)) return 'an agent striding out of a brokerage door at pace, keys and phone in hand, slight motion blur';
+    if(/team|broker(?!age software)|office|meeting/.test(t)) return 'a small, diverse brokerage team gathered around a conference table mid-conversation, natural window light';
+    if(/market|sales|inventory|listing|price|home|house|housing|state|region/.test(t)) return 'a tree-lined American suburban street of homes at golden hour, photographed from a gentle elevation';
+    return 'a warm candid moment of residential real-estate life - an agent, a client, or a home - in soft natural light';
+  }
   function heroNumber(cap){
     var m=cap.match(/\$[\d,.]+ ?[MBK]?\b|\d+(?:\.\d+)?%|\b\d[\d,]*(?:\.\d+)?\s*(?:days?|hours?|hrs|minutes?|weeks?|deals?|transactions?|agents?|brokers?|states?|pages?|x)\b|\b\d{1,3}(?:,\d{3})+\b/i);
     return m?m[0].trim():'';
@@ -2633,23 +2645,24 @@ try{
     var fmt=(p.format||'').toLowerCase(), pil=(p.pillar||'');
     var qm=cap.match(/["\u201c]([^"\u201d]{10,180})["\u201d]/);
     var dark=/data|index/i.test(pil);
+    var scene=sceneFor(p, cap);
     var direction;
     if(/poll/.test(fmt)){
-      direction='Template: SPLIT POLL - two clean option zones (muted slate vs hero blue) with short bold labels for the two choices the post asks about; the question as a compact headline on top.';
+      direction='Template: PHOTO SPLIT POLL - two photographic half-frames, one per option the post asks about (real moments, not icons), divided by a clean line; a short bold label on each half and the question as a compact headline on a slim navy bar.';
     } else if(/meme/.test(fmt)){
-      direction='Template: RELATABLE SCENE - one instantly recognizable agent-life moment with meme energy but premium craft; leave one clean high-contrast zone for the short punchline: "'+hook+'"';
+      direction='Template: RELATABLE SCENE - a photorealistic, instantly recognizable agent-life moment with meme energy but premium craft: '+scene+'. Leave one clean high-contrast zone for the short punchline: "'+hook+'"';
     } else if(/testimonial/i.test(pil) || /testimonial/.test(fmt)){
-      direction='Template: QUOTE CARD - oversized quotation marks, this line set large in a classic serif (Libre Baskerville look): "'+(qm?qm[1]:hook)+'". Attribution small beneath. Optional: a warm candid portrait of a real-estate professional on one side, soft natural light.';
+      direction='Template: QUOTE PORTRAIT - a warm candid editorial portrait of a real-estate professional fills the frame (or one half), soft natural light, genuine expression; over it, oversized quotation marks and this line set large in a classic serif (Libre Baskerville look): "'+(qm?qm[1]:hook)+'". Attribution small beneath.';
     } else if(/data|index/i.test(pil)){
       direction=num
-        ? 'Template: STAT CARD - the number '+num+' IS the design: render it exactly, about a third of the canvas tall, one-line label beneath it, small kicker top-left. Nothing else competes with it.'
-        : 'Template: LEADERBOARD - 3 to 5 ranked rows or bars drawn from the post, top row highlighted in the hero blue, the rest in slate; clean, tabular, confident.';
+        ? 'Template: STAT ON SCENE - start from a cinematic photograph: '+scene+'. Grade it cool and premium; lay a deep space-navy gradient scrim (#161B28 fading to transparent) across the lower third or one side; on the scrim, set the number '+num+' huge (about a third of the canvas tall) in white or Electric Blue #006BED with its one-line label beneath. The photo tells the story; the number lands it.'
+        : 'Template: DATA PANEL ON SCENE - a softly blurred, dimmed photograph as the backdrop ('+scene+'); a rounded translucent navy panel carries 3 to 5 ranked bars or rows drawn from the post, top row highlighted in the hero blue.';
     } else if(/education/i.test(pil)){
       direction=/carousel|document/.test(fmt)
-        ? 'Template: CAROUSEL TITLE SLIDE - a bold title promising the specific outcome of the lesson ("'+hook+'"), a subtle swipe cue bottom-right, big margins.'
-        : 'Template: TEACHING CARD - either bold numbered steps or a two-zone myth-vs-fact split (muted slate zone vs hero blue zone); the promise of the lesson as a max-7-word headline.';
+        ? 'Template: PHOTO TITLE SLIDE - a cinematic photograph ('+scene+') with a navy scrim on one side carrying a bold title that promises the outcome of the lesson ("'+hook+'") and a subtle swipe cue bottom-right.'
+        : 'Template: PHOTO TEACHING CARD - a photograph ('+scene+') anchors one half of the frame; the other half is a clean panel with bold numbered steps or a myth-vs-fact split; the promise of the lesson as a max-7-word headline.';
     } else {
-      direction='Template: SCENE - one warm, candid residential real-estate moment that embodies the post (closing table, keys changing hands, an agent mid-hustle, a golden-hour home exterior); soft natural light, documentary warmth, zero product and zero selling.';
+      direction='Template: SCENE - one warm, candid, photorealistic residential real-estate moment that embodies the post: '+scene+'. Soft natural light, documentary warmth, zero product and zero selling.';
     }
     var L=[];
     L.push('Generate one finished social media image now. Do not describe it or ask questions - output the image itself.');
@@ -2660,6 +2673,7 @@ try{
     L.push('');
     L.push('WHAT THE IMAGE MUST DO');
     L.push('A scrolling reader must feel this hook from the image alone: "'+hook+'"');
+    L.push('This image is PHOTOGRAPHY-LED: real people, homes, hands and places carry it; type rides on top. Photorealistic, editorial quality - shallow depth of field, natural or cinematic light, diverse modern professionals, real American residential settings. Do NOT deliver a text-only graphic.');
     L.push(direction);
     if(isVideo) L.push('It is a video cover: keep all text inside the middle 80% of the frame and make the hook text the dominant element.');
     if(vis) L.push('Art direction from the team: '+vis);
@@ -2675,7 +2689,8 @@ try{
     L.push('');
     L.push('HARD RULES');
     L.push('- No logos, wordmarks or watermarks of any company, including SkySlope. No fake social platform UI. No lorem ipsum or gibberish text anywhere.');
-    L.push('- On-image text stays short and spelled exactly as written above. Use ONLY numbers that appear in this prompt - never invent or round one.');
+    L.push('- On-image text is ONLY what the template names: the hero number, its one-line label, the short headline or labels, and a small source line if the post cites one. NEVER render these instructions, parentheticals, methodology notes, or anything else from this prompt as text in the image.');
+    L.push('- Every word rendered must be spelled exactly as written above. Use ONLY numbers that appear in this prompt - never invent, round, or extrapolate one.');
     L.push('- If photography appears: warm, candid, diverse residential real estate - never stock handshakes, gavels, courtrooms or robots.');
     return L.join('\n');
   }
@@ -3496,13 +3511,16 @@ try{
       "- Editorial accent for quotes/testimonials ONLY: a classic serif (Libre Baskerville look), italic welcome.",
       "- One hero element per image: a huge number OR a headline of at most 7 words. All other text minimal; exact spellings as given.",
       "",
+      "## PHOTOGRAPHY FIRST",
+      "Every image is built around something REAL - people, homes, hands, desks, streets. Type supports the photo; the photo carries the feeling. Photorealistic, editorial quality: shallow depth of field, natural or cinematic light, diverse modern professionals, real American residential settings. A text-only graphic is a failure unless pure typography is explicitly requested.",
+      "",
       "## COMPOSITION SYSTEM - pick the template that fits the post",
-      "1. STAT CARD (the default and the signature): one huge number filling about a third of the canvas height - Science Blue on light, or white/Sky Light on the dark gradient - a one-line label beneath it, a small kicker top-left, and nothing else.",
-      "2. LEADERBOARD: 3-5 ranked rows or bars, the top row highlighted in the hero accent, everything else slate; clean and tabular.",
-      "3. QUOTE CARD: oversized quotation marks, the quote in serif across 1-3 lines, name + brokerage small beneath; optional warm candid portrait on one side.",
-      "4. SPLIT (myth vs fact / before vs after): two cleanly divided zones - muted slate side vs hero blue side - with short labels.",
-      "5. SCENE (education / zero-CTA): one warm candid residential real estate moment (closing table, keys in hand, a TC clearing a checklist, golden-hour home exterior) in soft natural light; short overlay line on a subtle scrim only if the prompt asks.",
-      "Consistency rules: identical corner-radius feel (soft 16px), margins at least 8% of the canvas on every side, and the same type treatment across every image in this chat.",
+      "1. STAT ON SCENE (the default): start from a cinematic photograph that embodies the stat (a TC beside a stack of contracts, keys passing between hands, a golden-hour suburban street). Grade it cool and premium, lay a deep-navy gradient scrim (#161B28 fading to transparent) over the lower third or one side, and set the hero number huge in white or Electric Blue on the scrim with its one-line label.",
+      "2. DATA PANEL ON SCENE: a softly blurred, dimmed photo backdrop; a rounded translucent navy panel carries 3-5 ranked bars or rows, top row in the hero blue.",
+      "3. QUOTE PORTRAIT: a warm candid editorial portrait fills the frame or one half; the quote overlaid in serif with oversized quotation marks; attribution small.",
+      "4. PHOTO SPLIT: two photographic zones (chaos vs calm, before vs after, option A vs option B), divided cleanly, short bold labels on each side.",
+      "5. SCENE (zero-CTA): one warm candid residential real-estate moment in soft natural light - documentary warmth, zero product, zero selling; overlay text only if asked.",
+      "Consistency rules: the same cool, blue-leaning grade on every photo; identical corner-radius feel (soft 16px); margins at least 8% of the canvas; the same type treatment across every image in this chat.",
       "",
       "## FINISH & CRAFT",
       "- Panels get softly rounded corners and long soft shadows; dark scenes get gentle blue glows.",
@@ -3511,6 +3529,8 @@ try{
       "",
       "## HARD RULES",
       "1. Output ONE finished image per request. No questions, no descriptions - generate it.",
+      "1b. PHOTOGRAPHY-LED above all: every image includes real imagery (people, homes, hands, places). Never deliver a text-only graphic unless explicitly asked for pure typography.",
+      "1c. On-image text is ONLY what the chosen template names (hero number, label, short headline, small source line). Never render prompt instructions, parentheticals or methodology notes as image text.",
       "2. No logos, wordmarks or watermarks of any company, including SkySlope's.",
       "3. No fake platform UI (no fake LinkedIn/Instagram frames). No lorem ipsum, no gibberish background text.",
       "4. Only numbers that appear in the prompt; [BRACKETED] numbers are unverified placeholders - never render them.",
@@ -3560,7 +3580,7 @@ try{
       "## The signature format: the stat card",
       "SkySlope's signature social image is a bold typographic stat card: one huge number, a one-line label under it, lots of breathing room. When in doubt, make a stat card.",
       "",
-      "## Photography / scene direction",
+      "## Photography / scene direction (the DEFAULT - images are photography-led, type rides on top)",
       "Real moments in residential real estate: closings, keys changing hands, agents at laptops, a TC clearing a checklist, brokers reviewing files, home exteriors at golden hour. Warm, candid, diverse, modern. Avoid: stock handshake cliches, suits in glass towers, gavels and courtrooms, robots shaking hands with humans.",
       "",
       "## Hard rules - non-negotiable",
