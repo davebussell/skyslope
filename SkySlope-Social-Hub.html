@@ -495,6 +495,17 @@
   .schedm .calday:hover{border-color:var(--blue)}
   .schedm .calday.mine{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
   .sc-chip{cursor:default;pointer-events:none}
+  .dsched{background:var(--surface);border:1px solid var(--grid);border-left:4px solid #28A745;border-radius:14px;padding:12px 16px;margin:0 0 18px;max-width:540px;box-shadow:var(--shadow)}
+  .dsched h3{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .dsrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0;border-top:1px solid var(--grid)}
+  .dsrow:first-of-type{border-top:0}
+  .dsrow b{font-size:12.5px;color:var(--ink);min-width:86px}
+  .dsrel{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--s3)}
+  .dsrel.over{color:var(--crit)}
+  .dschip{font-family:inherit;font-size:11px;color:#fff;border:0;border-radius:999px;padding:3px 10px;cursor:pointer;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dschip:hover{opacity:.85}
+  .dsnone{font-size:12px;color:var(--muted);padding:4px 0}
+  .pv.flash .pvcard{animation:flashcard 1.6s}
   .sc-more{font-size:9px;color:var(--muted)}
   @media(max-width:700px){.schedm .calday{min-height:46px}.sc-chip{display:inline-block;width:9px;height:9px;min-width:0;border-radius:50%;padding:0;font-size:0;margin-right:2px}}
 </style>
@@ -2915,21 +2926,67 @@ try{
     return '<div class="pvmedia ghost"><span>planned visual</span>'+capHTML((p.visual||'No visual brief yet').slice(0,150))+'</div>';
   }
   function escAttr(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+  function dayLabel(ds){
+    var today=isoDate(new Date());
+    if(ds===today) return 'Today';
+    var diff=Math.round((new Date(ds+'T12:00:00')-new Date(today+'T12:00:00'))/86400000);
+    if(diff===1) return 'Tomorrow';
+    if(diff<0) return Math.abs(diff)+'d overdue';
+    return 'in '+diff+'d';
+  }
+  function buildDeploySched(list){
+    ccPosts.forEach(function(p,gi){ p.__gi=gi; });
+    var pool=ccPosts.filter(function(p){ return p.env==='ready' && visible(p); });
+    var dated=pool.filter(function(p){ return p.when; });
+    var undatedN=pool.length-dated.length;
+    var box=document.createElement('div'); box.className='dsched';
+    var head=document.createElement('h3'); head.textContent='\ud83d\udcc5 Launch schedule'; box.appendChild(head);
+    if(!dated.length){
+      var n=document.createElement('div'); n.className='dsnone'; n.textContent='Nothing has a day yet \u2014 tap the \ud83d\udcc5 chip on a card to book it.'; box.appendChild(n);
+    } else {
+      var bymap={}; dated.forEach(function(p){ (bymap[p.when]=bymap[p.when]||[]).push(p); });
+      var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      Object.keys(bymap).sort().forEach(function(ds){
+        var row=document.createElement('div'); row.className='dsrow';
+        var b=document.createElement('b'); b.textContent=WD[new Date(ds+'T12:00:00').getDay()]+' '+fmtDay(ds); row.appendChild(b);
+        var lab=dayLabel(ds);
+        var rel=document.createElement('span'); rel.className='dsrel'+(/overdue/.test(lab)?' over':''); rel.textContent=lab; row.appendChild(rel);
+        bymap[ds].forEach(function(p){
+          var c=document.createElement('button'); c.type='button'; c.className='dschip';
+          c.style.background=CAL_COLORS[p.platform]||'#888';
+          c.textContent=p.platform+' \u00b7 '+p.title;
+          c.title='Jump to this post below';
+          c.onclick=function(){
+            var card=document.querySelector('#plist .pv[data-pvi="'+p.__gi+'"]');
+            if(card){ card.scrollIntoView({behavior:'smooth',block:'center'}); card.classList.add('flash'); setTimeout(function(){ card.classList.remove('flash'); },1700); }
+          };
+          row.appendChild(c);
+        });
+        box.appendChild(row);
+      });
+    }
+    if(undatedN){ var u=document.createElement('div'); u.className='dsnone'; u.textContent=undatedN+' post'+(undatedN===1?'':'s')+' below still need'+(undatedN===1?'s':'')+' a day.'; box.appendChild(u); }
+    list.appendChild(box);
+  }
   function render(){
     var list=document.getElementById('plist');list.innerHTML='';
     var shown=0;
-    var groups = pvPlatform==='All' ? PLATFORM_ORDER : [pvPlatform];
+    var deployOrder = !filterFree && activeEnv==='ready';
+    if(deployOrder) buildDeploySched(list);
+    var groups = deployOrder ? ['__launch__'] : (pvPlatform==='All' ? PLATFORM_ORDER : [pvPlatform]);
     groups.forEach(function(plat){
-      var posts=ccPosts.map(function(p,gi){ p.__gi=gi; return p; }).filter(function(p){ return p.platform===plat && visible(p); });
+      var posts=ccPosts.map(function(p,gi){ p.__gi=gi; return p; }).filter(function(p){ return (deployOrder || p.platform===plat) && visible(p); });
+      if(deployOrder) posts.sort(function(a,b){ var ka=a.when||'9999-12-31', kb=b.when||'9999-12-31'; return ka<kb?-1:ka>kb?1:0; });
       if(!posts.length) return;
-      if(pvPlatform==='All'){
+      if(pvPlatform==='All' && !deployOrder){
         var hh=document.createElement('h2'); hh.className='pvh'; hh.textContent=plat+' \u00b7 '+posts.length+' post'+(posts.length>1?'s':'');
         list.appendChild(hh);
       }
       posts.forEach(function(p){
         shown++;
-        var m=PV_META[plat]||PV_META.LinkedIn;
-        var d=document.createElement('div'); d.className='pv pv-'+plat.toLowerCase()+(p.sel?' incart':'')+(p.status==='Published'?' pubdone':'');
+        var pf=(plat==='__launch__')?p.platform:plat;
+        var m=PV_META[pf]||PV_META.LinkedIn;
+        var d=document.createElement('div'); d.className='pv pv-'+pf.toLowerCase()+(p.sel?' incart':'')+(p.status==='Published'?' pubdone':'');
         d.setAttribute('data-pvi', p.__gi);
         d.style.animationDelay=Math.min(shown*35,350)+'ms';
         var folded = m.fold && p.cap.length>m.fold;
