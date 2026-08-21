@@ -1017,7 +1017,7 @@
         <b>Push-live workflow (honest version):</b> no standalone page can post directly to LinkedIn/Instagram/Facebook — that requires an authenticated publishing app. <b>Copy + Compose</b> gets you one click away: paste, attach the visual, publish. Phase 2 moves scheduling into Meta Business Suite Planner or Buffer/Metricool with an approval step; this studio stays the drafting + QA layer.
         <div style="margin-top:8px"><b>QA before every publish (the "Johnny" rule):</b> caption matches the visual · names spelled right · zero-CTA posts have NO link (product mention goes in a comment reply) · alt text added.</div>
         <div style="margin-top:8px"><button class="cbtn push" id="exportBtn">⬇ Export state (JSON to clipboard)</button> <button class="cbtn push" id="excelBtn">⬇ Excel export (rows by platform)</button> <button class="cbtn push" id="llmBtn">⬇ LLM task export</button> <button class="cbtn" id="resetBtn">↺ Clear saved edits</button> <span class="note-strip">Text edits, stages, creative links, statuses, checklists and dropped images (auto-compressed) save and sync. Oversized images stay session-only — masters and all video live in Google Drive, linked not hosted.</span></div>
-        <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button> <button class="cbtn" id="forcePush" type="button" title="Overwrite the team database with THIS browser's version — use from a device that still has the good copy">⇧ Push my version to the team</button></div>
+        <div style="margin-top:8px"><b>Team sync:</b> <span id="syncStatus">local only</span> <button class="cbtn" id="syncConfig" type="button">⚙ Connect shared database</button> <button class="cbtn" id="forcePush" type="button" title="Overwrite the team database with THIS browser's version — use from a device that still has the good copy">⇧ Push my version to the team</button> <button class="cbtn" id="loadTeam" type="button" title="Replace this browser's copy with the latest team version from the shared database">↻ Load team version</button> <button class="cbtn" id="restoreBackup" type="button" title="Bring back the state this browser had just before its last Clear">↩ Restore pre-clear backup</button></div>
       </div>
       <textarea class="io" id="ioArea" style="display:none" readonly></textarea>
       <div id="cartBar" class="cartbar" style="display:none">
@@ -3583,6 +3583,8 @@ try{
     location.reload();
   };
   if(!cfg.url||!cfg.anonKey){
+    var hb1=document.getElementById('loadTeam'); if(hb1) hb1.style.display='none';
+    var hb2=document.getElementById('forcePush'); if(hb2) hb2.style.display='none';
     setSt('local only \u2014 edits live in this browser; Export state to hand off, or connect Supabase for live team sync');
     return;
   }
@@ -3590,7 +3592,7 @@ try{
   var EP=cfg.url.replace(/\/+$/,'')+'/rest/v1/hub_state';
   function localState(){ try{return localStorage.getItem('sshub_state');}catch(err){return null;} }
   var lastPushed=localState(), remoteNewerShown=false;
-  var pullSettled=false, freshStart=false;
+  var pullSettled=false, freshStart=false, adoptRetries=0, forcing=false;
   try{ freshStart=sessionStorage.getItem('sshub_fresh')==='1'; sessionStorage.removeItem('sshub_fresh'); }catch(err){}
   function adoptRemote(remote){
     if(window.__sshubSuspend) window.__sshubSuspend();
@@ -3638,12 +3640,19 @@ try{
         b.onclick=function(){ adoptRemote(remote); };
         st.appendChild(b);
       }
-    }).catch(function(){ pullSettled=true; setSt('sync error \u2014 check connection and keys'); });
+    }).catch(function(){
+      pullSettled=true;
+      if(initial && freshStart && adoptRetries<3){ adoptRetries++; setSt('sync error \u2014 retrying team pull\u2026'); setTimeout(function(){ pullFull(true); }, 4000); return; }
+      setSt('sync error \u2014 check connection and keys');
+    });
   }
   function push(){
     if(!pullSettled) return; // never overwrite the team before we've even seen their state
     var cur=localState(); if(!cur||cur===lastPushed) return;
     var body; try{ body=JSON.parse(cur); }catch(err){ return; }
+    var hasWork=(body.posts||[]).some(function(q){ return q.img||q.when||(q.history&&q.history.length); });
+    if(!hasWork && lastRemoteAt && !forcing){ lastPushed=cur; setSt('push held \u2014 an empty pipeline never overwrites the team version'); return; }
+    forcing=false;
     fetch(EP,{method:'POST',headers:Object.assign({'Prefer':'resolution=merge-duplicates'},H),body:JSON.stringify([{id:1,state:body,updated_at:new Date().toISOString()}])})
       .then(function(r){
         if(r.ok){ lastPushed=cur; setSt('synced \u00b7 '+new Date().toLocaleTimeString()); }
@@ -3651,10 +3660,22 @@ try{
       })
       .catch(function(){ setSt('sync error \u2014 offline?'); });
   }
+  var ltb=document.getElementById('loadTeam');
+  if(ltb) ltb.onclick=function(){
+    if(!confirm('Replace this browser\u2019s copy with the latest team version?')) return;
+    fetch(EP+'?id=eq.1&select=state',{headers:H}).then(function(r){
+      if(!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function(rows){
+      var row=rows&&rows[0];
+      if(!row||!row.state){ setSt('no team state to load yet'); return; }
+      adoptRemote(JSON.stringify(row.state));
+    }).catch(function(){ setSt('sync error \u2014 could not fetch the team version'); });
+  };
   var fpb=document.getElementById('forcePush');
   if(fpb) fpb.onclick=function(){
     if(!confirm('Overwrite the TEAM database with this browser\u2019s current version? Every device will get this copy. Use this from the device that still has the good images and dates.')) return;
-    pullSettled=true; lastPushed='';
+    pullSettled=true; lastPushed=''; forcing=true;
     push();
   };
   setSt('connecting\u2026');
@@ -4223,6 +4244,7 @@ var AMPLIFIERS=[
   if(rb) rb.onclick=function(){
     if(confirm('Clear all saved edits in this browser? If team sync is on, the latest team version loads back in.')){
       suspended=true;
+      try{ var __bk2=localStorage.getItem(KEY); if(__bk2) localStorage.setItem('sshub_backup', __bk2); }catch(e){}
       try{ localStorage.removeItem(KEY); }catch(e){}
       try{ sessionStorage.removeItem('sshub_adopted'); sessionStorage.setItem('sshub_fresh','1'); }catch(e){}
       location.reload();
@@ -4233,11 +4255,25 @@ var AMPLIFIERS=[
   if(cb) cb.onclick=function(){
     if(confirm('Clear the saved hub data in this browser?\n\nThis wipes this browser\u2019s local copy. If team sync is connected, the latest TEAM version loads back in \u2014 images, dates and stages included. Export state first if you need a backup.')){
       suspended=true;
+      try{ var __bk=localStorage.getItem(KEY); if(__bk) localStorage.setItem('sshub_backup', __bk); }catch(e){}
       try{ localStorage.removeItem(KEY); localStorage.removeItem('sshub_view'); }catch(e){}
       try{ sessionStorage.removeItem('sshub_adopted'); sessionStorage.setItem('sshub_fresh','1'); }catch(e){}
       location.reload();
     }
   };
+  // restore the snapshot taken just before the last Clear
+  var rsb=document.getElementById('restoreBackup');
+  if(rsb){
+    var __hasBk=false; try{ __hasBk=!!localStorage.getItem('sshub_backup'); }catch(e){}
+    if(!__hasBk) rsb.style.display='none';
+    rsb.onclick=function(){
+      if(confirm('Replace the current state with the snapshot taken just before the last Clear on this browser?')){
+        suspended=true;
+        try{ localStorage.setItem(KEY, localStorage.getItem('sshub_backup')); }catch(e){}
+        location.reload();
+      }
+    };
+  }
   // voice checklist reset (per-post scratch, never persisted)
   var vr=document.getElementById('voiceReset');
   if(vr) vr.onclick=function(){
