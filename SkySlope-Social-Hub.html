@@ -509,6 +509,10 @@
   .sfrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex-basis:100%;margin-top:8px}
   .sfsel{padding:6px 8px;border:1px solid var(--grid);border-radius:8px;background:var(--surface);color:var(--ink-2);font-size:12.5px;font-family:inherit;max-width:230px}
   .sfclear{border-color:rgba(220,53,69,.5);color:var(--crit)}
+  .sfsearch{flex:1 1 200px;min-width:170px;padding:6px 12px;border:1px solid var(--grid);border-radius:999px;background:var(--surface);color:var(--ink);font-size:12.5px;font-family:inherit}
+  .sfsearch:focus{outline:none;border-color:var(--blue)}
+  .showmore{display:block;margin:4px 0 30px;padding:10px 20px;font-weight:700;color:var(--blue);border-color:var(--blue)}
+  @media(max-width:700px){.sfsearch{font-size:16px}}
   @media(max-width:700px){.sfsel{font-size:16px;max-width:100%}}
   /* ---- v11: live For-Rob list ---- */
   .rob-item{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:11px 14px;margin-bottom:8px}
@@ -3015,6 +3019,7 @@ try{
 }catch(e){}
 (function(){
   var activePillar='All', activeStatus='All', activeFormat='All', activeReady='To schedule', studioView='list';
+  var studioSearch='', renderCap=40;
   var activeEnv='copy';
   try{ activeEnv=localStorage.getItem('sshub_env')||'copy'; }catch(err){}
   var ENVS=[['copy','Compose'],['creative','Visualize'],['ready','Deploy']];
@@ -3169,6 +3174,7 @@ try{
     if(activePillar!=='All' && p.pillar!==activePillar) return false;
     if(activeFormat!=='All' && p.format!==activeFormat) return false;
     if(activeStatus!=='All' && p.status!==activeStatus) return false;
+    if(studioSearch && (p.title+' '+p.cap+' '+(p.note||'')+' '+p.pillar+' '+p.format).toLowerCase().indexOf(studioSearch.toLowerCase())===-1) return false;
     return true;
   }
   function selCount(){ return ccPosts.filter(function(p){return p.sel;}).length; }
@@ -3183,7 +3189,7 @@ try{
     var dated=ccPosts.filter(function(p){return p.when;}).length;
     t.innerHTML='<div class="tile"><div class="v">'+ccPosts.length+'</div><div class="l">Posts in pipeline</div></div>'+
       '<div class="tile"><div class="v">'+envCount('copy')+'</div><div class="l">Compose</div></div>'+
-      '<div class="tile"><div class="v">'+envCount('creative')+'</div><div class="l">Create</div></div>'+
+      '<div class="tile"><div class="v">'+envCount('creative')+'</div><div class="l">Visualize</div></div>'+
       '<div class="tile"><div class="v">'+toSched+'</div><div class="l">Deploy · awaiting</div></div>'+
       '<div class="tile"><div class="v">'+sched+'</div><div class="l">Scheduled</div></div>'+
       '<div class="tile"><div class="v">'+pub+'</div><div class="l">Shipped</div></div>'+
@@ -3229,6 +3235,7 @@ try{
     if(sec){ if(filterFree){ sec.removeAttribute('data-world'); } else { sec.setAttribute('data-world', activeEnv); } }
   }
   function filters(){
+    renderCap=40;
     var pf=document.getElementById('pillarFilters');
     pf.innerHTML='';
     var PV_COLORS={All:'#3F5B77',LinkedIn:'#0a66c2',Instagram:'linear-gradient(45deg,#f58529,#dd2a7b,#8134af)',Facebook:'#1877f2',YouTube:'#ff0000',X:'#0b0b0b',TikTok:'#010101'};
@@ -3293,6 +3300,10 @@ try{
   function filterRow(t){
     var row=document.createElement('div'); row.className='sfrow';
     var lab=document.createElement('span'); lab.className='note-strip'; lab.textContent='Filter:'; row.appendChild(lab);
+    var si=document.createElement('input'); si.type='search'; si.className='sfsearch';
+    si.placeholder='Search posts \u2014 title, caption, notes\u2026'; si.value=studioSearch;
+    si.oninput=function(){ studioSearch=si.value.trim(); renderCap=40; render(); };
+    row.appendChild(si);
     // count within the current world/platform scope so options show what they'd yield
     var scope=ccPosts.filter(function(p){
       if(!filterFree && p.env!==activeEnv) return false;
@@ -3322,9 +3333,9 @@ try{
     dd('pillar', activePillar, pillars, function(v){ activePillar=v; });
     dd('format', activeFormat, formats, function(v){ activeFormat=v; });
     dd('status', activeStatus, COPY_STATUSES.concat(['Scheduled','Published']), function(v){ activeStatus=v; });
-    if(activePillar!=='All'||activeFormat!=='All'||activeStatus!=='All'){
+    if(activePillar!=='All'||activeFormat!=='All'||activeStatus!=='All'||studioSearch){
       var x=document.createElement('button'); x.className='fbtn sfclear'; x.type='button'; x.textContent='\u2715 Clear filters';
-      x.onclick=function(){ activePillar='All'; activeFormat='All'; activeStatus='All'; filters(); syncView(); toolsBar(); };
+      x.onclick=function(){ activePillar='All'; activeFormat='All'; activeStatus='All'; studioSearch=''; filters(); syncView(); toolsBar(); };
       row.appendChild(x);
     }
     t.appendChild(row);
@@ -3542,6 +3553,7 @@ try{
           c.title='Jump to this post below';
           c.onclick=function(){
             var card=document.querySelector('#plist .pv[data-pvi="'+p.__gi+'"]');
+            if(!card){ renderCap=100000; render(); card=document.querySelector('#plist .pv[data-pvi="'+p.__gi+'"]'); }
             if(card){ card.scrollIntoView({behavior:'smooth',block:'center'}); card.classList.add('flash'); setTimeout(function(){ card.classList.remove('flash'); },1700); }
           };
           row.appendChild(c);
@@ -3556,6 +3568,7 @@ try{
     var list=document.getElementById('plist');list.innerHTML='';
     var shown=0;
     var deployOrder = !filterFree && activeEnv==='ready';
+    var rendered=0;
     if(deployOrder) buildDeploySched(list);
     var groups = deployOrder ? ['__launch__'] : (pvPlatform==='All' ? PLATFORM_ORDER : [pvPlatform]);
     groups.forEach(function(plat){
@@ -3568,6 +3581,8 @@ try{
       }
       posts.forEach(function(p){
         shown++;
+        if(rendered>=renderCap) return;
+        rendered++;
         var pf=(plat==='__launch__')?p.platform:plat;
         var m=PV_META[pf]||PV_META.LinkedIn;
         var d=document.createElement('div'); d.className='pv pv-'+pf.toLowerCase()+(p.sel?' incart':'')+(p.status==='Published'?' pubdone':'');
@@ -3656,6 +3671,12 @@ try{
         list.appendChild(d);
       });
     });
+    if(shown>rendered){
+      var more=document.createElement('button'); more.className='fbtn showmore'; more.type='button';
+      more.textContent='\u25bc Show '+Math.min(40, shown-rendered)+' more \u00b7 '+(shown-rendered)+' below';
+      more.onclick=function(){ renderCap+=40; render(); };
+      list.appendChild(more);
+    }
     if(!shown){
       var empty=document.createElement('div'); empty.className='envnote';
       empty.textContent = filterFree ? 'No posts for this platform yet.' :
