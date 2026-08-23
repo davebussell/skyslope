@@ -506,6 +506,10 @@
   .dschip:hover{opacity:.85}
   .dsnone{font-size:12px;color:var(--muted);padding:4px 0}
   .pv.flash .pvcard{animation:flashcard 1.6s}
+  .sfrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex-basis:100%;margin-top:8px}
+  .sfsel{padding:6px 8px;border:1px solid var(--grid);border-radius:8px;background:var(--surface);color:var(--ink-2);font-size:12.5px;font-family:inherit;max-width:230px}
+  .sfclear{border-color:rgba(220,53,69,.5);color:var(--crit)}
+  @media(max-width:700px){.sfsel{font-size:16px;max-width:100%}}
   /* ---- v11: live For-Rob list ---- */
   .rob-item{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:11px 14px;margin-bottom:8px}
   .rob-item.done{opacity:.62}
@@ -685,7 +689,7 @@
       <div class="grid2">
         <div class="ccard"><h3>Doc 1 · Social Media Strategy</h3>The plan Rob can green-light: the SkySlope Index data franchise, the June-audit fixes hard-wired in, platform lanes, and the 20-hour monthly scope. <a href="#" data-goto="d1">Open →</a></div>
         <div class="ccard"><h3>Doc 2 · Audience &amp; Path to Purchase</h3>The competitive set, four personas, the six-stage path to purchase, the Big Warning on review-platform social proof, and the Audience Growth Engine. <a href="#" data-goto="d2">Open →</a></div>
-        <div class="ccard"><h3>Content Studio</h3>Naomi's workspace: the editable backlog across all four pillars with statuses, publish days, calendar view, and Copy + Compose handoff. <a href="#" data-goto="studio">Open →</a></div>
+        <div class="ccard"><h3>Content Studio</h3>Naomi's workspace: the editable backlog across all five pillars with statuses, publish days, calendar view, and Copy + Compose handoff. <a href="#" data-goto="studio">Open →</a></div>
         <div class="ccard"><h3>Channel Performance</h3>Every channel and its analytics console one click away, follower growth tracking, posts-per-month tiles, and the engagement tracker with the June baseline. <a href="#" data-goto="social">Open →</a></div>
         <div class="ccard"><h3>Brand Guidelines</h3>Logo rules, palette, typography, components, and copy-paste tokens — the visual identity this hub runs on. <a href="#" data-goto="brand">Open →</a></div>
         <div class="ccard"><h3>Voice &amp; Tone</h3>Five voice attributes, six tone dials, exact product spellings, and the pre-publish checklist. <a href="#" data-goto="voice">Open →</a></div>
@@ -756,10 +760,11 @@
             <tr><td><b>1. Data &amp; Insights</b> (hero)</td><td>The SkySlope Index: stat drops, quarterly reports, annual recap, trend commentary.</td><td>~40%</td></tr>
             <tr><td><b>2. Testimonials &amp; Proof</b> (proven)</td><td>Customer Spotlight videos at increased cadence — the audit's only proven performer.</td><td>~25%</td></tr>
             <tr><td><b>3. Zero-CTA Relatable</b> (new)</td><td>Posts that exist only to be funny/relatable to agents &amp; TCs. No link, no pitch — product mention lives in a comment reply. Includes the "office hours" personality concept.</td><td>~20%</td></tr>
-            <tr><td><b>4. Education &amp; Product</b></td><td>Feature content rewritten for the feed: short, pain-point-first, no feature bullet-lists.</td><td>~15%</td></tr>
+            <tr><td><b>4. Education</b></td><td>Market and craft education rewritten for the feed: short, pain-point-first, no feature bullet-lists.</td><td>~10%</td></tr>
+            <tr><td><b>5. Product Info Plays</b> (added Aug 2026)</td><td>Insider hacks, feature spotlights, money moves, mobile wins and the monthly "what's new" — mined from the support center, so existing customers get more from the subscription they already pay for. Support-article link always in the first comment.</td><td>~15%</td></tr>
           </tbody>
         </table>
-        <p class="note-strip">The corporate-satire direction was considered and set aside as high-risk for SaaS sales; "relatable office hours" gets the para-social benefit without punching at our own users.</p>
+        <p class="note-strip">Share targets updated Aug 23, 2026 when Product Info Plays was split out of Education (Data &amp; Insights now ~35%, Testimonials ~20%, Zero-CTA ~20%). The corporate-satire direction was considered and set aside as high-risk for SaaS sales; "relatable office hours" gets the para-social benefit without punching at our own users.</p>
       </div></details>
 
       <details class="card" id="d1-platforms"><summary>Platforms &amp; Cadence<span class="chev">▶</span></summary><div class="body">
@@ -1070,7 +1075,7 @@
           The pillar formulas from the strategy plus borrowed patterns from what's winning on each platform right now — identity calls, contrarian openers, DM-share engineering, and per-platform first-line rules.
           <ul class="jumplist"><li><a href="#" data-goto="hooks">Open Hooks &amp; Formulas →</a></li></ul></div>
         <div class="ccard"><h3>Trend Briefing</h3>
-          A dated snapshot of platform and format trends — what the algorithms reward this quarter, with sources and a how-we-apply mapping to our four pillars. Refreshed monthly.
+          A dated snapshot of platform and format trends — what the algorithms reward this quarter, with sources and a how-we-apply mapping to our pillars. Refreshed monthly.
           <ul class="jumplist"><li><a href="#" data-goto="trends">Open Trend Briefing →</a></li></ul></div>
         <div class="ccard"><h3>Voices to Study</h3>
           Eleven high-profile Realtor voices with handles and "steal this" notes, the brand-adjacent accounts worth watching, and the etiquette rules for engaging as SkySlope.
@@ -1980,7 +1985,7 @@
       <div class="sub">The two strategy documents behind everything in this hub — Word versions live in the repo for sharing with Rob.</div>
       <div class="grid2">
         <div class="ccard"><h3>Doc 1 · Social Media Strategy</h3>
-          Turning 3M transactions a year into the most shareable data in real estate: the SkySlope Index franchise, the four pillars, platform lanes, and the 20-hour monthly scope.
+          Turning 3M transactions a year into the most shareable data in real estate: the SkySlope Index franchise, the five pillars, platform lanes, and the 20-hour monthly scope.
           <ul class="jumplist">
             <li><a href="#" data-goto="d1">Read Doc 1 →</a></li>
             <li><a href="#" data-goto="d1" data-jump="d1-audit">June audit baseline</a></li>
@@ -2087,7 +2092,7 @@
 
       <details class="card" open id="n-deliver"><summary>What Click Shift is delivering for SkySlope<span class="tag">The proposal in one card</span><span class="chev">▶</span></summary><div class="body">
         <ul>
-          <li><b>Strategy:</b> Doc 1 (Social Media Strategy — the SkySlope Index franchise, four content pillars, platform lanes, measurement) and Doc 2 (Audience, Personas &amp; Path to Purchase, incl. the review-platform warning and the Audience Growth Engine).</li>
+          <li><b>Strategy:</b> Doc 1 (Social Media Strategy — the SkySlope Index franchise, the content pillars, platform lanes, measurement) and Doc 2 (Audience, Personas &amp; Path to Purchase, incl. the review-platform warning and the Audience Growth Engine).</li>
           <li><b>The portal:</b> this password-gated command center at skyslope.soldonsocial.com — Content Studio with publishing calendar, channel dashboards with follower-growth tracking, the 930-asset library, and the full brand/voice/product reference.</li>
           <li><b>Monthly execution (20 hrs, per the July 9 proposal):</b> 10–12 posts across LinkedIn/Instagram/Facebook including a monthly Index stat drop · 4–6 short videos · captions, graphics and scheduling · community management with 24-hour replies · pre-publish QA on every post · monthly analytics report with the follower growth log.</li>
           <li><b>Brand governance:</b> Voice &amp; Tone guide, Product accuracy guide, and Brand Guidelines — every post on-brand and claim-safe.</li>
@@ -2101,12 +2106,9 @@
       <div id="robList"></div>
       <button class="cbtn push" id="robAdd" type="button" style="margin:2px 0 14px">+ Add item</button>
       <h2>For Click Shift</h2>
-      <label class="check"><input type="checkbox"><span class="ct"><b>30-min working session</b>Shortlist the first three Index stats + cast the office-hours host.</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>Sales/CS advocacy kickoff</b>Launch the weekly share-kit rhythm; first-hour engagement floor.</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>TC-facing content into the calendar</b>Attack the Paperless Pipeline gap where the audience is largest (5,560 mo. searches).</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>Identify 2–3 Facebook Groups + TC communities</b>Named-human participation plan; never post-and-leave.</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>QA checklist live before next publish</b>Caption/video match, names, links — closes the "Johnny" gap.</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>Walk the team through the portal</b>Live walkthrough of skyslope.soldonsocial.com in the Rob meeting: the password + "remember me," where each section lives, Naomi's weekly workflow, and the export-state handoff.</span></label>
+      <p class="note-strip" style="margin:0 0 8px">Also live — check off, note, add, remove; synced to the team.</p>
+      <div id="csList"></div>
+      <button class="cbtn push" id="csAdd" type="button" style="margin:2px 0 14px">+ Add item</button>
     </section>
   </main>
 </div>
@@ -2653,63 +2655,63 @@ var ccPosts = [
   {"pillar": "Testimonial", "platform": "Facebook", "format": "Clip repurpose", "status": "Idea", "when": "", "title": "Spotlight rewind — Century 21 Judge Fite", "cap": "Still one of our favorites: Century 21 Judge Fite on what changed when the back office stopped being the bottleneck. ▶️\n\n(Full story on YouTube.)", "visual": "Re-cut of the existing Judge Fite Spotlight (top audit performer) with new captions + hook frame.", "note": "Asset Library → \"Why Clients Love SkySlope\" playlist. QA names against footage (Johnny rule)."},
   {"pillar": "Testimonial", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The renewal that took five minutes", "cap": "\"Renewal came up. We didn’t even take a competing demo.\"\n\n— [Name], [Broker-Owner], [Brokerage]\n\nRetention is the quietest testimonial there is.", "visual": "Minimal quote card, lots of white space, single Science Blue rule under the quote.", "note": "Placeholder until a real renewal quote is approved — CS can source during renewals."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Your transaction has an email address", "cap": "Your transaction has its own email address.\n\nThe lender sends docs. You forward the email. They land in the file — no download, no rename, no upload.\n\nAgents chase paperwork. Files that collect their own paperwork close calmer.\n\n(How-to in the first comment.)", "visual": "STAT ON SCENE: a laptop inbox with one email mid-forward, warm office light; navy scrim right side with 'Forward it. Filed.' as the headline.", "note": "First comment: link support article 'Emailing Documents into SkySlope'. Screen-record version for IG later."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Your transaction has an email address", "cap": "Your transaction has its own email address.\n\nThe lender sends docs. You forward the email. They land in the file — no download, no rename, no upload.\n\nAgents chase paperwork. Files that collect their own paperwork close calmer.\n\n(How-to in the first comment.)", "visual": "STAT ON SCENE: a laptop inbox with one email mid-forward, warm office light; navy scrim right side with 'Forward it. Filed.' as the headline.", "note": "First comment: link support article 'Emailing Documents into SkySlope'. Screen-record version for IG later."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "Lightning Fill, caught on camera", "cap": "Filling a form from the couch used to be a laptop errand.\n\nLightning Fill on the mobile app: tap, and the fields fill themselves.\n\nWatch the clock in the corner.", "visual": "Screen-record reel, 9:16: phone in hand, stopwatch overlay, form fields populating; burned-in captions; first frame = the timer starting.", "note": "First comment: link 'Fill Forms Faster with Lightning Fill on Mobile'. 20s max."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "Lightning Fill, caught on camera", "cap": "Filling a form from the couch used to be a laptop errand.\n\nLightning Fill on the mobile app: tap, and the fields fill themselves.\n\nWatch the clock in the corner.", "visual": "Screen-record reel, 9:16: phone in hand, stopwatch overlay, form fields populating; burned-in captions; first frame = the timer starting.", "note": "First comment: link 'Fill Forms Faster with Lightning Fill on Mobile'. 20s max."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "The MLS number does the typing", "cap": "Type one MLS number. Watch the whole Forms file build itself.\n\nAddress, parties, details — imported, not re-entered.\n\nData entry is not a licensed activity.", "visual": "Screen-record: MLS Import flow, fields cascading in; end card 'One number. Whole file.' in Science Blue.", "note": "First comment: link 'Create Forms Files Faster with MLS Import'. Distinct from the existing 'Stop re-typing the address' post — this one is the import moment itself."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "The MLS number does the typing", "cap": "Type one MLS number. Watch the whole Forms file build itself.\n\nAddress, parties, details — imported, not re-entered.\n\nData entry is not a licensed activity.", "visual": "Screen-record: MLS Import flow, fields cascading in; end card 'One number. Whole file.' in Science Blue.", "note": "First comment: link 'Create Forms Files Faster with MLS Import'. Distinct from the existing 'Stop re-typing the address' post — this one is the import moment itself."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Smart Listings builds the listing file", "cap": "You filled out the forms. Why are you also building the listing file?\n\nSmart Listings takes the forms data and creates the SkySlope listing for you — one review, done.\n\nThe software does the double entry now.", "visual": "STAT ON SCENE: split — left, hands on a keyboard mid-form; right, the finished listing card materializing; Science Blue accent arrows.", "note": "First comment: link 'Save Time with Smart Listings'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Smart Listings builds the listing file", "cap": "You filled out the forms. Why are you also building the listing file?\n\nSmart Listings takes the forms data and creates the SkySlope listing for you — one review, done.\n\nThe software does the double entry now.", "visual": "STAT ON SCENE: split — left, hands on a keyboard mid-form; right, the finished listing card materializing; Science Blue accent arrows.", "note": "First comment: link 'Save Time with Smart Listings'."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "Relist in two clicks", "cap": "Relisting in spring? Twin townhomes? Same seller, new property?\n\nDuplicate the file. Two clicks. Everything that should carry over, does.\n\nStart from 80% done.", "visual": "Screen-record: the duplicate action, then the new file appearing; sticker text 'why did I ever re-type this'.", "note": "First comment: link 'Quickly Duplicate a File'."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "Relist in two clicks", "cap": "Relisting in spring? Twin townhomes? Same seller, new property?\n\nDuplicate the file. Two clicks. Everything that should carry over, does.\n\nStart from 80% done.", "visual": "Screen-record: the duplicate action, then the new file appearing; sticker text 'why did I ever re-type this'.", "note": "First comment: link 'Quickly Duplicate a File'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Your greatest hits, one click away", "cap": "The negotiation clause you have rewritten 50 times? Save it once.\n\nPersonal Clauses keep your best contract language on tap — drop it into any deal, exactly as you honed it.\n\nYour experience, reusable.", "visual": "Carousel: slide 1 'Your greatest hits, one click away'; slides 2-4 clause examples appearing into a contract; final slide the one-click insert.", "note": "First comment: link 'Creating and Using Personal Clauses'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Your greatest hits, one click away", "cap": "The negotiation clause you have rewritten 50 times? Save it once.\n\nPersonal Clauses keep your best contract language on tap — drop it into any deal, exactly as you honed it.\n\nYour experience, reusable.", "visual": "Carousel: slide 1 'Your greatest hits, one click away'; slides 2-4 clause examples appearing into a contract; final slide the one-click insert.", "note": "First comment: link 'Creating and Using Personal Clauses'."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The addendum writes itself", "cap": "Wrote past the end of the box?\n\nSkySlope Forms auto-adds the addendum for your overflow text — numbered, referenced, attached.\n\nSmall feature. Enormous 'finally.'", "visual": "STAT ON SCENE: close-up of dense contract text flowing onto a fresh page, soft light; 'Write long.' as the only overlay.", "note": "First comment: link 'Auto-Add Addenda for Overflow Text'."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The addendum writes itself", "cap": "Wrote past the end of the box?\n\nSkySlope Forms auto-adds the addendum for your overflow text — numbered, referenced, attached.\n\nSmall feature. Enormous 'finally.'", "visual": "STAT ON SCENE: close-up of dense contract text flowing onto a fresh page, soft light; 'Write long.' as the only overlay.", "note": "First comment: link 'Auto-Add Addenda for Overflow Text'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "Tag one page, paste to thirty", "cap": "A 30-page package does not need 30 rounds of dragging signature blocks.\n\nDigiSign: set the blocks once, copy, paste across the document.\n\nThe fastest e-signature setup is the one you only do once.", "visual": "Screen-record: copy-paste of signature blocks across pages at speed; counter overlay '1 page... 30 pages'.", "note": "First comment: link 'DigiSign — Work Faster with Copy and Paste'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "Tag one page, paste to thirty", "cap": "A 30-page package does not need 30 rounds of dragging signature blocks.\n\nDigiSign: set the blocks once, copy, paste across the document.\n\nThe fastest e-signature setup is the one you only do once.", "visual": "Screen-record: copy-paste of signature blocks across pages at speed; counter overlay '1 page... 30 pages'.", "note": "First comment: link 'DigiSign — Work Faster with Copy and Paste'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Envelopes that arrive pre-tagged", "cap": "The disclosures you send every single week should not start from a blank page.\n\nDigiSign Templates inside SkySlope Forms: the blocks are already placed when the envelope opens.\n\nNever tag the same form twice.", "visual": "STAT ON SCENE: a document with signature blocks already glowing in place, navy scrim bottom, 'Pre-tagged.' huge.", "note": "First comment: link 'Using DigiSign Templates in SkySlope Forms'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Envelopes that arrive pre-tagged", "cap": "The disclosures you send every single week should not start from a blank page.\n\nDigiSign Templates inside SkySlope Forms: the blocks are already placed when the envelope opens.\n\nNever tag the same form twice.", "visual": "STAT ON SCENE: a document with signature blocks already glowing in place, navy scrim bottom, 'Pre-tagged.' huge.", "note": "First comment: link 'Using DigiSign Templates in SkySlope Forms'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Deadlines that follow you home", "cap": "Contract deadlines belong on the calendar you actually look at.\n\nTask templates in SkySlope sync to iCal, Outlook and Google — build the timeline once, and every deal loads it automatically.\n\nThe checklist remembers so you can forget.", "visual": "Carousel: slide 1 a phone calendar with deal deadlines flowing in; slides show template -> file -> calendar; cool blue grade.", "note": "First comment: link 'Creating Reusable Task & Reminder Templates' + 'Syncing Tasks to iCal, Outlook, and Google Calendar'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Deadlines that follow you home", "cap": "Contract deadlines belong on the calendar you actually look at.\n\nTask templates in SkySlope sync to iCal, Outlook and Google — build the timeline once, and every deal loads it automatically.\n\nThe checklist remembers so you can forget.", "visual": "Carousel: slide 1 a phone calendar with deal deadlines flowing in; slides show template -> file -> calendar; cool blue grade.", "note": "First comment: link 'Creating Reusable Task & Reminder Templates' + 'Syncing Tasks to iCal, Outlook, and Google Calendar'."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Four ways into the file", "cap": "There are four ways to get a document into SkySlope:\n\n1. Drag and drop\n2. Forward the email\n3. Snap it with your phone\n4. Bulk upload the pile\n\nWhichever kind of week you're having.", "visual": "Carousel, 4:5: one photographic frame per method — desk drag-drop, phone forward, doc snap in a car, a stack scanning; numbered overlays.", "note": "First comment: link 'Uploading Documents: 4 Different Methods!'."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Four ways into the file", "cap": "There are four ways to get a document into SkySlope:\n\n1. Drag and drop\n2. Forward the email\n3. Snap it with your phone\n4. Bulk upload the pile\n\nWhichever kind of week you're having.", "visual": "Carousel, 4:5: one photographic frame per method — desk drag-drop, phone forward, doc snap in a car, a stack scanning; numbered overlays.", "note": "First comment: link 'Uploading Documents: 4 Different Methods!'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "One scan, dealt like cards", "cap": "The title company sent one 60-page PDF. Your checklist wants nine documents.\n\nSplit & Assign: draw the lines, and SkySlope deals every section to the right checklist item.\n\nStop printing to re-scan.", "visual": "Screen-record: Split & Assign slicing a long PDF, sections flying to checklist rows; end card 'Dealt.'", "note": "First comment: link 'Using Split & Assign'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "One scan, dealt like cards", "cap": "The title company sent one 60-page PDF. Your checklist wants nine documents.\n\nSplit & Assign: draw the lines, and SkySlope deals every section to the right checklist item.\n\nStop printing to re-scan.", "visual": "Screen-record: Split & Assign slicing a long PDF, sections flying to checklist rows; end card 'Dealt.'", "note": "First comment: link 'Using Split & Assign'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "The CDA without the spreadsheet", "cap": "Commission disbursement authorizations: the document everyone needs and nobody enjoys building.\n\nThe SkySlope CDA Generator pulls the numbers from the file and produces it in minutes.\n\nYour back office has better things to reconcile.", "visual": "DATA PANEL ON SCENE: blurred back-office desk; navy panel showing a clean CDA with figures flowing in from the commission page.", "note": "First comment: link 'Using the SkySlope CDA Generator'. Broker/TC audience."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "The CDA without the spreadsheet", "cap": "Commission disbursement authorizations: the document everyone needs and nobody enjoys building.\n\nThe SkySlope CDA Generator pulls the numbers from the file and produces it in minutes.\n\nYour back office has better things to reconcile.", "visual": "DATA PANEL ON SCENE: blurred back-office desk; navy panel showing a clean CDA with figures flowing in from the commission page.", "note": "First comment: link 'Using the SkySlope CDA Generator'. Broker/TC audience."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The typo on page 12", "cap": "The typo is on page 12. Three people already signed.\n\nYou do not have to void it. Correct the in-progress envelope, and everyone's completed signatures stay put.\n\nKnowing this one is the difference between a bad hour and a bad day.", "visual": "STAT ON SCENE: close-up of a document with one field highlighted for correction, calm hands on keyboard; 'Fix it. Keep the signatures.' overlay.", "note": "First comment: link 'Correct an In-Progress Envelope'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The typo on page 12", "cap": "The typo is on page 12. Three people already signed.\n\nYou do not have to void it. Correct the in-progress envelope, and everyone's completed signatures stay put.\n\nKnowing this one is the difference between a bad hour and a bad day.", "visual": "STAT ON SCENE: close-up of a document with one field highlighted for correction, calm hands on keyboard; 'Fix it. Keep the signatures.' overlay.", "note": "First comment: link 'Correct an In-Progress Envelope'."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Sunday night, Monday send", "cap": "Prep the envelope Sunday night. Send it Monday at 9:01.\n\nDraft envelopes hold your work until the moment is right — because good boundaries and fast signatures are not enemies.", "visual": "SCENE: dim Sunday-evening desk, laptop glow, coffee; small overlay 'Drafted. Not sent.' with a scheduled-looking calm.", "note": "First comment: link 'Using Draft Envelopes'."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Sunday night, Monday send", "cap": "Prep the envelope Sunday night. Send it Monday at 9:01.\n\nDraft envelopes hold your work until the moment is right — because good boundaries and fast signatures are not enemies.", "visual": "SCENE: dim Sunday-evening desk, laptop glow, coffee; small overlay 'Drafted. Not sent.' with a scheduled-looking calm.", "note": "First comment: link 'Using Draft Envelopes'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "The audit trail behind every signature", "cap": "Every DigiSign envelope carries a certificate: who signed, when, from where, in what order.\n\nWhen a transaction gets questioned two years later, that certificate is the calm in the room.\n\nSignatures fade from memory. Audit trails don't.", "visual": "Carousel: slide 1 a sealed certificate motif on navy; slides walk the certificate fields; steady, no-wink register.", "note": "First comment: link 'Envelope Certificates'. Compliance register — zero jokes."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "The audit trail behind every signature", "cap": "Every DigiSign envelope carries a certificate: who signed, when, from where, in what order.\n\nWhen a transaction gets questioned two years later, that certificate is the calm in the room.\n\nSignatures fade from memory. Audit trails don't.", "visual": "Carousel: slide 1 a sealed certificate motif on navy; slides walk the certificate fields; steady, no-wink register.", "note": "First comment: link 'Envelope Certificates'. Compliance register — zero jokes."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The leaderboard your office needed", "cap": "Every buyer now signs a representation agreement. Do you know which of your agents are actually getting them signed?\n\nThe Buyer Agreement Leaderboard shows the whole office at a glance.\n\nWhat gets seen gets signed.", "visual": "DATA PANEL ON SCENE: blurred brokerage floor; navy panel with a ranked leaderboard, top rows in Science Blue.", "note": "First comment: link 'Buyer Agreement Leaderboard'. Broker audience."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The leaderboard your office needed", "cap": "Every buyer now signs a representation agreement. Do you know which of your agents are actually getting them signed?\n\nThe Buyer Agreement Leaderboard shows the whole office at a glance.\n\nWhat gets seen gets signed.", "visual": "DATA PANEL ON SCENE: blurred brokerage floor; navy panel with a ranked leaderboard, top rows in Science Blue.", "note": "First comment: link 'Buyer Agreement Leaderboard'. Broker audience."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Standardize once, win every file", "cap": "Your best agent's file looks perfect. Your newest agent's file... is learning.\n\nBrokerage templates and broker clauses mean everyone starts from the good version — same forms, same language, same standard.\n\nConsistency is a broker superpower.", "visual": "Carousel: slide 1 two files side by side converging into one template; then template -> many agents fanning out; blue on white.", "note": "First comment: link 'Creating Brokerage Templates' + 'Managing Broker Clauses'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Standardize once, win every file", "cap": "Your best agent's file looks perfect. Your newest agent's file... is learning.\n\nBrokerage templates and broker clauses mean everyone starts from the good version — same forms, same language, same standard.\n\nConsistency is a broker superpower.", "visual": "Carousel: slide 1 two files side by side converging into one template; then template -> many agents fanning out; blue on white.", "note": "First comment: link 'Creating Brokerage Templates' + 'Managing Broker Clauses'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Stop CC-ing your TC", "cap": "Your transaction coordinator is running the deal from your inbox's forwarding history.\n\nThere's a better way: proper TC access in SkySlope — their own view, the full file, nothing lost in the thread.\n\nGive the person running the deal the keys to it.", "visual": "SCENE: a TC at a clean dual-monitor setup, in command; overlay 'In the file. Not the CC line.'", "note": "First comment: link 'All about TC Access' + collaborator guides."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Stop CC-ing your TC", "cap": "Your transaction coordinator is running the deal from your inbox's forwarding history.\n\nThere's a better way: proper TC access in SkySlope — their own view, the full file, nothing lost in the thread.\n\nGive the person running the deal the keys to it.", "visual": "SCENE: a TC at a clean dual-monitor setup, in command; overlay 'In the file. Not the CC line.'", "note": "First comment: link 'All about TC Access' + collaborator guides."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Carousel / document", "status": "Idea", "when": "", "title": "What 'Viewed' actually means", "cap": "Sent. Delivered. Viewed. Completed.\n\nYour envelope statuses are telling you exactly where the deal's momentum is — if you know how to read them.\n\nA 'Viewed' that never becomes 'Completed' is a phone call waiting to happen.", "visual": "Carousel, 4:5: each slide one status as a big word with a one-line translation beneath; final slide 'Read the momentum.'", "note": "First comment: link 'Envelope Actions and Statuses'."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Carousel / document", "status": "Idea", "when": "", "title": "What 'Viewed' actually means", "cap": "Sent. Delivered. Viewed. Completed.\n\nYour envelope statuses are telling you exactly where the deal's momentum is — if you know how to read them.\n\nA 'Viewed' that never becomes 'Completed' is a phone call waiting to happen.", "visual": "Carousel, 4:5: each slide one status as a big word with a one-line translation beneath; final slide 'Read the momentum.'", "note": "First comment: link 'Envelope Actions and Statuses'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Commission on your timeline", "cap": "The deal closed. The commission check is... processing.\n\neCommission in the US and Rocket Advance in Canada work right inside SkySlope — an advance on a closed deal, when cash flow needs to match reality.\n\nDetails and eligibility in the first comment.", "visual": "STAT ON SCENE: agent reviewing numbers on a tablet in a bright office, composed; small overlay 'Closed is closed.' Factual tone, no glow effects.", "note": "First comment: links to eCommission and Rocket Advance articles. Money topic — calm register, no wink, no hype."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "Commission on your timeline", "cap": "The deal closed. The commission check is... processing.\n\neCommission in the US and Rocket Advance in Canada work right inside SkySlope — an advance on a closed deal, when cash flow needs to match reality.\n\nDetails and eligibility in the first comment.", "visual": "STAT ON SCENE: agent reviewing numbers on a tablet in a bright office, composed; small overlay 'Closed is closed.' Factual tone, no glow effects.", "note": "First comment: links to eCommission and Rocket Advance articles. Money topic — calm register, no wink, no hype."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The last EMD check you drive across town", "cap": "Somewhere right now an agent is driving an earnest money check across town like it's 2009.\n\nKeyBox inside SkySlope requests the EMD digitally — tracked, confirmed, done.\n\nRetire the deposit road trip.", "visual": "SCENE: car keys and a paper check on a car seat, golden hour through the windshield — the 'old way' framed nostalgically; overlay 'Retired.'", "note": "First comment: link 'KeyBox — Request Earnest Money Deposit (EMD) In SkySlope'."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The last EMD check you drive across town", "cap": "Somewhere right now an agent is driving an earnest money check across town like it's 2009.\n\nKeyBox inside SkySlope requests the EMD digitally — tracked, confirmed, done.\n\nRetire the deposit road trip.", "visual": "SCENE: car keys and a paper check on a car seat, golden hour through the windshield — the 'old way' framed nostalgically; overlay 'Retired.'", "note": "First comment: link 'KeyBox — Request Earnest Money Deposit (EMD) In SkySlope'."},
 
-  {"pillar": "Education", "platform": "Facebook", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The home warranty that orders itself", "cap": "Closing checklist item #23: order the home warranty.\n\nYou can do it from inside the transaction file — pick the plan, done, logged.\n\nOne less tab. One less follow-up. One less 'did anyone order the...?'", "visual": "SCENE: warm photo of a family at a front door with keys; small overlay checkmark 'Warranty: ordered.'", "note": "First comment: link 'Order a Home Warranty in SkySlope'."},
+  {"pillar": "Product", "platform": "Facebook", "format": "Static / graphic", "status": "Idea", "when": "", "title": "The home warranty that orders itself", "cap": "Closing checklist item #23: order the home warranty.\n\nYou can do it from inside the transaction file — pick the plan, done, logged.\n\nOne less tab. One less follow-up. One less 'did anyone order the...?'", "visual": "SCENE: warm photo of a family at a front door with keys; small overlay checkmark 'Warranty: ordered.'", "note": "First comment: link 'Order a Home Warranty in SkySlope'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Escrow, title, NHD — without leaving the file", "cap": "Open escrow. Order title. Pull the NHD report.\n\nAll three happen from inside the SkySlope transaction — Open Order and partner integrations mean the vendors come to the file, not the other way around.\n\nThe transaction is the workspace.", "visual": "Carousel: slide 1 'The transaction is the workspace'; slides show each order type firing from the file; consistent blue panels.", "note": "First comment: links to Open Order, Pre-Open Order, NHD articles. CA-heavy angle for NHD."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "Escrow, title, NHD — without leaving the file", "cap": "Open escrow. Order title. Pull the NHD report.\n\nAll three happen from inside the SkySlope transaction — Open Order and partner integrations mean the vendors come to the file, not the other way around.\n\nThe transaction is the workspace.", "visual": "Carousel: slide 1 'The transaction is the workspace'; slides show each order type firing from the file; consistent blue panels.", "note": "First comment: links to Open Order, Pre-Open Order, NHD articles. CA-heavy angle for NHD."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Reel / video", "status": "Idea", "when": "", "title": "The Everything App", "cap": "The SkySlope Forms app grew up.\n\nIt's now the SkySlope Everything App — files, forms, envelopes and checklists, all in your pocket.\n\nThe office is wherever the deal is.", "visual": "Reel, 9:16: fast cuts of one phone doing it all — car, kitchen, open house; end card 'Everything App' on space-navy gradient.", "note": "First comment: link 'SkySlope Forms App Is Now the SkySlope Everything App' + app download."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Reel / video", "status": "Idea", "when": "", "title": "The Everything App", "cap": "The SkySlope Forms app grew up.\n\nIt's now the SkySlope Everything App — files, forms, envelopes and checklists, all in your pocket.\n\nThe office is wherever the deal is.", "visual": "Reel, 9:16: fast cuts of one phone doing it all — car, kitchen, open house; end card 'Everything App' on space-navy gradient.", "note": "First comment: link 'SkySlope Forms App Is Now the SkySlope Everything App' + app download."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Reel / video", "status": "Idea", "when": "", "title": "Send it from the driveway", "cap": "The showing ended 90 seconds ago.\n\nThe contract is already in their inbox — sent from your phone, from the driveway.\n\nSpeed is a service.", "visual": "Reel: agent in the driver's seat, phone in hand, tap-send, satisfied nod; house visible through the windshield; timestamp overlay.", "note": "First comment: link 'Send Contracts with SkySlope Forms on Mobile'."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Reel / video", "status": "Idea", "when": "", "title": "Send it from the driveway", "cap": "The showing ended 90 seconds ago.\n\nThe contract is already in their inbox — sent from your phone, from the driveway.\n\nSpeed is a service.", "visual": "Reel: agent in the driver's seat, phone in hand, tap-send, satisfied nod; house visible through the windshield; timestamp overlay.", "note": "First comment: link 'Send Contracts with SkySlope Forms on Mobile'."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Reel / video", "status": "Idea", "when": "", "title": "Snap it to compliance", "cap": "Client signs the paper counter at the kitchen table.\n\nYou photograph it with the app. It's on the checklist before you reach your car.\n\nCompliance at the speed of a camera shutter.", "visual": "Reel: phone camera snapping a signed page on a kitchen table, upload animation, checklist row turning green.", "note": "First comment: link 'Submit Docs to the Checklist — Mobile App'."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Reel / video", "status": "Idea", "when": "", "title": "Snap it to compliance", "cap": "Client signs the paper counter at the kitchen table.\n\nYou photograph it with the app. It's on the checklist before you reach your car.\n\nCompliance at the speed of a camera shutter.", "visual": "Reel: phone camera snapping a signed page on a kitchen table, upload animation, checklist row turning green.", "note": "First comment: link 'Submit Docs to the Checklist — Mobile App'."},
 
-  {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "What's new in SkySlope — [Month]", "cap": "Three things SkySlope shipped in [Month] that are already in your account:\n\n1. [Update one]\n2. [Update two]\n3. [Update three]\n\nYou're paying for these. Use them.\n\n(Full changelog in the first comment.)", "visual": "Carousel: title slide 'Already in your account'; one clean product-moment frame per update; consistent panels.", "note": "RECURRING MONTHLY SLOT — fill from the 'SkySlope Updates' support article each month; first comment links the changelog."},
+  {"pillar": "Product", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "What's new in SkySlope — [Month]", "cap": "Three things SkySlope shipped in [Month] that are already in your account:\n\n1. [Update one]\n2. [Update two]\n3. [Update three]\n\nYou're paying for these. Use them.\n\n(Full changelog in the first comment.)", "visual": "Carousel: title slide 'Already in your account'; one clean product-moment frame per update; consistent panels.", "note": "RECURRING MONTHLY SLOT — fill from the 'SkySlope Updates' support article each month; first comment links the changelog."},
 
-  {"pillar": "Education", "platform": "Instagram", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "Feature of the month — [Feature]", "cap": "[Feature] shipped this month, and it fixes a thing you complained about.\n\n[One-line what it does.]\n\n20 seconds, watch:", "visual": "Screen-record reel of the single best new feature from the monthly changelog; stopwatch energy; burned-in captions.", "note": "RECURRING MONTHLY SLOT — pick the best item from the monthly Updates article; pair with the What's-new carousel."},
+  {"pillar": "Product", "platform": "Instagram", "format": "Screen-record reel", "status": "Idea", "when": "", "title": "Feature of the month — [Feature]", "cap": "[Feature] shipped this month, and it fixes a thing you complained about.\n\n[One-line what it does.]\n\n20 seconds, watch:", "visual": "Screen-record reel of the single best new feature from the monthly changelog; stopwatch energy; burned-in captions.", "note": "RECURRING MONTHLY SLOT — pick the best item from the monthly Updates article; pair with the What's-new carousel."},
 
   {"pillar": "Education", "platform": "LinkedIn", "format": "Carousel / document", "status": "Idea", "when": "", "title": "What brokers get wrong about audit prep", "cap": "Most brokerages prepare for audits by scheduling a very bad week.\n\nThe ones that don't? Their files were audit-ready the day they closed — checklists enforced, documents flagged, trail complete.\n\nAudit prep is a system, not a season.", "visual": "Carousel: slide 1 the contrarian claim huge on navy; slides contrast 'the bad week' vs 'the system'; calm guardian register.", "note": "Contrarian-opener experiment from the Trend Briefing. Compliance topic — no jokes."},
 
@@ -2734,6 +2736,14 @@ var ROB_ASKS=[
  {t:'Name the customer care + sales content allies', d:'1-2 people in customer care and 1-2 in sales who can: flag great customer stories as they happen, sanity-check product claims before posts go live, and occasionally appear on camera. Small ask per person — an ear to the ground beats a content committee.', note:'', done:false, at:''},
  {t:'Set up the internal post-alert distribution list', d:'An email distribution list (e.g. social-alerts@skyslope.com) that Click Shift can mail the moment a post goes live, so internal teams can like/comment in the first hour — the engagement window that decides LinkedIn distribution. Needs: the list created, Click Shift able to send to it, and a one-line ask to staff about what to do when the alert lands.', note:'', done:false, at:''}
 ];
+var CS_ASKS=[
+ {t:'30-min working session', d:'Shortlist the first three Index stats and cast the office-hours host.', note:'', done:false, at:''},
+ {t:'Sales/CS advocacy kickoff', d:'Launch the weekly share-kit rhythm with a first-hour engagement floor on every priority post.', note:'', done:false, at:''},
+ {t:'TC-facing content into the calendar', d:'Attack the Paperless Pipeline gap where the audience is largest (5,560 monthly searches).', note:'', done:false, at:''},
+ {t:'Identify 2-3 Facebook Groups + TC communities', d:'Named-human participation plan; never post-and-leave.', note:'', done:false, at:''},
+ {t:'QA checklist live before next publish', d:'Caption/video match, names, links - closes the "Johnny" gap from the June audit.', note:'', done:false, at:''},
+ {t:'Walk the team through the portal', d:'Live walkthrough of skyslope.soldonsocial.com in the Rob meeting: the password + remember-me, where each section lives, Naomi\u2019s weekly workflow, and the export-state handoff.', note:'', done:false, at:''}
+];
 var FOLLOWS = [
   {who:'NextHome (corporate + leadership)', cat:'Partner', why:'Franchise partner — tag exchanges, co-branded stats', pf:'LinkedIn/IG', status:'To follow'},
   {who:'Stellar MLS', cat:'Partner', why:'MLS partner — co-marketing reach', pf:'LinkedIn/FB', status:'To follow'},
@@ -2755,6 +2765,7 @@ var FOLLOWS = [
 // a delete survives reloads, redeploys and team sync. Export state includes
 // the list so Click Shift can prune the shipped defaults for real.
 var ccDeleted=[];
+var __shipPillar={}; ccPosts.forEach(function(p){ __shipPillar[p.title]=p.pillar; });
 try{
   var __ssState = JSON.parse(localStorage.getItem('sshub_state')||'null');
   if(__ssState){
@@ -2773,6 +2784,13 @@ try{
       __ssState.robAsks.forEach(function(r){ ROB_ASKS.push(r); });
       __newR.forEach(function(r){ ROB_ASKS.push(r); });
     }
+    if(Array.isArray(__ssState.csAsks)&&__ssState.csAsks.length){
+      var __haveC={}; __ssState.csAsks.forEach(function(r){ __haveC[r.t]=1; });
+      var __newC=CS_ASKS.filter(function(r){ return !__haveC[r.t]; });
+      CS_ASKS.length=0;
+      __ssState.csAsks.forEach(function(r){ CS_ASKS.push(r); });
+      __newC.forEach(function(r){ CS_ASKS.push(r); });
+    }
     if(Array.isArray(__ssState.follows)&&__ssState.follows.length){
       var __haveF={}; __ssState.follows.forEach(function(f){ __haveF[f.who]=1; });
       var __newF=FOLLOWS.filter(function(f){ return !__haveF[f.who]; });
@@ -2780,10 +2798,12 @@ try{
       __ssState.follows.forEach(function(f){ FOLLOWS.push(f); });
       __newF.forEach(function(f){ FOLLOWS.push(f); });
     }
+    // pillar migration: reclassified shipped posts adopt the new pillar everywhere
+    ccPosts.forEach(function(p){ if(__shipPillar[p.title]==='Product' && p.pillar!=='Product') p.pillar='Product'; });
   }
 }catch(e){}
 (function(){
-  var activePillar='All', activeStatus='All', activeReady='To schedule', studioView='list';
+  var activePillar='All', activeStatus='All', activeFormat='All', activeReady='To schedule', studioView='list';
   var activeEnv='copy';
   try{ activeEnv=localStorage.getItem('sshub_env')||'copy'; }catch(err){}
   var ENVS=[['copy','Compose'],['creative','Visualize'],['ready','Deploy']];
@@ -2845,7 +2865,7 @@ try{
       direction=num
         ? 'Template: STAT ON SCENE - start from a cinematic photograph: '+scene+'. Grade it cool and premium; lay a deep space-navy gradient scrim (#161B28 fading to transparent) across the lower third or one side; on the scrim, set the number '+num+' huge (about a third of the canvas tall) in white or Electric Blue #006BED with its one-line label beneath. The photo tells the story; the number lands it.'
         : 'Template: DATA PANEL ON SCENE - a softly blurred, dimmed photograph as the backdrop ('+scene+'); a rounded translucent navy panel carries 3 to 5 ranked bars or rows drawn from the post, top row highlighted in the hero blue.';
-    } else if(/education/i.test(pil)){
+    } else if(/education|product/i.test(pil)){
       direction=/carousel|document/.test(fmt)
         ? 'Template: PHOTO TITLE SLIDE - a cinematic photograph ('+scene+') with a navy scrim on one side carrying a bold title that promises the outcome of the lesson ("'+hook+'") and a subtle swipe cue bottom-right.'
         : 'Template: PHOTO TEACHING CARD - a photograph ('+scene+') anchors one half of the frame; the other half is a clean panel with bold numbered steps or a myth-vs-fact split; the promise of the lesson as a max-7-word headline.';
@@ -2935,6 +2955,9 @@ try{
   function visible(p){
     if(!filterFree && p.env!==activeEnv) return false;
     if(pvPlatform!=='All' && p.platform!==pvPlatform) return false;
+    if(activePillar!=='All' && p.pillar!==activePillar) return false;
+    if(activeFormat!=='All' && p.format!==activeFormat) return false;
+    if(activeStatus!=='All' && p.status!==activeStatus) return false;
     return true;
   }
   function selCount(){ return ccPosts.filter(function(p){return p.sel;}).length; }
@@ -3056,12 +3079,52 @@ try{
     };
     document.getElementById('npTitle').focus();
   }
+  function filterRow(t){
+    var row=document.createElement('div'); row.className='sfrow';
+    var lab=document.createElement('span'); lab.className='note-strip'; lab.textContent='Filter:'; row.appendChild(lab);
+    // count within the current world/platform scope so options show what they'd yield
+    var scope=ccPosts.filter(function(p){
+      if(!filterFree && p.env!==activeEnv) return false;
+      if(pvPlatform!=='All' && p.platform!==pvPlatform) return false;
+      return true;
+    });
+    function dd(label, cur, values, setFn){
+      var s=document.createElement('select'); s.className='sfsel';
+      var counts={}; scope.forEach(function(p){ var v=p[label]; counts[v]=(counts[v]||0)+1; });
+      var o0=document.createElement('option'); o0.value='All'; o0.textContent='All '+(label==='pillar'?'pillars':label==='format'?'formats':'statuses')+' ('+scope.length+')'; s.appendChild(o0);
+      values.forEach(function(v){
+        var o=document.createElement('option'); o.value=v;
+        o.textContent=v+' ('+(counts[v]||0)+')';
+        o.selected=(v===cur); s.appendChild(o);
+      });
+      if(cur==='All') o0.selected=true;
+      s.onchange=function(){ setFn(s.value); filters(); syncView(); toolsBar(); };
+      row.appendChild(s);
+      return s;
+    }
+    var pillars=[], formats=[], seenP={}, seenF={};
+    ccPosts.forEach(function(p){
+      if(p.pillar && !seenP[p.pillar]){ seenP[p.pillar]=1; pillars.push(p.pillar); }
+      if(p.format && !seenF[p.format]){ seenF[p.format]=1; formats.push(p.format); }
+    });
+    pillars.sort(); formats.sort();
+    dd('pillar', activePillar, pillars, function(v){ activePillar=v; });
+    dd('format', activeFormat, formats, function(v){ activeFormat=v; });
+    dd('status', activeStatus, COPY_STATUSES.concat(['Scheduled','Published']), function(v){ activeStatus=v; });
+    if(activePillar!=='All'||activeFormat!=='All'||activeStatus!=='All'){
+      var x=document.createElement('button'); x.className='fbtn sfclear'; x.type='button'; x.textContent='\u2715 Clear filters';
+      x.onclick=function(){ activePillar='All'; activeFormat='All'; activeStatus='All'; filters(); syncView(); toolsBar(); };
+      row.appendChild(x);
+    }
+    t.appendChild(row);
+  }
   function toolsBar(){
     var t=document.getElementById('studioTools'); if(!t) return;
     t.innerHTML='<span class="note-strip">Actions:</span>';
     btn('+ New post', openNewPost);
     btn('\u2728 Prompt resources', function(){ var nl=document.querySelector('.navlink[data-view="prompts"]'); if(nl) nl.click(); });
     function btn(label,fn){ var b=document.createElement('button'); b.className='fbtn'; b.textContent=label; b.onclick=fn; t.appendChild(b); return b; }
+    setTimeout(function(){ if(!t.querySelector('.sfrow')) filterRow(t); },0);
     if(activeEnv==='ready'&&!filterFree){
       btn(studioView==='list'?'Calendar view':'List view', function(){ studioView=studioView==='list'?'cal':'list'; syncView(); });
     } else if(studioView==='cal'){ studioView='list'; }
@@ -3858,6 +3921,9 @@ try{
       "## Zero-CTA",
       "Pure value or pure fun for the real estate community - NO product visuals, no sell. Relatable agent-life moments, tasteful memes, seasonal scenes. This pillar earns trust by asking nothing.",
       "",
+      "## Product Info Plays",
+      "Insider hacks, feature spotlights and monthly what's-new posts that help existing customers get more from SkySlope. Visual language: screen-record realism, a real workflow moment (hands, phone, desk) anchoring one half, clean panel with the outcome on the other; teaching energy, premium craft. The support article is always linked in the first comment.",
+      "",
       "## Format vocabulary used in briefs",
       "Single stat graphic, Static / graphic, Carousel / document, Reel / video, Reel / animation, Screen-record reel, Clip repurpose, Video testimonial, Meme / static, Poll.",
       "",
@@ -3894,7 +3960,7 @@ try{
   // export everything
   document.getElementById('exportBtn').onclick=function(){
     var ta=document.getElementById('ioArea');
-    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),deleted:(typeof ccDeleted!=='undefined'?ccDeleted:[]),robAsks:(typeof ROB_ASKS!=='undefined'?ROB_ASKS:[]),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),trackerExtra:(typeof TRACKER_EXTRA!=='undefined'?TRACKER_EXTRA:[])};
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),deleted:(typeof ccDeleted!=='undefined'?ccDeleted:[]),robAsks:(typeof ROB_ASKS!=='undefined'?ROB_ASKS:[]),csAsks:(typeof CS_ASKS!=='undefined'?CS_ASKS:[]),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),trackerExtra:(typeof TRACKER_EXTRA!=='undefined'?TRACKER_EXTRA:[])};
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
@@ -4583,6 +4649,7 @@ var AMPLIFIERS=[
       posts:ccPosts.map(function(p){ var q={}; for(var k in p){ if(k==='img'){ if(p.img&&p.img.length<=400000) q.img=p.img; } else { q[k]=p[k]; } } return q; }),
       deleted:(typeof ccDeleted!=='undefined'?ccDeleted:[]),
       robAsks:(typeof ROB_ASKS!=='undefined'?ROB_ASKS:[]),
+      csAsks:(typeof CS_ASKS!=='undefined'?CS_ASKS:[]),
       follows:FOLLOWS,
       channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),
       channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),
@@ -4637,11 +4704,11 @@ var AMPLIFIERS=[
       });
     }
   }catch(e){}
-  // live For-Rob list — render, edit, note, add, delete; all through save()
-  function renderRob(){
-    var box=document.getElementById('robList'); if(box===null) return;
+  // live tracker lists (For Rob + For Click Shift) — render, edit, note, add, delete; all through save()
+  function renderAsks(arr, boxId){
+    var box=document.getElementById(boxId); if(box===null) return;
     box.innerHTML='';
-    ROB_ASKS.forEach(function(r, idx){
+    arr.forEach(function(r, idx){
       var row=document.createElement('div'); row.className='rob-item'+(r.done?' done':'');
       var top=document.createElement('label'); top.className='rob-top';
       var cb=document.createElement('input'); cb.type='checkbox'; cb.checked=!!r.done;
@@ -4649,7 +4716,7 @@ var AMPLIFIERS=[
         r.done=cb.checked;
         var by=''; try{by=localStorage.getItem('sshub_user')||'';}catch(e){}
         r.at=r.done?((by?by+' \u00b7 ':'')+new Date().toISOString().slice(0,10)):'';
-        renderRob(); save();
+        renderAsks(arr, boxId); save();
       };
       var ct=document.createElement('span'); ct.className='ct';
       var b=document.createElement('b'); b.textContent=r.t; ct.appendChild(b);
@@ -4657,7 +4724,7 @@ var AMPLIFIERS=[
       if(r.done&&r.at){ var st2=document.createElement('span'); st2.className='rob-stamp'; st2.textContent='\u2713 done \u00b7 '+r.at; ct.appendChild(st2); }
       top.appendChild(cb); top.appendChild(ct);
       var del=document.createElement('button'); del.className='rob-del'; del.type='button'; del.textContent='\u2715'; del.title='Remove this item';
-      del.onclick=function(ev){ ev.preventDefault(); if(confirm('Remove "'+r.t+'" from the list?')){ ROB_ASKS.splice(idx,1); renderRob(); save(); } };
+      del.onclick=function(ev){ ev.preventDefault(); if(confirm('Remove "'+r.t+'" from the list?')){ arr.splice(idx,1); renderAsks(arr, boxId); save(); } };
       top.appendChild(del);
       var note=document.createElement('textarea'); note.className='rob-note'; note.placeholder='Notes \u2014 status, who said what, links\u2026'; note.value=r.note||'';
       note.onchange=function(){ r.note=note.value; save(); };
@@ -4665,14 +4732,19 @@ var AMPLIFIERS=[
       box.appendChild(row);
     });
   }
-  var robAddBtn=document.getElementById('robAdd');
-  if(robAddBtn) robAddBtn.onclick=function(){
-    var t=prompt('New item \u2014 short title:'); if(!t) return;
-    var d=prompt('Detail \u2014 what exactly do we need?')||'';
-    ROB_ASKS.push({t:t.trim(), d:d.trim(), note:'', done:false, at:''});
-    renderRob(); save();
-  };
-  renderRob();
+  function wireAdd(btnId, arr, boxId){
+    var b=document.getElementById(btnId);
+    if(b) b.onclick=function(){
+      var t=prompt('New item \u2014 short title:'); if(!t) return;
+      var d=prompt('Detail \u2014 what exactly is needed?')||'';
+      arr.push({t:t.trim(), d:d.trim(), note:'', done:false, at:''});
+      renderAsks(arr, boxId); save();
+    };
+  }
+  wireAdd('robAdd', ROB_ASKS, 'robList');
+  wireAdd('csAdd', CS_ASKS, 'csList');
+  renderAsks(ROB_ASKS,'robList');
+  renderAsks(CS_ASKS,'csList');
   // keep FOLLOWS in sync with the editable table
   var ft=document.getElementById('followTable');
   if(ft) ft.addEventListener('focusout', function(){
