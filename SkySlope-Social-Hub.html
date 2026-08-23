@@ -506,6 +506,18 @@
   .dschip:hover{opacity:.85}
   .dsnone{font-size:12px;color:var(--muted);padding:4px 0}
   .pv.flash .pvcard{animation:flashcard 1.6s}
+  /* ---- v11: live For-Rob list ---- */
+  .rob-item{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:11px 14px;margin-bottom:8px}
+  .rob-item.done{opacity:.62}
+  .rob-item.done .ct b{text-decoration:line-through}
+  .rob-top{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+  .rob-top input{margin-top:3px;accent-color:var(--s1);flex-shrink:0}
+  .rob-top .ct{flex:1}
+  .rob-stamp{display:block;font-size:11px;color:var(--s3);font-weight:700;margin-top:3px}
+  .rob-del{border:0;background:none;color:var(--muted);cursor:pointer;font-size:12px;padding:2px 4px;flex-shrink:0;font-family:inherit}
+  .rob-del:hover{color:var(--crit)}
+  .rob-note{width:100%;margin-top:8px;font-family:inherit;font-size:12.5px;border:1px dashed var(--baseline);border-radius:8px;background:var(--page);color:var(--ink);padding:7px 9px;min-height:34px;resize:vertical;box-sizing:border-box}
+  .rob-note:focus{border-style:solid;border-color:var(--blue);outline:none}
   /* ---- v10: video uploads ---- */
   .pvmedia.vid{padding:0;min-height:0;position:relative;display:block}
   .pvmedia.vid video{width:100%;max-height:480px;display:block;background:#000}
@@ -2071,7 +2083,7 @@
     <!-- ========== ACTION TRACKER ========== -->
     <section class="view" id="view-next">
       <h1>Action Tracker</h1>
-      <div class="sub">The decisions and kickoff actions across both documents. Checkboxes auto-save in this browser — use this live in the meeting with Rob.</div>
+      <div class="sub">The decisions and kickoff actions across both documents. The For-Rob list is fully live — check off, add notes, add items — and syncs to the whole team.</div>
 
       <details class="card" open id="n-deliver"><summary>What Click Shift is delivering for SkySlope<span class="tag">The proposal in one card</span><span class="chev">▶</span></summary><div class="body">
         <ul>
@@ -2085,11 +2097,9 @@
       </div></details>
 
       <h2>For Rob</h2>
-      <label class="check"><input type="checkbox"><span class="ct"><b>Confirm the social media package</b>So Jessica can fold it into the August invoice (template is ready in shared Docs).</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>Name a data contact + legal reviewer</b>Who pulls approved aggregate stats, and who signs off — the gate for everything Index-related.</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>Approve the review-generation program</b>The Big Warning is the case: Capterra 3.9★ is the weakest surface researching buyers see.</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>Nominate 2–3 exec/leader LinkedIn voices</b>Personal profiles carry 5–10× Page reach; the engagement plan calls for 1 post/week each.</span></label>
-      <label class="check"><input type="checkbox"><span class="ct"><b>Grant channel account access</b>Admin/editor roles for Naomi + Click Shift: LinkedIn Page admin, Meta Business Suite (Instagram + Facebook), YouTube channel manager, X login — plus Semrush and analytics view access for reporting.</span></label>
+      <p class="note-strip" style="margin:0 0 8px">This list is live — check items off, add notes, add or remove items right here. Changes save and sync to the whole team.</p>
+      <div id="robList"></div>
+      <button class="cbtn push" id="robAdd" type="button" style="margin:2px 0 14px">+ Add item</button>
       <h2>For Click Shift</h2>
       <label class="check"><input type="checkbox"><span class="ct"><b>30-min working session</b>Shortlist the first three Index stats + cast the office-hours host.</span></label>
       <label class="check"><input type="checkbox"><span class="ct"><b>Sales/CS advocacy kickoff</b>Launch the weekly share-kit rhythm; first-hour engagement floor.</span></label>
@@ -2715,6 +2725,15 @@ var ccPosts = [
 
   {"pillar": "Zero-CTA", "platform": "LinkedIn", "format": "Static / graphic", "status": "Idea", "when": "", "title": "For the broker reading the NAR report at 7am", "cap": "If you're the broker who reads the NAR release the morning it drops — with coffee, before the office opens — this feed is for you.\n\nNext Existing-Home Sales release: Sept 10, 10am ET.\n\nSee you in the comments at 10:05.", "visual": "SCENE: early-morning desk, printed report and coffee, sunrise through blinds; overlay 'Sept 10 · 10am ET'.", "note": "Identity-call opener from Hooks & Formulas; primes the same-day EHS reaction post."}
 ];
+
+// Live "For Rob" asks — editable in-app, saved + team-synced (state.robAsks)
+var ROB_ASKS=[
+ {t:'Send the data pack that unlocks the Index posts', d:'Aggregate, anonymized stats to replace every [bracketed] placeholder: documents per closing · signatures per closing · median e-sign turnaround (hours) · contract-to-close days by state (top 10) · busiest closing day of the week and month of the year · most common compliance flags and their frequency · total transactions/yr and active agent count (verify the 3M+ / 900K figures) · plus legal sign-off on which numbers are publishable. This is the gate for the entire Data & Index pillar.', note:'', done:false, at:''},
+ {t:'Share the target audience + account lists', d:'The current target audience definition, the existing customer list, and any target/prospect account lists (brokerages, teams, TC companies). We will use these to build the follow-and-engage lists per channel — who we follow, whose posts we comment on as SkySlope, and which accounts the advocacy program should reach.', note:'', done:false, at:''},
+ {t:'Nominate SkySlope users we can interview', d:'Customers open to a recorded interview for the Testimonial pillar. Ideal: Wichita, Kansas or nearby — Naomi is local, so in-person filming is easy. Open to any location for remote interviews. Agents, TCs, admins or brokers; 2-3 names with contact info gets the Spotlight series moving.', note:'', done:false, at:''},
+ {t:'Name the customer care + sales content allies', d:'1-2 people in customer care and 1-2 in sales who can: flag great customer stories as they happen, sanity-check product claims before posts go live, and occasionally appear on camera. Small ask per person — an ear to the ground beats a content committee.', note:'', done:false, at:''},
+ {t:'Set up the internal post-alert distribution list', d:'An email distribution list (e.g. social-alerts@skyslope.com) that Click Shift can mail the moment a post goes live, so internal teams can like/comment in the first hour — the engagement window that decides LinkedIn distribution. Needs: the list created, Click Shift able to send to it, and a one-line ask to staff about what to do when the alert lands.', note:'', done:false, at:''}
+];
 var FOLLOWS = [
   {who:'NextHome (corporate + leadership)', cat:'Partner', why:'Franchise partner — tag exchanges, co-branded stats', pf:'LinkedIn/IG', status:'To follow'},
   {who:'Stellar MLS', cat:'Partner', why:'MLS partner — co-marketing reach', pf:'LinkedIn/FB', status:'To follow'},
@@ -2746,6 +2765,13 @@ try{
       ccPosts.length=0;
       __ssState.posts.forEach(function(p){ ccPosts.push(p); });
       __shippedNew.forEach(function(p){ ccPosts.push(p); });
+    }
+    if(Array.isArray(__ssState.robAsks)&&__ssState.robAsks.length){
+      var __haveR={}; __ssState.robAsks.forEach(function(r){ __haveR[r.t]=1; });
+      var __newR=ROB_ASKS.filter(function(r){ return !__haveR[r.t]; });
+      ROB_ASKS.length=0;
+      __ssState.robAsks.forEach(function(r){ ROB_ASKS.push(r); });
+      __newR.forEach(function(r){ ROB_ASKS.push(r); });
     }
     if(Array.isArray(__ssState.follows)&&__ssState.follows.length){
       var __haveF={}; __ssState.follows.forEach(function(f){ __haveF[f.who]=1; });
@@ -3868,7 +3894,7 @@ try{
   // export everything
   document.getElementById('exportBtn').onclick=function(){
     var ta=document.getElementById('ioArea');
-    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),deleted:(typeof ccDeleted!=='undefined'?ccDeleted:[]),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),trackerExtra:(typeof TRACKER_EXTRA!=='undefined'?TRACKER_EXTRA:[])};
+    var state={exported:new Date().toISOString(),posts:ccPosts.map(cleanPost),deleted:(typeof ccDeleted!=='undefined'?ccDeleted:[]),robAsks:(typeof ROB_ASKS!=='undefined'?ROB_ASKS:[]),follows:FOLLOWS,channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),targets:(typeof GROWTH_TARGETS!=='undefined'?GROWTH_TARGETS:{}),goalLeader:(typeof GOAL_LEADER!=='undefined'?GOAL_LEADER:'Engagement'),amplifiers:(typeof AMPLIFIERS!=='undefined'?AMPLIFIERS:[]),trackerExtra:(typeof TRACKER_EXTRA!=='undefined'?TRACKER_EXTRA:[])};
     ta.value=JSON.stringify(state,null,2);
     ta.style.display='block';ta.scrollIntoView({behavior:'smooth'});
     ta.select();
@@ -4556,6 +4582,7 @@ var AMPLIFIERS=[
       savedAt:new Date().toISOString(),
       posts:ccPosts.map(function(p){ var q={}; for(var k in p){ if(k==='img'){ if(p.img&&p.img.length<=400000) q.img=p.img; } else { q[k]=p[k]; } } return q; }),
       deleted:(typeof ccDeleted!=='undefined'?ccDeleted:[]),
+      robAsks:(typeof ROB_ASKS!=='undefined'?ROB_ASKS:[]),
       follows:FOLLOWS,
       channels:(typeof CH_STATS!=='undefined'?CH_STATS:{}),
       channelHistory:(typeof CH_HISTORY!=='undefined'?CH_HISTORY:{}),
@@ -4610,6 +4637,42 @@ var AMPLIFIERS=[
       });
     }
   }catch(e){}
+  // live For-Rob list — render, edit, note, add, delete; all through save()
+  function renderRob(){
+    var box=document.getElementById('robList'); if(box===null) return;
+    box.innerHTML='';
+    ROB_ASKS.forEach(function(r, idx){
+      var row=document.createElement('div'); row.className='rob-item'+(r.done?' done':'');
+      var top=document.createElement('label'); top.className='rob-top';
+      var cb=document.createElement('input'); cb.type='checkbox'; cb.checked=!!r.done;
+      cb.onchange=function(){
+        r.done=cb.checked;
+        var by=''; try{by=localStorage.getItem('sshub_user')||'';}catch(e){}
+        r.at=r.done?((by?by+' \u00b7 ':'')+new Date().toISOString().slice(0,10)):'';
+        renderRob(); save();
+      };
+      var ct=document.createElement('span'); ct.className='ct';
+      var b=document.createElement('b'); b.textContent=r.t; ct.appendChild(b);
+      var dd=document.createElement('span'); dd.textContent=r.d; ct.appendChild(dd);
+      if(r.done&&r.at){ var st2=document.createElement('span'); st2.className='rob-stamp'; st2.textContent='\u2713 done \u00b7 '+r.at; ct.appendChild(st2); }
+      top.appendChild(cb); top.appendChild(ct);
+      var del=document.createElement('button'); del.className='rob-del'; del.type='button'; del.textContent='\u2715'; del.title='Remove this item';
+      del.onclick=function(ev){ ev.preventDefault(); if(confirm('Remove "'+r.t+'" from the list?')){ ROB_ASKS.splice(idx,1); renderRob(); save(); } };
+      top.appendChild(del);
+      var note=document.createElement('textarea'); note.className='rob-note'; note.placeholder='Notes \u2014 status, who said what, links\u2026'; note.value=r.note||'';
+      note.onchange=function(){ r.note=note.value; save(); };
+      row.appendChild(top); row.appendChild(note);
+      box.appendChild(row);
+    });
+  }
+  var robAddBtn=document.getElementById('robAdd');
+  if(robAddBtn) robAddBtn.onclick=function(){
+    var t=prompt('New item \u2014 short title:'); if(!t) return;
+    var d=prompt('Detail \u2014 what exactly do we need?')||'';
+    ROB_ASKS.push({t:t.trim(), d:d.trim(), note:'', done:false, at:''});
+    renderRob(); save();
+  };
+  renderRob();
   // keep FOLLOWS in sync with the editable table
   var ft=document.getElementById('followTable');
   if(ft) ft.addEventListener('focusout', function(){
