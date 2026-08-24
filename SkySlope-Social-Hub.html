@@ -513,6 +513,13 @@
   .sfsearch:focus{outline:none;border-color:var(--blue)}
   .showmore{display:block;margin:4px 0 30px;padding:10px 20px;font-weight:700;color:var(--blue);border-color:var(--blue)}
   @media(max-width:700px){.sfsearch{font-size:16px}}
+  .wk-row{display:flex;gap:8px;align-items:center;padding:5px 0;font-size:12.5px}
+  .wk-row+.wk-row{border-top:1px solid var(--grid)}
+  .wk-row b{color:var(--ink);font-size:12px;white-space:nowrap}
+  .wk-row>b:first-child{min-width:74px}
+  .wk-plat{color:#fff;border-radius:999px;padding:1px 8px;font-size:10px;font-weight:700;flex-shrink:0}
+  .wk-t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+  .wk-at{font-size:10.5px;color:var(--muted);white-space:nowrap}
   @media(max-width:700px){.sfsel{font-size:16px;max-width:100%}}
   /* ---- v11: live For-Rob list ---- */
   .rob-item{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:11px 14px;margin-bottom:8px}
@@ -632,6 +639,7 @@
     <section class="view active" id="view-overview">
       <h1>SkySlope Social Strategy — Overview</h1>
       <div class="sub">Two strategic documents, one engine: turn 3M+ transactions of proprietary data into the most shareable content in real estate — and build the audience to see it. Prepared for Robert Pedraza.</div>
+      <div id="weekPanel"></div>
 
       <h2 style="font-size:16px">Visibility detail — follower growth vs targets</h2>
       <p class="note-strip" style="margin:0 0 8px">Live counts from the growth log · <b>monthly targets are Click Shift estimates pending Rob-confirmed commitments</b> (none exist in the email record yet) — click a target to set the committed number; goal format: direction + metric + baseline + target + deadline + owner.</p>
@@ -3165,7 +3173,7 @@ try{
   function stamp(p,act){ p.history.push({act:act,by:hubUser(),at:new Date().toISOString().slice(0,16).replace('T',' ')}); }
   function lastStamp(p){ return p.history.length?p.history[p.history.length-1]:null; }
   function fmtAct(s){
-    var m={'to-creative':'handed off to Create','to-ready':'handed off to Deploy','back-to-copy':'sent back to Compose','back-to-creative':'sent back to Create','scheduled':'marked scheduled','published':'shipped'};
+    var m={'to-creative':'moved to Visualize','to-ready':'moved to Deploy','back-to-copy':'sent back to Compose','back-to-creative':'sent back to Visualize','scheduled':'marked scheduled','published':'shipped'};
     return (m[s.act]||s.act)+' by '+s.by+' \u00b7 '+s.at;
   }
   function visible(p){
@@ -3431,7 +3439,49 @@ try{
     if(p.when) showToast('Assigned to '+p.when+(r&&r.to==='ready'?' \u2014 moved to Deploy':''));
     else showToast('Day cleared'+(r?' \u2014 back to '+ENV_LABEL[r.to]:''));
   }
-  function refreshAll(){ tiles(); envTabs(); filters(); render(); updateCart(); }
+  function actWord(a){
+    var m={'created':'created','to-creative':'moved to Visualize','to-ready':'moved to Deploy','back-to-copy':'sent back to Compose','back-to-creative':'sent back to Visualize','scheduled':'marked scheduled','published':'shipped','approved':'approved'};
+    return m[a]||a;
+  }
+  function renderWeek(){
+    var box=document.getElementById('weekPanel'); if(!box) return;
+    var today=isoDate(new Date());
+    var end=new Date(); end.setDate(end.getDate()+6); var endS=isoDate(end);
+    var wk=ccPosts.filter(function(p){ return p.when && p.when>=today && p.when<=endS; })
+      .sort(function(a,b){ return a.when<b.when?-1:1; });
+    var awaiting=ccPosts.filter(function(p){ return p.env==='ready' && !p.when && p.status!=='Published'; }).length;
+    var viz=ccPosts.filter(function(p){ return p.env==='creative'; }).length;
+    var WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    var html='<div class="grid2" style="margin:14px 0 6px">';
+    html+='<div class="ccard"><h3>\ud83d\udcc6 This week</h3>';
+    if(wk.length){
+      wk.slice(0,8).forEach(function(p){
+        var d=new Date(p.when+'T12:00:00');
+        html+='<div class="wk-row"><b>'+WD[d.getDay()]+' '+fmtDay(p.when)+'</b><span class="wk-plat" style="background:'+(CAL_COLORS[p.platform]||'#888')+'">'+p.platform+'</span><span class="wk-t">'+escAttr(p.title)+'</span></div>';
+      });
+      if(wk.length>8) html+='<div class="note-strip">+'+(wk.length-8)+' more booked this week</div>';
+    } else {
+      html+='<div class="note-strip" style="margin:0">Nothing booked in the next 7 days \u2014 open the studio and give a few posts a day.</div>';
+    }
+    html+='<div class="note-strip">'+awaiting+' in Deploy awaiting a day \u00b7 '+viz+' in Visualize</div>';
+    html+='<ul class="jumplist"><li><a href="#" id="wkOpenStudio">Open Content Studio \u2192</a></li></ul></div>';
+    var ev=[];
+    ccPosts.forEach(function(p){ (p.history||[]).forEach(function(s){ ev.push({act:s.act,by:s.by,at:s.at,title:p.title}); }); });
+    ev.sort(function(a,b){ return a.at<b.at?1:-1; });
+    html+='<div class="ccard"><h3>\ud83d\udd52 Recent team activity</h3>';
+    if(ev.length){
+      ev.slice(0,10).forEach(function(s){
+        html+='<div class="wk-row act"><span class="wk-t"><b>'+escAttr(s.by||'someone')+'</b> '+escAttr(actWord(s.act))+' \u201c'+escAttr((s.title||'').slice(0,44))+'\u201d</span><span class="wk-at">'+escAttr(s.at||'')+'</span></div>';
+      });
+    } else {
+      html+='<div class="note-strip" style="margin:0">Nothing logged yet \u2014 activity appears here as the team moves posts, books days and ships.</div>';
+    }
+    html+='</div></div>';
+    box.innerHTML=html;
+    var lk=document.getElementById('wkOpenStudio');
+    if(lk) lk.onclick=function(e){ e.preventDefault(); var nl=document.querySelector('.navlink[data-view="studio"]'); if(nl) nl.click(); };
+  }
+  function refreshAll(){ tiles(); envTabs(); filters(); render(); updateCart(); renderWeek(); }
   // normalize whatever state was loaded (shipped, saved, or team-synced)
   ccPosts.forEach(function(p){ var e=derivedEnv(p); if(e!==p.env) p.env=e; if(creativeFulfilled(p)) inferKind(p); });
   function moveEnv(p,env,act,msg){
@@ -4290,7 +4340,7 @@ try{
     document.body.appendChild(a); a.click(); a.remove();
     showToast('Excel export downloaded — one row per post, grouped by platform, with platform rules');
   };
-  filters();syncView();
+  filters();syncView();renderWeek();
 })();
 
 // ---------- CloudSync: shared team state via Supabase (inactive until configured) ----------
@@ -5013,6 +5063,8 @@ var AMPLIFIERS=[
   });
   setInterval(save,3000);
   window.addEventListener('beforeunload',save);
+  window.addEventListener('pagehide',save);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') save(); });
   // clear-saved-edits button (Content Studio handoff card)
   var rb=document.getElementById('resetBtn');
   if(rb) rb.onclick=function(){
