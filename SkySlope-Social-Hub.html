@@ -3302,6 +3302,7 @@ try{
     var lab=document.createElement('span'); lab.className='note-strip'; lab.textContent='Filter:'; row.appendChild(lab);
     var si=document.createElement('input'); si.type='search'; si.className='sfsearch';
     si.placeholder='Search posts \u2014 title, caption, notes\u2026'; si.value=studioSearch;
+    si.setAttribute('aria-label','Search posts');
     si.oninput=function(){ studioSearch=si.value.trim(); renderCap=40; render(); };
     row.appendChild(si);
     // count within the current world/platform scope so options show what they'd yield
@@ -3312,6 +3313,7 @@ try{
     });
     function dd(label, cur, values, setFn){
       var s=document.createElement('select'); s.className='sfsel';
+      s.setAttribute('aria-label','Filter by '+label);
       var counts={}; scope.forEach(function(p){ var v=p[label]; counts[v]=(counts[v]||0)+1; });
       var o0=document.createElement('option'); o0.value='All'; o0.textContent='All '+(label==='pillar'?'pillars':label==='format'?'formats':'statuses')+' ('+scope.length+')'; s.appendChild(o0);
       values.forEach(function(v){
@@ -3345,6 +3347,11 @@ try{
     t.innerHTML='<span class="note-strip">Actions:</span>';
     btn('+ New post', openNewPost);
     btn('\u2728 Prompt resources', function(){ var nl=document.querySelector('.navlink[data-view="prompts"]'); if(nl) nl.click(); });
+    btn('\u25a3 Cart all shown', function(){
+      var n=0; ccPosts.forEach(function(p){ if(visible(p) && !p.sel){ p.sel=true; n++; } });
+      refreshSelViews(); updateCart();
+      showToast(n? n+' post'+(n===1?'':'s')+' added to the cart \u2014 export away' : 'Everything shown is already in the cart');
+    });
     function btn(label,fn){ var b=document.createElement('button'); b.className='fbtn'; b.textContent=label; b.onclick=fn; t.appendChild(b); return b; }
     setTimeout(function(){ if(!t.querySelector('.sfrow')) filterRow(t); },0);
     if(activeEnv==='ready'&&!filterFree){
@@ -3679,7 +3686,9 @@ try{
     }
     if(!shown){
       var empty=document.createElement('div'); empty.className='envnote';
-      empty.textContent = filterFree ? 'No posts for this platform yet.' :
+      var anyFilter = studioSearch || activePillar!=='All' || activeFormat!=='All' || activeStatus!=='All' || pvPlatform!=='All';
+      empty.textContent = anyFilter ? 'No posts match the current search/filters \u2014 clear them above to see everything.' :
+        filterFree ? 'No posts for this platform yet.' :
         activeEnv==='copy' ? 'Compose is quiet \u2014 the muse is waiting. Hit + New post.' :
         activeEnv==='creative' ? 'Visualize is empty \u2014 attach an image (or Drive link) to a post and it lands here on its own.' :
         'Deploy is clear \u2014 set a publish day on any post and it lands here on its own.';
@@ -3694,9 +3703,20 @@ try{
     ti.onchange=function(){ p.title=ti.value; };
     var vi=document.createElement('textarea'); vi.className='pe-vis'; vi.value=p.visual||''; vi.placeholder='Visual brief / image instructions';
     vi.onchange=function(){ p.visual=vi.value; };
+    var dup=document.createElement('button'); dup.className='cbtn'; dup.textContent='\u29c9 Duplicate post';
+    dup.title='Copy this post into Compose \u2014 handy for platform variants';
+    dup.onclick=function(){
+      var base=p.title+' (copy)', t2=base, k=2;
+      while(ccPosts.some(function(x){ return x.title===t2; })){ t2=base+' '+k; k++; }
+      var np={pillar:p.pillar,platform:p.platform,format:p.format,status:'Idea',env:'copy',creative:{kind:'',link:'',note:''},history:[],title:t2,cap:p.cap,visual:p.visual||'',note:p.note||'',when:''};
+      stamp(np,'created');
+      ccPosts.unshift(np);
+      refreshAll();
+      showToast('Duplicated \u2014 "'+t2.slice(0,40)+'" born in Compose');
+    };
     var del=document.createElement('button'); del.className='cbtn'; del.textContent='\u2715 Delete post';
     del.onclick=function(){ openDelModal(p); };
-    ed.appendChild(ti); ed.appendChild(vi); ed.appendChild(del);
+    ed.appendChild(ti); ed.appendChild(vi); ed.appendChild(dup); ed.appendChild(del);
   }
   // ----- v8.1: delete post \u2014 X on every card, one confirmation modal -----
   var delTarget=null;
