@@ -580,7 +580,7 @@
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-head">
       <div><svg class="sslogo" viewBox="0 0 153 25" role="img" aria-label="SkySlope"><use href="#ss-logo"/></svg>
-      <div class="brand">Social Hub<small><a href="#" data-goto="support">Support &amp; contacts →</a></small></div></div>
+      <div class="brand">Social Hub</div></div>
       <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="sidebar">Menu</button>
     </div>
     <input class="search" id="searchBox" type="search" placeholder="Search sections…  ( / )" aria-label="Search sections">
@@ -4043,6 +4043,8 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     var __pgi=(window.__planIdx&&window.__planIdx[p.title]!=null)?window.__planIdx[p.title]:-1;
     if(__pgi>-1&&typeof PLANSEP!=='undefined'&&PLANSEP.CREATIVES&&PLANSEP.CREATIVES[__pgi])
       return '<div class="pvmedia spwrap">'+PLANSEP.CREATIVES[__pgi]+'</div>';
+    if(window.CUSTOM_CRE&&window.CUSTOM_CRE[p.title])
+      return '<div class="pvmedia spwrap">'+window.CUSTOM_CRE[p.title]+'</div>';
     return '<div class="pvmedia spwrap">'+artFor(p,(__pgi>-1?__pgi:__gi))+'</div>';
   }
   function escAttr(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
@@ -5929,6 +5931,235 @@ Array.prototype.forEach.call(document.querySelectorAll('table'), function(t){
 });
 </script>
 
+<style>
+/* sp2 — hand-designed studio creatives (extends the September design system) */
+.sp2-light{background:linear-gradient(180deg,#fff,#F4F8FC);color:#16273a}
+.sp2-pad{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:6% 7%}
+.sp2-split{position:absolute;inset:0;display:grid;grid-template-columns:1.12fr 1fr}
+.sp2-cell{padding:5.5% 6.5%;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.sp2-divR{border-right:1px solid #DEE5ED}
+.sp2-num{font-family:var(--serif,Georgia,serif);font-weight:800;color:#0059DA;line-height:.95;letter-spacing:-.02em}
+.sp2-numXL{font-size:clamp(30px,6.8vw,58px)}
+.sp2-numL{font-size:clamp(22px,4.6vw,40px)}
+.sp2-lab{font-size:12.5px;font-weight:700;color:#16273a;margin-top:8px;line-height:1.35}
+.sp2-sub{font-size:11px;color:#3F5B77;margin-top:6px;font-weight:600}
+.sp2-src{font-size:10px;color:#5b7288;margin-top:10px;font-weight:600}
+.sp2-kick{font-size:9.5px;font-weight:800;letter-spacing:.2em;color:#0059DA;margin-bottom:8px}
+.sp2-chart{width:100%;height:auto;display:block;margin-top:8px}
+.sp2-qrow{display:flex;gap:14px;align-items:baseline;padding:11px 0;border-bottom:1px dashed #DEE5ED}
+.sp2-qrow:last-child{border-bottom:0}
+.sp2-qrow b{font-family:var(--serif,Georgia,serif);color:#0059DA;font-size:20px;flex:0 0 auto}
+.sp2-qrow span{font-weight:700;color:#16273a;font-size:13.5px;line-height:1.3}
+.sp2-quote{font-family:var(--serif,Georgia,serif);font-size:clamp(15px,2.6vw,22px);line-height:1.32;font-weight:700}
+.sp2-badgeWrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4.5%;background:radial-gradient(4px 4px at 12% 18%,#0059DA55,transparent 60%),radial-gradient(3px 3px at 85% 22%,#28A74555,transparent 60%),radial-gradient(3.5px 3.5px at 22% 82%,#87C6FF88,transparent 60%),radial-gradient(3px 3px at 74% 78%,#DC354544,transparent 60%),radial-gradient(2.6px 2.6px at 50% 10%,#0059DA44,transparent 60%),radial-gradient(3px 3px at 92% 60%,#87C6FF66,transparent 60%),linear-gradient(180deg,#EAF3FF,#F4F8FC)}
+.sp2-logoFrame{background:#fff;border:1px solid #DEE5ED;border-radius:14px;box-shadow:0 10px 30px -12px rgba(21,38,66,.28);padding:16px 32px;font-weight:800;color:#3F5B77;font-size:13.5px}
+.sp2-ribbon{margin-top:11px;background:#0059DA;color:#fff;font-size:10px;font-weight:800;border-radius:999px;padding:4px 14px;letter-spacing:.06em}
+.sp2-congrats{font-family:var(--serif,Georgia,serif);font-size:clamp(16px,2.8vw,24px);font-weight:800;color:#16273a;margin-top:11px}
+.sp2-pollq{font-size:clamp(14px,2.2vw,19px);font-weight:800;color:#16273a;line-height:1.25;margin:2px 0 6px;font-family:var(--serif,Georgia,serif)}
+.sp2-pollRow{display:flex;align-items:center;gap:9px;border:1.5px solid #DEE5ED;border-radius:999px;padding:6px 13px;font-size:11px;font-weight:700;color:#3F5B77;margin-top:6px;background:#fff;width:min(100%,340px)}
+.sp2-pollRow i{width:11px;height:11px;border-radius:50%;border:2px solid #87C6FF;flex:0 0 11px}
+.sp2-chipDate{display:inline-block;margin-top:13px;background:rgba(135,198,255,.16);border:1px solid rgba(135,198,255,.45);color:#BFE0FF;font-size:10.5px;font-weight:800;border-radius:999px;padding:3px 13px;letter-spacing:.1em}
+.sp2-horizon{position:absolute;left:-22%;right:-22%;bottom:-46%;height:72%;border-radius:50% 50% 0 0;background:radial-gradient(ellipse at 50% 0%,#0A2642 0%,#151A27 72%);box-shadow:0 -1px 26px 2px rgba(135,198,255,.30)}
+.sp2-corner{position:absolute;right:3.5%;bottom:6%;width:20px;height:20px;opacity:.85}
+</style>
+<script>
+// ---------- Hand-designed studio creatives: the first ten Compose cards ----------
+(function(){
+  var C = {};
+
+  C['The market that refuses to crash'] =
+    '<div class="sp-carWrap"><div class="sp-slideStrip">'
+    +'<div class="sp-slide sp-ar-11">'
+    +'<img class="sp-ph-img" src="https://images.unsplash.com/photo-1576941089067-2de3c901e126?auto=format&fit=crop&w=1200&q=80" alt="White farmhouse at dusk">'
+    +'<div class="sp-scrim sp-dkAll"><div class="sp-kicker">MARKET PULSE \u00b7 JULY EHS</div>'
+    +'<div class="sp-heroTitle">The market that refuses to crash.</div>'
+    +'<div class="sp-srcLine">NAR Existing-Home Sales \u00b7 July print</div></div>'
+    +'<span class="sp-slidePill">1 / 3</span></div>'
+    +'<div class="sp-slide sp-ar-11 sp-lightSlide">'
+    +'<div class="sp2-kick">SALES PACE, TRAILING YEAR</div>'
+    +'<div class="sp-slideHead">Down for the month. Up for the year.</div>'
+    +'<svg class="sp2-chart" viewBox="0 0 320 150">'
+    +'<line x1="10" y1="40" x2="310" y2="40" stroke="#EAF0F6" stroke-width="1"/><line x1="10" y1="80" x2="310" y2="80" stroke="#EAF0F6" stroke-width="1"/><line x1="10" y1="120" x2="310" y2="120" stroke="#EAF0F6" stroke-width="1"/>'
+    +'<path d="M10,62 C40,58 62,84 92,88 C122,92 138,72 168,78 C198,84 222,98 250,90 C278,82 296,74 308,72" fill="none" stroke="#0059DA" stroke-width="3.5" stroke-linecap="round"/>'
+    +'<circle cx="308" cy="72" r="4.5" fill="#0059DA"/>'
+    +'<rect x="176" y="18" width="128" height="22" rx="11" fill="#EAF3FF"/>'
+    +'<text x="240" y="33" text-anchor="middle" font-size="10.5" font-weight="700" fill="#16273a">Jul: \u22121.7% m/m \u00b7 +0.7% y/y</text>'
+    +'<text x="12" y="144" font-size="9" fill="#8fa4b8">Aug \u201925</text><text x="308" y="144" text-anchor="end" font-size="9" fill="#8fa4b8">Jul \u201926</text>'
+    +'</svg></div>'
+    +'<div class="sp-slide sp-ar-11 sp-navySlide"><div class="sp-stars"></div>'
+    +'<div style="font-family:Georgia,serif;font-size:56px;line-height:.55;color:#87C6FF;opacity:.85">\u201c</div>'
+    +'<div class="sp2-quote"><span class="sp-phv">[Yun\u2019s \u201crefuses to crash\u201d line \u2014 exact wording from the July release]</span></div>'
+    +'<div class="sp-srcLine" style="margin-top:12px">\u2014 Lawrence Yun, NAR Chief Economist</div>'
+    +'</div>'
+    +'</div><div class="sp-carDots"><i class="sp-on"></i><i></i><i></i></div></div>'
+    +'<div class="sp-phFlag">\u26a0 Pull the exact quote from NAR\u2019s July commentary before this ships</div>';
+
+  C['Brokers finally call the market healthy'] =
+    '<div class="sp-creative sp-ar-191 sp2-light"><div class="sp2-split">'
+    +'<div class="sp2-cell sp2-divR">'
+    +'<div class="sp2-kick">POWER BROKER SURVEY</div>'
+    +'<div class="sp2-num sp2-numXL">51%</div>'
+    +'<div class="sp2-lab">of brokers now call their market <b>balanced or healthy</b></div>'
+    +'<div class="sp2-sub">First time optimism leads in three years</div>'
+    +'<div class="sp2-src">RealTrends / T3 Sixty Power Broker survey \u00b7 link in first comment</div>'
+    +'</div>'
+    +'<div class="sp2-cell" style="background:#F4F8FC">'
+    +'<div class="sp2-kick" style="color:#3F5B77">THE CATCH</div>'
+    +'<div style="font-family:var(--serif,Georgia,serif);font-size:clamp(15px,2.5vw,23px);font-weight:800;color:#3F5B77;line-height:1.22">Affordability is now the <span style="color:#DC3545">#1</span> business challenge</div>'
+    +'<div class="sp2-sub">First time in nine years</div>'
+    +'</div></div></div>';
+
+  C['The 400,000 missing transactions'] =
+    '<div class="sp-creative sp-ar-191 sp2-light"><div class="sp2-split">'
+    +'<div class="sp2-cell">'
+    +'<div class="sp2-kick">THE MISSING MARKET</div>'
+    +'<div class="sp2-num sp2-numXL">400,000</div>'
+    +'<div class="sp2-lab">transactions below where 2026 projections had the year before February</div>'
+    +'<div class="sp2-src">Forecast gap \u00b7 cite the projection + current NAR pace in first comment</div>'
+    +'</div>'
+    +'<div class="sp2-cell" style="justify-content:center">'
+    +'<svg class="sp2-chart" viewBox="0 0 220 150">'
+    +'<rect x="26" y="26" width="62" height="110" rx="7" fill="none" stroke="#8fa4b8" stroke-width="2" stroke-dasharray="5 4"/>'
+    +'<rect x="128" y="56" width="62" height="80" rx="7" fill="#0059DA"/>'
+    +'<path d="M88,26 L108,26 L108,56 L128,56" fill="none" stroke="#DC3545" stroke-width="2"/>'
+    +'<text x="108" y="46" text-anchor="middle" font-size="12" font-weight="800" fill="#DC3545">\u2212400K</text>'
+    +'<text x="57" y="148" text-anchor="middle" font-size="9" fill="#5b7288">projected</text>'
+    +'<text x="159" y="148" text-anchor="middle" font-size="9" fill="#5b7288">actual pace</text>'
+    +'</svg></div></div></div>';
+
+  C['The average agent closes 9 deals a year'] =
+    '<div class="sp-creative sp-ar-191 sp2-light"><div class="sp2-split">'
+    +'<div class="sp2-cell sp2-divR">'
+    +'<div class="sp2-kick" style="color:#3F5B77">THE AVERAGE AGENT</div>'
+    +'<div class="sp2-num sp2-numL" style="color:#8fa4b8">9 <span style="font-size:.45em;font-weight:700">deals</span></div>'
+    +'<div class="sp2-sub">closed per year \u2014 NAR member profile</div>'
+    +'</div>'
+    +'<div class="sp2-cell">'
+    +'<div class="sp2-kick">THE PEOPLE BEHIND THEM</div>'
+    +'<div class="sp2-num sp2-numXL">15\u201340</div>'
+    +'<div class="sp2-lab">files a TC or ops team carries <b>at once</b></div>'
+    +'<div class="sp2-src">Averages don\u2019t close files. People do.</div>'
+    +'</div></div></div>';
+
+  C['Independents hit 28.79% market share'] =
+    '<div class="sp-creative sp-ar-191 sp2-light"><div class="sp2-split" style="grid-template-columns:1fr 1.3fr">'
+    +'<div class="sp2-cell" style="align-items:center;justify-content:center">'
+    +'<svg viewBox="0 0 160 160" style="width:min(72%,150px);display:block">'
+    +'<circle cx="80" cy="80" r="58" fill="none" stroke="#DEE5ED" stroke-width="20"/>'
+    +'<circle cx="80" cy="80" r="58" fill="none" stroke="#0059DA" stroke-width="20" stroke-linecap="round" stroke-dasharray="104.9 259.5" transform="rotate(-90 80 80)"/>'
+    +'<text x="80" y="82" text-anchor="middle" font-family="Georgia,serif" font-size="24" font-weight="800" fill="#0059DA">28.79%</text>'
+    +'<text x="80" y="100" text-anchor="middle" font-size="8.5" font-weight="700" fill="#5b7288">of ranked volume</text>'
+    +'</svg></div>'
+    +'<div class="sp2-cell">'
+    +'<div class="sp2-kick">REALTRENDS VERIFIED</div>'
+    +'<div class="sp-slideHead">Independents keep taking share <span style="color:#28A745">\u2197</span></div>'
+    +'<div class="sp2-lab">28.79% of ranked volume now closes at independent brokerages</div>'
+    +'<div class="sp2-sub">Non-traditional models \u2014 Compass, eXp, Real, LPT \u2014 climbing alongside</div>'
+    +'<div class="sp2-src">RealTrends Verified rankings \u00b7 this year\u2019s release</div>'
+    +'</div></div></div>';
+
+  C['Poll: what does "balanced market" mean to you'] =
+    '<div class="sp-creative sp-ar-191 sp2-light">'
+    +'<svg style="position:absolute;top:9%;right:6%;width:24%" viewBox="0 0 140 46">'
+    +'<path d="M4,30 Q70,44 136,26" fill="none" stroke="#DEE5ED" stroke-width="2"/>'
+    +'<path d="M52,34 L88,28" fill="none" stroke="#87C6FF" stroke-width="2.5" stroke-linecap="round"/>'
+    +'<circle cx="70" cy="36" r="6.5" fill="#0059DA"/>'
+    +'</svg>'
+    +'<div class="sp2-pad" style="justify-content:center">'
+    +'<div class="sp2-kick">NATIVE LINKEDIN POLL</div>'
+    +'<div class="sp2-pollq">Be honest \u2014 in your office, \u201cbalanced\u201d means:</div>'
+    +'<div class="sp2-pollRow"><i></i>Buyers negotiating again</div>'
+    +'<div class="sp2-pollRow"><i></i>Sellers pricing like it\u2019s 2022</div>'
+    +'<div class="sp2-pollRow"><i></i>More files, thinner margins</div>'
+    +'<div class="sp2-pollRow"><i></i>\u201cDepends on the week\u201d</div>'
+    +'<div class="sp2-src">Ships as a native poll \u2014 this card is the hub\u2019s preview</div>'
+    +'</div></div>';
+
+  C['The stat that sees 60 days ahead'] =
+    '<div class="sp-creative sp-ar-191 sp2-light"><div class="sp2-pad" style="justify-content:center">'
+    +'<div class="sp2-kick">LEADING INDICATOR</div>'
+    +'<div class="sp-slideHead">Showings see the market \u224860 days early</div>'
+    +'<svg class="sp2-chart" viewBox="0 0 340 132">'
+    +'<rect x="150" y="12" width="54" height="96" fill="#EAF3FF"/>'
+    +'<text x="177" y="26" text-anchor="middle" font-size="10" font-weight="800" fill="#0059DA">\u224860 days</text>'
+    +'<path d="M12,86 C46,80 72,54 104,48 C130,44 146,40 176,34 C206,28 232,26 258,24" fill="none" stroke="#0059DA" stroke-width="3.5" stroke-linecap="round"/>'
+    +'<path d="M64,92 C98,88 124,64 156,58 C182,54 198,50 228,44 C258,38 300,34 326,32" fill="none" stroke="#8fa4b8" stroke-width="2.5" stroke-dasharray="6 5" stroke-linecap="round"/>'
+    +'<circle cx="14" cy="118" r="4" fill="#0059DA"/><text x="24" y="122" font-size="9.5" font-weight="700" fill="#16273a">Showings (ShowingTime)</text>'
+    +'<circle cx="170" cy="118" r="4" fill="none" stroke="#8fa4b8" stroke-width="2"/><text x="180" y="122" font-size="9.5" font-weight="700" fill="#5b7288">Closed sales (NAR EHS)</text>'
+    +'</svg>'
+    +'<div class="sp2-src">Buyer foot traffic per listing moves \u2248two months before sales data \u00b7 ShowingTime Showing Index</div>'
+    +'</div></div>';
+
+  C['AI guardrails before AI magic'] =
+    '<div class="sp-carWrap"><div class="sp-slideStrip">'
+    +'<div class="sp-slide sp-ar-11 sp-navySlide"><div class="sp-stars"></div>'
+    +'<svg width="36" height="36" viewBox="0 0 24 24" style="margin-bottom:12px"><rect x="4" y="10" width="16" height="11" rx="2.5" fill="none" stroke="#87C6FF" stroke-width="1.7"/><path d="M8,10 V7 a4,4 0 0 1 8,0 V10" fill="none" stroke="#87C6FF" stroke-width="1.7"/><circle cx="12" cy="15.5" r="1.6" fill="#87C6FF"/></svg>'
+    +'<div class="sp-kicker">BEFORE THE MAGIC</div>'
+    +'<div class="sp-heroTitle">Three questions to ask any AI tool before it touches a transaction.</div>'
+    +'<span class="sp-slidePill">1 / 3</span></div>'
+    +'<div class="sp-slide sp-ar-11 sp-lightSlide">'
+    +'<div class="sp2-qrow"><b>01</b><span>Where does client data go \u2014 and does it leave the country?</span></div>'
+    +'<div class="sp2-qrow"><b>02</b><span>Is anyone training models on your transactions?</span></div>'
+    +'<div class="sp2-qrow"><b>03</b><span>What\u2019s logged, who can see it, and for how long?</span></div>'
+    +'</div>'
+    +'<div class="sp-slide sp-ar-11 sp-navySlide"><div class="sp-stars"></div>'
+    +'<div class="sp2-quote">Guardrails first.<br>Magic second.</div>'
+    +'<div class="sp-srcLine" style="margin-top:11px">SkySlope \u00b7 compliance-first by design</div>'
+    +'</div>'
+    +'</div><div class="sp-carDots"><i class="sp-on"></i><i></i><i></i></div></div>';
+
+  C['RealTrends congrats \u2014 customer edition'] =
+    '<div class="sp-creative sp-ar-191"><div class="sp2-badgeWrap">'
+    +'<div class="sp2-kick" style="letter-spacing:.26em">CONGRATULATIONS</div>'
+    +'<div class="sp2-logoFrame"><span class="sp-phv">[Brokerage logo]</span></div>'
+    +'<div class="sp2-congrats"><span class="sp-phv">[Brokerage Name]</span></div>'
+    +'<div class="sp2-ribbon">REALTRENDS VERIFIED \u00b7 <span style="color:#BFE0FF" class="sp-phv">[#XX] BY VOLUME</span></div>'
+    +'<svg class="sp2-corner" viewBox="-0.7 -0.2 24.9 25.4"><use href="#ss-mark"/></svg>'
+    +'</div></div>'
+    +'<div class="sp-phFlag">\u26a0 Confirm the ranking and get the brokerage\u2019s OK before this ships \u2014 their brand leads, ours stays in the corner</div>';
+
+  C['Index teaser \u2014 what 3M closings know'] =
+    '<div class="sp-creative sp-ar-191" style="background:linear-gradient(165deg,#151A27,#0A2642)">'
+    +'<div class="sp-stars"></div>'
+    +'<div class="sp2-horizon"></div>'
+    +'<div class="sp-scrim sp-center" style="background:none">'
+    +'<div class="sp-kicker">THE SKYSLOPE INDEX</div>'
+    +'<div class="sp-heroNum" style="font-family:var(--serif,Georgia,serif)">3,000,000 closings.</div>'
+    +'<div class="sp-heroLabel" style="font-size:15px;font-weight:800;color:#fff">One report.</div>'
+    +'<span class="sp2-chipDate">SEPTEMBER 15</span>'
+    +'</div></div>';
+
+  window.CUSTOM_CRE = C;
+
+  // Unsplash credits for the photos these comps use (spec panel reads PLANSEP.CRED by shipped index)
+  try{
+    if(typeof PLANSEP!=='undefined'&&PLANSEP.CRED&&window.__planIdx){
+      var gi1=window.__planIdx['The market that refuses to crash'];
+      if(gi1!=null&&!PLANSEP.CRED[gi1]) PLANSEP.CRED[gi1]=[{kind:'unsplash',name:'Unsplash comp',href:'https://images.unsplash.com/photo-1576941089067-2de3c901e126'}];
+    }
+  }catch(e){}
+
+  // The Planned-visual briefs now describe the built comps (and feed genPrompt)
+  var VIS = {
+    'The market that refuses to crash':'3-slide carousel: (1) white-farmhouse photo under a Midnight Sky scrim \u2014 \u201cThe market that refuses to crash.\u201d with a MARKET PULSE kicker; (2) light slide \u2014 Science Blue sales trend line dipping then holding, with a \u201cJul: \u22121.7% m/m \u00b7 +0.7% y/y\u201d chip; (3) Midnight Sky starfield quote slide \u2014 Yun\u2019s July line as a serif pull-quote (exact wording from the release).',
+    'Brokers finally call the market healthy':'Split stat card on white/Ice: left \u2014 giant serif \u201c51%\u201d in Science Blue, \u201ccall their market balanced or healthy\u201d, \u201cfirst time optimism leads in three years\u201d; right, on Ice \u2014 \u201cAffordability is now the #1 business challenge\u201d in Slate serif with the #1 in Alert red, \u201cfirst time in nine years\u201d. Source line: RealTrends / T3 Power Broker survey.',
+    'The 400,000 missing transactions':'Split card: left \u2014 THE MISSING MARKET kicker, giant serif \u201c400,000\u201d in Science Blue, \u201ctransactions below where 2026 projections had the year\u201d; right \u2014 bar pair, projected (dashed outline) vs actual (solid Science Blue), joined by a red \u2212400K bracket.',
+    'The average agent closes 9 deals a year':'Contrast split: left, muted \u2014 \u201c9 deals\u201d small in gray, \u201cclosed per year \u2014 NAR member profile\u201d; right, hero \u2014 giant serif \u201c15\u201340\u201d in Science Blue, \u201cfiles a TC or ops team carries at once\u201d. Close line: \u201cAverages don\u2019t close files. People do.\u201d',
+    'Independents hit 28.79% market share':'Donut chart card: 28.79% arc in Science Blue on a Grid-gray ring with serif \u201c28.79%\u201d centered; right column \u2014 REALTRENDS VERIFIED kicker, \u201cIndependents keep taking share\u201d with a green \u2197, sub-line on non-traditional models (Compass, eXp, Real, LPT) climbing.',
+    'Poll: what does "balanced market" mean to you':'Native-poll preview card on white: serif question \u201cIn your office, balanced means:\u201d with the four real options as pill rows and radio dots; small balance accent top-right \u2014 a Science Blue dot with a Sky-Light pole on a curved gray line. Ships as a NATIVE LinkedIn poll; this graphic is the hub preview.',
+    'The stat that sees 60 days ahead':'Light chart card: Science Blue showings line leading a gray dashed closed-sales line, a Sky Mist \u201c\u224860 days\u201d gap band between them, two-item legend. ShowingTime Showing Index vs NAR EHS framework.',
+    'AI guardrails before AI magic':'3-slide guardian carousel: (1) Midnight Sky starfield with a thin-line Sky-Light padlock \u2014 \u201cThree questions to ask any AI tool before it touches a transaction.\u201d; (2) light slide \u2014 the three questions as serif-numbered rows (data residency, model training, logging); (3) Midnight Sky close \u2014 \u201cGuardrails first. Magic second.\u201d',
+    'RealTrends congrats \u2014 customer edition':'Celebration card on Sky Mist with confetti dots in brand colors: a white framed [Brokerage logo] as the hero, serif [Brokerage Name], Science Blue ribbon \u201cRealTrends Verified \u00b7 [#XX] by volume\u201d, SkySlope mark small in the corner. Their brand first, ours last.',
+    'Index teaser \u2014 what 3M closings know':'Dark Mirage hero: starfield above a glowing planet-horizon arc, THE SKYSLOPE INDEX kicker, giant serif white \u201c3,000,000 closings.\u201d over \u201cOne report.\u201d, Sky-Light date chip \u201cSEPTEMBER 15\u201d. No numbers revealed \u2014 pure anticipation.'
+  };
+  try{
+    if(typeof ccPosts!=='undefined'){
+      ccPosts.forEach(function(p){ if(VIS[p.title]) p.visual=VIS[p.title]; });
+      if(window.hubRerender) window.hubRerender();
+    }
+  }catch(e){}
+})();
+</script>
 <script>
 // ---------- Data & Claims Register: claims vs. evidence, operating model, and the request ----------
 (function(){
