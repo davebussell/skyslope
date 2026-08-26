@@ -18,7 +18,7 @@
     --logo-mark:#0059DA; --logo-word:#3F5B77;
     --font-sans:proxima-nova,"Proxima Nova","Helvetica Neue",Helvetica,Arial,-apple-system,"Segoe UI",sans-serif;
   }
-  :root[data-theme="dark"]{
+  :root[data-theme="dark-disabled"]{
     color-scheme: dark;
     /* Mirage / Midnight Sky world — logo reverses to all white per brand rules */
     --page:#151A27; --surface:#1C2433; --ink:#FFFFFF; --ink-2:#A7C2E7; --muted:#98AEC3;
@@ -192,7 +192,7 @@
   @media print{.sidebar,.mode-toggle,.tbtn{display:none}.view{display:block!important}.card{break-inside:avoid}}
 
   /* ---- v2: system dark preference (when no explicit choice is stored) ---- */
-  @media (prefers-color-scheme: dark){
+  @media not all{
     :root:not([data-theme="light"]){
       color-scheme: dark;
       --page:#151A27; --surface:#1C2433; --ink:#FFFFFF; --ink-2:#A7C2E7; --muted:#98AEC3;
@@ -543,7 +543,7 @@
 </style>
 </head>
 <body>
-<script>try{var __t=localStorage.getItem('sshub_theme');if(__t)document.documentElement.setAttribute('data-theme',__t);}catch(e){}</script>
+<script>try{document.documentElement.setAttribute('data-theme','light');localStorage.removeItem('sshub_theme');}catch(e){}</script>
 <div class="corner">
   <button class="logout show" id="clearBtn" title="Clear cache — wipes this browser's saved copy and re-syncs the latest team version (or shipped defaults if sync is off)"><span class="ic">↺</span><span class="lbl">Clear cache</span></button>
   <button class="logout" id="logoutBtn" title="Log out — clears the remembered site password on this device"><span class="ic">⎋</span><span class="lbl">Log out</span></button>
@@ -632,7 +632,7 @@
       <button class="navlink deep sub" data-view="ops" data-terms="weekly rhythm operations roles roadmap naomi cadence monday friday">Weekly Rhythm</button>
     </div>
     <div class="whoami">Working as <b id="whoName">not set</b> <button class="cbtn" id="whoChange" type="button">change</button></div>
-    <button class="mode-toggle" id="modeToggle">◐ Toggle dark mode</button>
+    <button class="mode-toggle" id="modeToggle" style="display:none" aria-hidden="true">◐ Toggle dark mode</button>
   </nav>
 
   <!-- ================= MAIN ================= -->
@@ -682,24 +682,7 @@
         <div class="tile"><div class="v">13</div><div class="l">#1 AI-overview placements on broker terms</div></div>
       </div>
 
-      <div class="chartwrap">
-        <div class="chart-head">
-          <h3>Search footprint — SkySlope vs tracked competitors</h3>
-          <span class="note">215 keywords · Semrush, Aug 4–10 2026</span>
-          <button class="tbtn" id="tableToggle">View as table</button>
-        </div>
-        <div class="legend" id="chartLegend"></div>
-        <svg id="chart" width="100%" height="260" role="img" aria-label="Grouped bar chart of keywords ranked, top-3 positions, and AI-overview placements for SkySlope, Dotloop, Paperless Pipeline and BoldTrail"></svg>
-        <table id="chartTable">
-          <thead><tr><th>Company</th><th>Keywords ranked</th><th>Top-3 positions</th><th>AI-overview placements</th></tr></thead>
-          <tbody>
-            <tr><td><b>SkySlope</b></td><td>65</td><td>13</td><td>13</td></tr>
-            <tr><td><b>Dotloop</b></td><td>89</td><td>44</td><td>39</td></tr>
-            <tr><td><b>Paperless Pipeline</b></td><td>60</td><td>28</td><td>28</td></tr>
-            <tr><td><b>BoldTrail</b></td><td>17</td><td>13</td><td>12</td></tr>
-          </tbody>
-        </table>
-      </div>
+
 
       <h2>Start here</h2>
       <div class="grid2">
@@ -890,6 +873,27 @@
     <section class="view" id="view-social">
       <h1>Channel Performance</h1>
       <div class="sub">One place to reach every channel, its analytics console, and the post-by-post engagement picture. Baseline: June 2026 engagement audit.</div>
+
+      <h2>Main competitors</h2>
+      <div class="sub">The three we track head-to-head: <b>Dotloop</b>, <b>Paperless Pipeline</b> and <b>BoldTrail</b> — their footprint numbers below, refreshed with each Semrush export.</div>
+      <div class="chartwrap">
+        <div class="chart-head">
+          <h3>SkySlope vs the competitive set — search footprint</h3>
+          <span class="note">215 keywords · Semrush, Aug 4–10 2026</span>
+          <button class="tbtn" id="tableToggle">View as table</button>
+        </div>
+        <div class="legend" id="chartLegend"></div>
+        <svg id="chart" width="100%" height="260" role="img" aria-label="Grouped bar chart of keywords ranked, top-3 positions, and AI-overview placements for SkySlope, Dotloop, Paperless Pipeline and BoldTrail"></svg>
+        <table id="chartTable">
+          <thead><tr><th>Company</th><th>Keywords ranked</th><th>Top-3 positions</th><th>AI-overview placements</th></tr></thead>
+          <tbody>
+            <tr><td><b>SkySlope</b></td><td>65</td><td>13</td><td>13</td></tr>
+            <tr><td><b>Dotloop</b></td><td>89</td><td>44</td><td>39</td></tr>
+            <tr><td><b>Paperless Pipeline</b></td><td>60</td><td>28</td><td>28</td></tr>
+            <tr><td><b>BoldTrail</b></td><td>17</td><td>13</td><td>12</td></tr>
+          </tbody>
+        </table>
+      </div>
 
       <h2>Channel access</h2>
       <div class="channels">
@@ -2195,6 +2199,12 @@
     <!-- ============ PLANS · September Plan ============ -->
     <section class="view" id="view-plansep">
       <style id="plansep-css">
+:root{
+ --eblue:#006BED; --sky:#87C6FF; --slate:#3F5B77; --navy2:#161B28;
+ --ice:#F4F8FC; --cloud:#E1F1FF; --green:#28A745; --red:#DC3545; --amber:#FFC107;
+ --sans:'Montserrat','Proxima Nova','Avenir Next','Segoe UI',system-ui,sans-serif;
+ --serif:'Libre Baskerville',Georgia,serif;
+}
 #view-plansep{
  --blue:#0059DA; --eblue:#006BED; --sky:#87C6FF; --slate:#3F5B77; --navy:#151A27; --navy2:#161B28;
  --ice:#F4F8FC; --cloud:#E1F1FF; --green:#28A745; --red:#DC3545; --amber:#FFC107;
@@ -2216,7 +2226,7 @@
 .pmock{min-width:0}
 .pgrid .sp-specs{margin:0}
 @media(max-width:1100px){.pgrid{grid-template-columns:1fr}}
-.pvmedia.spwrap{display:block;padding:0;background:none;border:0;min-height:0}
+.pvmedia.spwrap{display:block;padding:0;background:none;border:0;min-height:0;text-align:left;font-size:inherit;color:inherit}
 .pvmedia.spwrap>.sp-creative,.pvmedia.spwrap .sp-carWrap{border-radius:10px;overflow:hidden}
 .pvmedia.spwrap .playw{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.92);color:#0A2642;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.35)}
 .pvmedia.art{flex-direction:column;align-items:stretch;padding:0;background:none;border:0;min-height:0;gap:0}
@@ -2226,7 +2236,7 @@
 .pvart .big{font-weight:800;font-size:clamp(16px,2.6vw,26px);line-height:1.15;letter-spacing:-.4px;word-break:break-word}
 .pvart .big.xl{font-size:clamp(20px,3.4vw,34px)}
 .pvart .big.ctr{text-align:center;text-transform:uppercase;font-size:clamp(15px,2.4vw,22px)}
-.pvart .sub{margin-top:8px;font-size:12px;opacity:.78;line-height:1.45}
+.pvart .sub{margin:8px 0 0;color:inherit;font-size:12px;opacity:.78;line-height:1.45}
 .pvart .smark{position:absolute;right:12px;bottom:9px;display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;opacity:.85}
 .pvart.data{background:linear-gradient(160deg,#161B28,#0A2642 55%,#006BED 170%);color:#fff}
 .pvart.stat{background:#fff;border:1px solid #dbe6f2;color:#0A2642}
@@ -2234,6 +2244,10 @@
 .pvart.stat .num.flag{text-decoration:underline dotted #C22 3px;text-underline-offset:6px}
 .pvart.stat .unit{font-weight:800;font-size:clamp(15px,2.4vw,24px);letter-spacing:.04em;text-transform:uppercase;color:#0A2642;margin-top:2px}
 .pvart.stat .flagnote{margin-top:8px;font-size:10.5px;color:#C22;font-weight:600}
+.pvart.quote{background:#EAF3FF;color:#0A2642;border:1px solid #dbe6f2}
+.pvart.quote .qmark{font-size:52px;font-weight:900;color:#006BED;line-height:.6;margin:6px 0 2px}
+.sp-creative .smark{color:#fff}
+.sp-creative.sp-noimg{background:linear-gradient(160deg,#161B28,#0A2642 55%,#006BED 170%)}
 .pvart.graphic{background:#fff;border:1px solid #dbe6f2;color:#0A2642}
 .pvart.graphic.tone{background:#006BED;border:0;color:#fff}
 .pvart.caro{background:#fff;border:1px solid #dbe6f2;color:#0A2642}
@@ -2251,6 +2265,16 @@
 .artprompt{font-family:inherit;font-size:11.5px;font-weight:700;border:1px solid #006BED;color:#006BED;background:none;border-radius:999px;padding:4px 12px;cursor:pointer}
 .artprompt:hover{background:#EAF3FF}
 .artnote{font-size:10.5px;color:var(--muted,#6b7a8c);font-style:italic}
+.fbList{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:8px}
+.fbList li{background:var(--page,#F8F9FA);border:1px solid var(--grid,#E7ECF1);border-radius:8px;padding:8px 10px;font-size:12.5px}
+.fbList .fbAt{color:var(--muted,#6b7a8c);font-size:10.5px;margin-left:6px}
+.fbList .fbTx{margin-top:3px;white-space:pre-wrap}
+.fbList .fbNone{font-style:italic;color:var(--muted,#6b7a8c)}
+.fbText{width:100%;font-family:inherit;font-size:12.5px;border:1px solid var(--grid,#E7ECF1);border-radius:8px;padding:8px 10px;background:var(--surface,#fff);color:var(--ink,#1C2733);resize:vertical;margin-bottom:8px}
+.rvwRow{display:flex;gap:8px;align-items:center;margin:8px 0}
+.rvwRow input[type=date]{font-family:inherit;font-size:12.5px;border:1px solid var(--grid,#E7ECF1);border-radius:8px;padding:6px 9px;background:var(--surface,#fff);color:var(--ink,#1C2733)}
+.rvwWhen{font-size:12.5px;margin:0}
+.rvwNote{font-size:10.5px;color:var(--muted,#6b7a8c);font-style:italic;margin:4px 0 0}
 .sp-heroInner{position:relative;max-width:none;margin:0;padding-left:clamp(16px,2.5vw,40px);padding-right:340px}
 .sp-kicker{font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--sky)}
 .sp-hero h1{font-size:clamp(34px,5vw,58px);font-weight:800;line-height:1.04;margin:14px 0 14px;letter-spacing:-.01em}
@@ -2654,6 +2678,7 @@
     lg.appendChild(s);
   });
   drawChart();
+  document.querySelectorAll('[data-view="social"]').forEach(function(b){ b.addEventListener('click', function(){ setTimeout(drawChart, 0); }); });
   window.addEventListener('resize', drawChart);
 
   // table toggle
@@ -3354,10 +3379,10 @@ try{
   var studioSearch='', renderCap=40;
   var activeEnv='copy';
   try{ activeEnv=localStorage.getItem('sshub_env')||'copy'; }catch(err){}
-  var ENVS=[['copy','Compose'],['creative','Visualize'],['ready','Deploy']];
-  var ENV_LABEL={copy:'Compose',creative:'Visualize',ready:'Deploy'};
+  var ENVS=[['copy','Compose'],['creative','Review'],['ready','Deploy']];
+  var ENV_LABEL={copy:'Compose',creative:'Review',ready:'Deploy'};
   var ENV_COLOR={copy:'#0059DA',creative:'#533DB1',ready:'#28A745'};
-  var filterFree=true, pvPlatform='All'; // filter-free preview is ALWAYS the default on load
+  var filterFree=false, pvPlatform='All'; // stage worlds only — the filter-free preview was retired
   var PLATFORM_ORDER=['LinkedIn','Instagram','Facebook','YouTube','X','TikTok'];
   var PLATFORM_GUIDE={
     LinkedIn:'Post natively; document/PDF carousel preferred for data posts. Hook inside the first 125 characters. External or methodology links go in the FIRST COMMENT, never the post body. Rally 3+ team engagements within the first hour.',
@@ -3497,7 +3522,7 @@ try{
   function stamp(p,act){ p.history.push({act:act,by:hubUser(),at:new Date().toISOString().slice(0,16).replace('T',' ')}); }
   function lastStamp(p){ return p.history.length?p.history[p.history.length-1]:null; }
   function fmtAct(s){
-    var m={'to-creative':'moved to Visualize','to-ready':'moved to Deploy','back-to-copy':'sent back to Compose','back-to-creative':'sent back to Visualize','scheduled':'marked scheduled','published':'shipped'};
+    var m={'to-creative':'moved to Review','to-ready':'moved to Deploy','back-to-copy':'sent back to Compose','back-to-creative':'sent back to Review','scheduled':'marked scheduled','published':'shipped'};
     return (m[s.act]||s.act)+' by '+s.by+' \u00b7 '+s.at;
   }
   function visible(p){
@@ -3521,7 +3546,7 @@ try{
     var dated=ccPosts.filter(function(p){return p.when;}).length;
     t.innerHTML='<div class="tile"><div class="v">'+ccPosts.length+'</div><div class="l">Posts in pipeline</div></div>'+
       '<div class="tile"><div class="v">'+envCount('copy')+'</div><div class="l">Compose</div></div>'+
-      '<div class="tile"><div class="v">'+envCount('creative')+'</div><div class="l">Visualize</div></div>'+
+      '<div class="tile"><div class="v">'+envCount('creative')+'</div><div class="l">Review</div></div>'+
       '<div class="tile"><div class="v">'+toSched+'</div><div class="l">Deploy · awaiting</div></div>'+
       '<div class="tile"><div class="v">'+sched+'</div><div class="l">Scheduled</div></div>'+
       '<div class="tile"><div class="v">'+pub+'</div><div class="l">Shipped</div></div>'+
@@ -3552,17 +3577,6 @@ try{
       if(wi<2){ var ar=document.createElement('span'); ar.className='w-arrow'; ar.textContent='→'; wrap.appendChild(ar); }
     });
     t.appendChild(wrap);
-    var ff=document.createElement('button');
-    ff.className='fbtn ff'+(filterFree?' on':'');
-    ff.textContent='Filter-free preview';
-    ff.title='See every post, styled the way each platform will render it';
-    ff.onclick=function(){
-      filterFree=!filterFree;
-      try{ localStorage.setItem('sshub_ff', filterFree?'1':'0'); }catch(err){}
-      if(filterFree){ activePillar='All'; activeStatus='All'; activeReady='All'; studioView='list'; }
-      filters(); syncView();
-    };
-    t.appendChild(ff);
     var sec=document.getElementById('view-studio');
     if(sec){ if(filterFree){ sec.removeAttribute('data-world'); } else { sec.setAttribute('data-world', activeEnv); } }
   }
@@ -3603,7 +3617,7 @@ try{
     var defPlat = pvPlatform==='All'?'Instagram':pvPlatform;
     var ov=document.createElement('div'); ov.id='npOverlay'; ov.className='npov';
     ov.innerHTML='<div class="npm" role="dialog" aria-modal="true" aria-label="New post">'+
-      '<h3>New post</h3><div class="note-strip">Stages are automatic \u2014 attach an image for Visualize, set a publish day for Deploy.</div>'+
+      '<h3>New post</h3><div class="note-strip">Stages are automatic \u2014 attach an image for Review, set a publish day for Deploy.</div>'+
       '<div class="nprow2"><div><label>Platform</label><select id="npPlat">'+PLATFORM_ORDER.map(function(x){return '<option'+(x===defPlat?' selected':'')+'>'+x+'</option>';}).join('')+'</select></div>'+
       '<div><label>Pillar</label><select id="npPil">'+pOpts.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div></div>'+
       '<div class="nprow2"><div><label>Format</label><select id="npFmt">'+fOpts.map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div>'+
@@ -3738,7 +3752,7 @@ try{
   function inferKind(p){ if(!p.creative.kind && (p.img||p.creative.link)){ p.creative.kind = (!p.img && /video|mp4|reel/i.test(p.creative.link||''))?'video':'image'; } }
   // The stage is DERIVED from the post's content \u2014 nobody moves cards by hand:
   //   publish day (or Scheduled/Published status) -> Deploy
-  //   image or Drive link -> Visualize
+  //   image or Drive link -> Review
   //   otherwise -> Compose
   function derivedEnv(p){
     if(p.status==='Scheduled'||p.status==='Published') return 'ready';
@@ -3764,7 +3778,7 @@ try{
     else showToast('Day cleared'+(r?' \u2014 back to '+ENV_LABEL[r.to]:''));
   }
   function actWord(a){
-    var m={'created':'created','to-creative':'moved to Visualize','to-ready':'moved to Deploy','back-to-copy':'sent back to Compose','back-to-creative':'sent back to Visualize','scheduled':'marked scheduled','published':'shipped','approved':'approved'};
+    var m={'created':'created','to-creative':'moved to Review','to-ready':'moved to Deploy','back-to-copy':'sent back to Compose','back-to-creative':'sent back to Review','scheduled':'marked scheduled','published':'shipped','approved':'approved'};
     return m[a]||a;
   }
   function renderWeek(){
@@ -3787,7 +3801,7 @@ try{
     } else {
       html+='<div class="note-strip" style="margin:0">Nothing booked in the next 7 days \u2014 open the studio and give a few posts a day.</div>';
     }
-    html+='<div class="note-strip">'+awaiting+' in Deploy awaiting a day \u00b7 '+viz+' in Visualize</div>';
+    html+='<div class="note-strip">'+awaiting+' in Deploy awaiting a day \u00b7 '+viz+' in Review</div>';
     html+='<ul class="jumplist"><li><a href="#" id="wkOpenStudio">Open Content Studio \u2192</a></li></ul></div>';
     var ev=[];
     ccPosts.forEach(function(p){ (p.history||[]).forEach(function(s){ ev.push({act:s.act,by:s.by,at:s.at,title:p.title}); }); });
@@ -3889,58 +3903,86 @@ try{
     };
     return b;
   }
-function artPool(){
-    return [
-      {id:'1516156008625-3a9d6067fab5',u:'https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?auto=format&fit=crop&w=1200&q=80',n:'Breno Assis',a:'Aerial suburb',k:'state states market suburb aerial neighborhood leaderboard rank city'},
-      {id:'1583521214690-73421a1829a9',u:'https://images.unsplash.com/photo-1583521214690-73421a1829a9?auto=format&fit=crop&w=1200&q=80',n:'Wesley Tingey',a:'Stacks of contracts',k:'documents signatures paperwork stack closing file files index'},
-      {id:'1523380262778-076eb862d38f',u:'https://images.unsplash.com/photo-1523380262778-076eb862d38f?auto=format&fit=crop&w=1200&q=80',n:'Beth Stevenson',a:'Desk lamp at night',k:'friday night late deadline 4:58 evening push'},
-      {id:'1468779036391-52341f60b55d',u:'https://images.unsplash.com/photo-1468779036391-52341f60b55d?auto=format&fit=crop&w=1200&q=80',n:'Beatriz P\u00e9rez Moya',a:'Thick folders',k:'compliance audit folders flags stall review worst story'},
-      {id:'1656399910089-b7ead999bf23',u:'https://images.unsplash.com/photo-1656399910089-b7ead999bf23?auto=format&fit=crop&w=1200&q=80',n:'itay verchik',a:'Broker portrait',k:'broker spotlight leader principal owner'},
-      {id:'1741156386380-0236c72eb6f9',u:'https://images.unsplash.com/photo-1741156386380-0236c72eb6f9?auto=format&fit=crop&w=1200&q=80',n:'Jakub \u017berdzicki',a:'Keys',k:'keys close closing handoff deal done'},
-      {id:'1450101499163-c8848c66ca85',u:'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80',n:'Scott Graham',a:'Signing a contract',k:'contract sign signing tuesday esign signature'},
-      {id:'1554325139-bbd006cd3e5a',u:'https://images.unsplash.com/photo-1554325139-bbd006cd3e5a?auto=format&fit=crop&w=1200&q=80',n:'Marissa Grootes',a:'Calm desk',k:'calm organized desk zero-cta breathe tidy'},
-      {id:'1573497019940-1c28c88b4f3e',u:'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80',n:'LinkedIn Sales Solutions',a:'TC portrait',k:'tc transaction coordinator spotlight month customer'},
-      {id:'1580894732444-8ecded7900cd',u:'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=80',n:'ThisisEngineering',a:'Explaining at whiteboard',k:'how to explain education guide read report ehs 90 seconds'},
-      {id:'1572021335469-31706a17aaef',u:'https://images.unsplash.com/photo-1572021335469-31706a17aaef?auto=format&fit=crop&w=1200&q=80',n:'Jud Mackrill',a:'Team at laptop',k:'team office brokerage together culture'},
-      {id:'1573165850883-9b0e18c44bd2',u:'https://images.unsplash.com/photo-1573165850883-9b0e18c44bd2?auto=format&fit=crop&w=1200&q=80',n:'Christina @ wocintechchat.com',a:'Agent at laptop',k:'agent laptop working mobile app product feature'},
-      {id:'1564767609342-620cb19b2357',u:'https://images.unsplash.com/flagged/photo-1564767609342-620cb19b2357?auto=format&fit=crop&w=1200&q=80',n:'Maria Ziegler',a:'Keys in hand',k:'keys hand first home buyer experience gap'},
-      {id:'1590650153855-d9e808231d41',u:'https://images.unsplash.com/photo-1590650153855-d9e808231d41?auto=format&fit=crop&w=900&q=80',n:'LinkedIn Sales Solutions',a:'TC at desk',k:'day in the life tc desk workflow files managing'},
-      {id:'1605146769289-440113cc3d00',u:'https://images.unsplash.com/photo-1605146769289-440113cc3d00?auto=format&fit=crop&w=1200&q=80',n:'Dillon Kydd',a:'Home exterior',k:'home house listing exterior market numbers monthly'},
-      {id:'1622117529958-21841d15c368',u:'https://images.unsplash.com/photo-1622117529958-21841d15c368?auto=format&fit=crop&w=1200&q=80',n:'Ofspace LLC',a:'Interview still',k:'interview testimonial video customer camera story'},
-      {id:'1709787627975-9cb37bbeca60',u:'https://images.unsplash.com/photo-1709787627975-9cb37bbeca60?auto=format&fit=crop&w=1200&q=80',n:'Jennifer Kalenberg',a:'New homeowners',k:'homeowners family moving welcome poll question community'},
-      {id:'1526656001029-20a71b17f7ba',u:'https://images.unsplash.com/photo-1526656001029-20a71b17f7ba?auto=format&fit=crop&w=1200&q=80',n:'Marissa Grootes',a:'Rows of binders',k:'binders archive records data calendar quarterly'}
-    ];
+var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=1200&q=80","a":"Businesswoman office"},"Chasing signatures at 9pm?":{"u":"https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80","a":"Presentation meeting"},"Webinar clip — buyer-rep changes":{"u":"https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=1200&q=80","a":"Professional portrait"},"The market that refuses to crash":{"u":"https://images.unsplash.com/photo-1576941089067-2de3c901e126?auto=format&fit=crop&w=1200&q=80","a":"White farmhouse"},"The first-time buyer is 40 now":{"u":"https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?auto=format&fit=crop&w=1200&q=80","a":"Home tour"},"Portal lead vs past client":{"u":"https://images.unsplash.com/photo-1599809275671-b5942cabc7a2?auto=format&fit=crop&w=1200&q=80","a":"Realtor handing keys"},"The 3-week \"quick question\"":{"u":"https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=1200&q=80","a":"Planner open"},"3 tools your agents already pay for":{"u":"https://images.unsplash.com/photo-1591696205602-2f950c417cb9?auto=format&fit=crop&w=1200&q=80","a":"Analyst at monitors"},"AI guardrails before AI magic":{"u":"https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80","a":"Laptop with charts"},"Spotlight: surviving the busy season":{"u":"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1200&q=80","a":"Happy customer"},"Which of the 4 markets are you in?":{"u":"https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1200&q=80","a":"City skyline"},"Rates move. Checklists don’t.":{"u":"https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?auto=format&fit=crop&w=1200&q=80","a":"Percent blocks"},"What 4.6 months of inventory actually means":{"u":"https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=80","a":"Handshake deal"},"Index Drop #4 — the Friday filing rush":{"u":"https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80","a":"Circuit tech"},"Audit season, by the numbers":{"u":"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=1200&q=80","a":"Charts on screen"},"Your Year in Closings — coming":{"u":"https://images.unsplash.com/photo-1554774853-719586f82d77?auto=format&fit=crop&w=1200&q=80","a":"Reviewing charts"},"The 11:58pm lender doc":{"u":"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80","a":"City at night"},"Tag the color-coder":{"u":"https://images.unsplash.com/photo-1416331108676-a22ccb276e35?auto=format&fit=crop&w=1200&q=80","a":"Cottage exterior"},"final_FINAL_v3.pdf":{"u":"https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=1200&q=80","a":"Keys on table"},"\"Can we move the date?\"":{"u":"https://images.unsplash.com/photo-1600047509358-9dc75507daeb?auto=format&fit=crop&w=1200&q=80","a":"Blue house"},"The multiple-offer sleep-on-it":{"u":"https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80","a":"Modern house front"},"Office coffee, closing week":{"u":"https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80","a":"Boardroom"},"The signature finger":{"u":"https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80","a":"Signing a contract"},"The initial on page 14":{"u":"https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80","a":"Programming screen"},"8 minutes to 4":{"u":"https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=1200&q=80","a":"Recording setup"},"Stop re-typing the address":{"u":"https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&w=1200&q=80","a":"Podcast mic"},"Disclosures without the dread":{"u":"https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?auto=format&fit=crop&w=1200&q=80","a":"Stack of notebooks"},"The 10-hour commission math problem":{"u":"https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80","a":"Whiteboard session"},"Buyer agreements: the new muscle memory":{"u":"https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=1200&q=80","a":"Estate aerial"},"The migration myth":{"u":"https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80","a":"Team at table"},"3 signs the back office is the bottleneck":{"u":"https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&w=1200&q=80","a":"Growth coins"},"TC terms, translated":{"u":"https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=1200&q=80","a":"Contract review"},"Spotlight: the switch that didn’t hurt":{"u":"https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1200&q=80","a":"Neighborhood homes"},"Spotlight: 2am support actually answered":{"u":"https://images.unsplash.com/photo-1664575602554-2087b04935a5?auto=format&fit=crop&w=1200&q=80","a":"Working with phone"},"TC of the Month #2":{"u":"https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80","a":"Businesswoman smile"},"Spotlight: the franchise ops view":{"u":"https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?auto=format&fit=crop&w=1200&q=80","a":"Video call"},"Customer milestone congrats":{"u":"https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=1200&q=80","a":"Friendly portrait"},"Your transaction has an email address":{"u":"https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80","a":"Meeting with laptop"},"The MLS number does the typing":{"u":"https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80","a":"Code on laptop"},"Smart Listings builds the listing file":{"u":"https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=1200&q=80","a":"Laptop keyboard glow"},"Relist in two clicks":{"u":"https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=1200&q=80","a":"Model homes"},"Your greatest hits, one click away":{"u":"https://images.unsplash.com/photo-1450101215322-bf5cd27642fc?auto=format&fit=crop&w=1200&q=80","a":"Signing papers"},"The addendum writes itself":{"u":"https://images.unsplash.com/photo-1600275669439-14e40452d20b?auto=format&fit=crop&w=1200&q=80","a":"Handshake close"},"Tag one page, paste to thirty":{"u":"https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=1200&q=80","a":"Ring light setup"},"Envelopes that arrive pre-tagged":{"u":"https://images.unsplash.com/photo-1495364141860-b0d03eccd065?auto=format&fit=crop&w=1200&q=80","a":"Coffee pour"},"Deadlines that follow you home":{"u":"https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80","a":"House keys and contract"},"Four ways into the file":{"u":"https://images.unsplash.com/photo-1518186285589-2f7649de83e0?auto=format&fit=crop&w=1200&q=80","a":"Desk overhead"},"One scan, dealt like cards":{"u":"https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1200&q=80","a":"Notebook flatlay"},"The CDA without the spreadsheet":{"u":"https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80","a":"Minimal office"},"The typo on page 12":{"u":"https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&w=1200&q=80","a":"Deep breath sunset"},"Sunday night, Monday send":{"u":"https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=1200&q=80","a":"Laptop on desk"},"The audit trail behind every signature":{"u":"https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80","a":"House living room"},"The leaderboard your office needed":{"u":"https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=1200&q=80","a":"High five office"},"Standardize once, win every file":{"u":"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=1200&q=80","a":"Businessman smile"},"Stop CC-ing your TC":{"u":"https://images.unsplash.com/photo-1558036117-15d82a90b9b1?auto=format&fit=crop&w=1200&q=80","a":"Keys handoff"},"What 'Viewed' actually means":{"u":"https://images.unsplash.com/photo-1598257006458-087169a1f08d?auto=format&fit=crop&w=1200&q=80","a":"Man on phone call"},"Commission on your timeline":{"u":"https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=80","a":"Bright workspace"},"The last EMD check you drive across town":{"u":"https://images.unsplash.com/photo-1493934558415-9d19f0b2b4d2?auto=format&fit=crop&w=1200&q=80","a":"Sunset drive"},"The home warranty that orders itself":{"u":"https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1200&q=80","a":"Key in door"},"Escrow, title, NHD — without leaving the file":{"u":"https://images.unsplash.com/photo-1434626881859-194d67b2b86f?auto=format&fit=crop&w=1200&q=80","a":"Charts and pen"},"The Everything App":{"u":"https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1200&q=80","a":"Phone in hand"},"Send it from the driveway":{"u":"https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80","a":"Brick house lawn"},"Snap it to compliance":{"u":"https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80","a":"Phone mockup hand"},"Feature of the month — [Feature]":{"u":"https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80","a":"Watch and laptop"},"What brokers get wrong about audit prep":{"u":"https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80","a":"Paperwork and calculator"},"Have you tried clearing your cache":{"u":"https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=80","a":"Support headset"},"Password reset Monday":{"u":"https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80","a":"Notes and coffee"},"What's your upload personality?":{"u":"https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=1200&q=80","a":"Tax forms desk"},"If you leave your brokerage":{"u":"https://images.unsplash.com/photo-1521316730702-829a8e30dfd0?auto=format&fit=crop&w=1200&q=80","a":"Filing folders"},"For the broker reading the NAR report at 7am":{"u":"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80","a":"Coffee on desk"},"Fall buyers mean business":{"u":"https://images.unsplash.com/photo-1416453072034-c8dbfa2856b5?auto=format&fit=crop&w=1200&q=80","a":"Front door"},"EHS reaction — September drop":{"u":"https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80","a":"Morning desk"},"Back-to-school, back-to-contracts":{"u":"https://images.unsplash.com/photo-1603796846097-bee99e4a601f?auto=format&fit=crop&w=1200&q=80","a":"Moving boxes"},"The 100-day sprint":{"u":"https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=1200&q=80","a":"Calendar and coffee"},"Office docs, filled once":{"u":"https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80","a":"Woman at screen"},"Envelopes that nag politely":{"u":"https://images.unsplash.com/photo-1573496774426-fe3db3dd1731?auto=format&fit=crop&w=1200&q=80","a":"Professional woman"},"Office Hours — fall pipeline edition":{"u":"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80","a":"Office building up"},"October is price-cut season":{"u":"https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80","a":"Row houses"},"The haunted file":{"u":"https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=80","a":"Home office nook"},"Halloween open house survival":{"u":"https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80","a":"House with porch"},"Serious-buyer math":{"u":"https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80","a":"Interview chat"},"EHS reaction — October drop":{"u":"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80","a":"Contemporary home"},"Audit season is coming":{"u":"https://images.unsplash.com/photo-1606327054629-64c8b0fd6e4f?auto=format&fit=crop&w=1200&q=80","a":"Checklist clipboard"},"Personal docs, on tap":{"u":"https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80","a":"Apartments exterior"},"NXT week":{"u":"https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80","a":"Conference discussion"},"The Buyers & Sellers Profile, decoded":{"u":"https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=1200&q=80","a":"Home at dusk"},"Gratitude, transaction edition":{"u":"https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80","a":"Open office"},"Sunset at 5:04":{"u":"https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?auto=format&fit=crop&w=1200&q=80","a":"Realtor with clients"},"The turkey-day file freeze":{"u":"https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=1200&q=80","a":"Phone and mask era"},"Winter buyers are the realest buyers":{"u":"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80","a":"House interior stairs"},"EHS reaction — November drop":{"u":"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80","a":"Luxury villa evening"},"Year in review: the office edition":{"u":"https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?auto=format&fit=crop&w=1200&q=80","a":"Team reviewing data"},"The December 31 closing":{"u":"https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80","a":"Strategy wall"},"Twelve files of closing":{"u":"https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&w=1200&q=80","a":"Condo towers"},"The quiet-week catch-up":{"u":"https://images.unsplash.com/photo-1625602812206-5ec545ca1231?auto=format&fit=crop&w=1200&q=80","a":"New build homes"},"Holiday card season, CRM edition":{"u":"https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1200&q=80","a":"Writing notes"},"Goal setting for agents who hate goal setting":{"u":"https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=1200&q=80","a":"Planner and pen"},"The year the market held":{"u":"https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=1200&q=80","a":"Downtown dusk"},"New year, clean pipeline":{"u":"https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?auto=format&fit=crop&w=1200&q=80","a":"Sunrise minimal"},"1099 season, without the shoebox":{"u":"https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80","a":"Cash and calculator"},"Resolution: same-day replies":{"u":"https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?auto=format&fit=crop&w=1200&q=80","a":"Frustrated laptop"},"New agents start in January":{"u":"https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?auto=format&fit=crop&w=1200&q=80","a":"Study desk"},"EHS reaction — January drop":{"u":"https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80","a":"Suburban home pool"},"Cold open house kit":{"u":"https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=1200&q=80","a":"Doorway light"},"The love letter problem":{"u":"https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80","a":"Presentation room"},"Spring market starts in February":{"u":"https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=1200&q=80","a":"City buildings"},"The pre-spring tune-up":{"u":"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80","a":"Team laugh at laptop"},"EHS reaction — February drop":{"u":"https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80","a":"Evening house lights"},"Presidents Day showings":{"u":"https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=1200&q=80","a":"House porch columns"},"The spring surge, quantified":{"u":"https://images.unsplash.com/photo-1523540939399-141cbff6a8d7?auto=format&fit=crop&w=1200&q=80","a":"Small town street"},"The best week to list":{"u":"https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=1200&q=80","a":"Money house savings"},"Spring volume breaks brittle systems":{"u":"https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=1200&q=80","a":"Study group laptops"},"X: NXT dispatch":{"u":"https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80","a":"Lecture hall"},"X: Everything App note":{"u":"https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80","a":"Team huddle"},"YT: fall customer story (full cut)":{"u":"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80","a":"Thoughtful portrait"},"YT: EHS in 90 seconds (monthly)":{"u":"https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&w=1200&q=80","a":"Finance graphs"},"YT: Office Hours — season one":{"u":"https://images.unsplash.com/photo-1435527173128-983b87201f4d?auto=format&fit=crop&w=1200&q=80","a":"Watch closeup"},"YT: DigiSign start-to-signed":{"u":"https://images.unsplash.com/photo-1501139083538-0139583c060f?auto=format&fit=crop&w=1200&q=80","a":"Sand timer"},"Email docs out, from the file":{"u":"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=80","a":"Craftsman house"},"Bundle it, send it once":{"u":"https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&w=1200&q=80","a":"Desk with documents"},"Notifications that watch the file":{"u":"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=80","a":"Phone with apps"},"The checkbox group trick":{"u":"https://images.unsplash.com/photo-1430285561322-7808604715df?auto=format&fit=crop&w=1200&q=80","a":"Apartment building"},"Make the signature request sound like you":{"u":"https://images.unsplash.com/photo-1526406915894-7bcd65f60845?auto=format&fit=crop&w=1200&q=80","a":"Typing on phone"},"Bring your old files with you":{"u":"https://images.unsplash.com/photo-1600518464441-9154a4dea21b?auto=format&fit=crop&w=1200&q=80","a":"Packing boxes"},"Spotlight: the fall sprinter":{"u":"https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80","a":"Glass house modern"},"Spotlight: the office that templated everything":{"u":"https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&w=1200&q=80","a":"Portrait warm"},"TC of the Month #3":{"u":"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=1200&q=80","a":"Smiling professional"},"The lock-in effect, explained":{"u":"https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80","a":"City glass towers"},"Appraisal gap 101":{"u":"https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80","a":"Books and apple"},"Days on market is not a verdict":{"u":"https://images.unsplash.com/photo-1590725140246-20acdee442be?auto=format&fit=crop&w=1200&q=80","a":"For sale sign"},"Seller concessions are back":{"u":"https://images.unsplash.com/photo-1543269664-56d93c1b41a6?auto=format&fit=crop&w=1200&q=80","a":"Cowork table"}};
+  function artLayout(p){
+    var f=(p.format||'').toLowerCase();
+    var v=((p.visual||'')+' '+f).toLowerCase();
+    if(f.indexOf('poll')!==-1) return 'poll';
+    if(/video|reel|clip|screen/.test(f)) return 'video';
+    if(/carousel|document/.test(f)) return 'carousel';
+    if(/single stat|single-stat|big number|huge in science blue|oversized in science blue/.test(v)) return 'stat';
+    if(/photo|portrait|headshot|lock-screen|screenshot|device frame/.test(v)) return 'photo';
+    if(/type-only|type only|clean type|on white|sky mist/.test(v)) return 'typewhite';
+    if(/mirage|midnight sky|space gradient|starfield|dark.*teaser/.test(v)) return 'typedark';
+    if(/quote card|pull quote|pull-quote|testimonial quote/.test(v)) return 'quote';
+    return 'photo';
   }
-  function pickComp(p, gi){
-    var pool=artPool();
-    var hay=((p.title||'')+' '+(p.cap||'')+' '+(p.visual||'')+' '+(p.pillar||'')).toLowerCase();
-    var best=null, bs=0;
-    pool.forEach(function(c){
-      var s=0; c.k.split(' ').forEach(function(w){ if(w&&hay.indexOf(w)!==-1) s++; });
-      if(s>bs){ bs=s; best=c; }
-    });
-    return best||pool[gi%pool.length];
-  }
-  function artFor(p, gi){
-    var c=pickComp(p, gi);
-    if(typeof PLANSEP!=='undefined'){ PLANSEP.CRED=PLANSEP.CRED||{}; if(!PLANSEP.CRED[gi]) PLANSEP.CRED[gi]=[{kind:'unsplash',name:c.n,href:'https://unsplash.com/photos/'+c.id}]; }
-    var isVid=/video|reel|clip|screen/i.test(p.format||'');
-    var ar=(p.platform==='Instagram')?'sp-ar-11':'sp-ar-191';
+  function artHead(p){
+    var v=p.visual||'';
+    var q=v.match(/[\u201c"]([^\u201d"]{8,90})[\u201d"]/);
+    if(q&&!/^\[/.test(q[1])) return q[1];
     var lines=(p.cap||'').split('\n').filter(function(l){return l.trim();});
-    var big=(lines[0]||p.title||'').slice(0,120);
+    return (lines[0]||p.title||'').slice(0,110);
+  }
+  function artMark(){ return '<span class="smark"><svg viewBox="-0.7 -0.2 24.9 25.4" width="14" height="14" aria-hidden="true"><use href="#ss-mark"/></svg>SkySlope</span>'; }
+  function artFor(p, gi){
+    var kind=artLayout(p);
+    var lines=(p.cap||'').split('\n').filter(function(l){return l.trim();});
+    var big=artHead(p);
     var sub=(lines[1]||'').slice(0,90);
     var kick=escAttr(((p.pillar||'')+(p.format?' \u00b7 '+p.format:'')).toUpperCase());
-    return '<div class="sp-creative '+ar+'">'
-      +'<img class="sp-ph-img" src="'+c.u+'" alt="'+escAttr(c.a)+'" loading="lazy">'
-      +'<div class="sp-scrim sp-dkAll"><div class="sp-kicker">'+kick+'</div>'
+    if(kind==='stat'){
+      var line=lines[0]||'';
+      var m=line.match(/\[([^\]]{1,14})\]\s*([A-Za-z][A-Za-z-]*)/);
+      var num='', unit='', flagged=false;
+      if(m){ num=m[1]; unit=m[2]; flagged=true; }
+      else if(typeof heroNumber==='function'){ num=heroNumber(line.replace(/\[|\]/g,'')); if(num){ var after=line.replace(/\[|\]/g,'').split(num)[1]||''; unit=(after.trim().split(/\s+/)[0]||'').replace(/[^A-Za-z-]/g,''); } }
+      if(num){
+        return '<div class="pvart stat"><span class="k">'+kick+'</span>'
+          +'<div class="num'+(flagged?' flag':'')+'">'+escAttr(num)+'</div>'
+          +'<div class="unit">'+escAttr(unit||'')+'</div>'
+          +(flagged?'<div class="flagnote">[placeholder] \u2014 validate before publishing</div>':'')
+          +artMark()+'</div>';
+      }
+      return '<div class="pvart stat"><span class="k">'+kick+'</span><div class="big xl">'+capHTML(big)+'</div>'+(sub?'<div class="sub">'+capHTML(sub)+'</div>':'')+artMark()+'</div>';
+    }
+    if(kind==='typewhite')
+      return '<div class="pvart graphic"><span class="k">'+kick+'</span><div class="big xl">'+capHTML(big)+'</div>'+(sub?'<div class="sub">'+capHTML(sub)+'</div>':'')+artMark()+'</div>';
+    if(kind==='typedark')
+      return '<div class="pvart data"><span class="k">'+kick+'</span><div class="big xl">'+capHTML(big)+'</div>'+(sub?'<div class="sub">'+capHTML(sub)+'</div>':'')+artMark()+'</div>';
+    if(kind==='quote')
+      return '<div class="pvart quote"><span class="k">'+kick+'</span><div class="qmark">\u201c</div><div class="big">'+capHTML(big)+'</div><div class="sub">\u2014 SkySlope customer</div>'+artMark()+'</div>';
+    if(kind==='poll')
+      return '<div class="pvart pollc"><span class="k">'+kick+'</span><div class="big">'+capHTML(big)+'</div><div class="pbars"><span style="width:78%"></span><span style="width:52%"></span><span style="width:34%"></span></div>'+artMark()+'</div>';
+    var c=(typeof COMP_BY_TITLE!=='undefined'&&COMP_BY_TITLE[p.title])||null;
+    var ar=(p.platform==='Instagram')?'sp-ar-11':'sp-ar-191';
+    var inner='<div class="sp-scrim sp-dkAll"><div class="sp-kicker">'+kick+'</div>'
       +'<div class="sp-heroTitle">'+capHTML(big)+'</div>'
       +(sub?'<div class="sp-srcLine">'+capHTML(sub)+'</div>':'')
       +'</div>'
-      +(isVid?'<div class="playw"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>':'')
-      +(/carousel|document/i.test(p.format||'')?'<span class="sp-slidePill">1 / 6</span>':'')
-      +'</div>';
+      +(kind==='video'?'<div class="playw"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>':'')
+      +(kind==='carousel'?'<span class="sp-slidePill">1 / 6</span>':'');
+    if(c){
+      return '<div class="sp-creative '+ar+'"><img class="sp-ph-img" src="'+c.u+'" alt="'+escAttr(c.a)+'" loading="lazy">'+inner+'</div>';
+    }
+    return '<div class="sp-creative '+ar+' sp-noimg">'+inner+'</div>';
   }
-      function pvMedia(p){
+    function reviewPanel(p){
+    var fb=p.feedback||[];
+    var items=fb.map(function(f){
+      return '<li><b>'+escAttr(f.by||'Team')+'</b> <span class="fbAt">'+escAttr((f.at||'').slice(0,10))+'</span><div class="fbTx">'+escAttr(f.text||'')+'</div></li>';
+    }).join('')||'<li class="fbNone">No feedback yet \u2014 first pass gets the red pen.</li>';
+    var when=p.when?('On the deploy calendar: <b>'+fmtDay(p.when)+'</b>'):'Not on the deploy calendar yet.';
+    return '<aside class="sp-specs rvw">'
+      +'<div class="sp-specBlock"><h5>Review &amp; feedback</h5><ul class="fbList">'+items+'</ul>'
+      +'<textarea class="fbText" rows="3" maxlength="1000" placeholder="Feedback or change requests \u2014 what should change before this ships?"></textarea>'
+      +'<button type="button" class="cbtn fbAdd">Add feedback</button></div>'
+      +'<div class="sp-specBlock"><h5>Deploy date</h5><p class="rvwWhen">'+when+'</p>'
+      +'<div class="rvwRow"><input type="date" class="rvwDate" value="'+escAttr(p.when||'')+'" aria-label="Deploy date"><button type="button" class="cbtn rvwBook">\ud83d\udcc5 Calendar</button></div>'
+      +'<p class="rvwNote">Setting a date books this post into the Deploy schedule.</p></div>'
+      +'</aside>';
+  }
+  function pvMedia(p){
     if(p.creative&&p.creative.link){
       var kind=p.creative.kind||'asset';
       var lk=p.creative.link;
@@ -3949,11 +3991,11 @@ function artPool(){
       }
       return '<a class="pvmedia has" href="'+lk.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+(kind==='video'?'\u25b6':'\ud83d\uddbc\ufe0f')+' '+kind+' attached \u2014 open in Drive</a>';
     }
-    if(p.img) return '<div class="pvmedia img"><img src="'+p.img+'" alt=""><button type="button" class="imgrm" title="Remove image (moves the post back a stage)">✕</button></div>';
+    if(p.img) return '<div class="pvmedia img"><img src="'+escAttr(p.img)+'" alt=""><button type="button" class="imgrm" title="Remove image (moves the post back a stage)">✕</button></div>';
     var __gi=(p.__gi!=null?p.__gi:ccPosts.indexOf(p));
     if(typeof PLANSEP!=='undefined'&&PLANSEP.CREATIVES&&PLANSEP.CREATIVES[__gi])
-      return '<div class="pvmedia spwrap">'+PLANSEP.CREATIVES[__gi]+'<div class="artbar"><span class="artnote">September Plan creative \u2014 \u29c9 Image prompt \u2192 Gemini for production, then attach to replace</span></div></div>';
-    return '<div class="pvmedia spwrap">'+artFor(p,__gi)+'<div class="artbar"><span class="artnote">generated mockup \u2014 \u29c9 Image prompt \u2192 Gemini, then attach the real creative to replace it</span></div></div>';
+      return '<div class="pvmedia spwrap">'+PLANSEP.CREATIVES[__gi]+'</div>';
+    return '<div class="pvmedia spwrap">'+artFor(p,__gi)+'</div>';
   }
   function escAttr(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
   function dayLabel(ds){
@@ -4038,7 +4080,7 @@ function artPool(){
           '</div>'+
           (ls?'<div class="stamp">'+fmtAct(ls)+'</div>':'')+
           '<div class="pvtools"></div>'+
-          '<div class="pvedit" style="display:none"></div></div>'+((window.spSpecPanel&&typeof PLANSEP!=='undefined')?window.spSpecPanel(p,(p.__gi!=null?p.__gi:ccPosts.indexOf(p))):'')+'</div>';
+          '<div class="pvedit" style="display:none"></div></div>'+reviewPanel(p)+'</div>';
         var rmb=d.querySelector('.imgrm:not(.vidrm)');
         if(rmb) rmb.onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); removeImage(p); };
         var vrb=d.querySelector('.vidrm');
@@ -4049,6 +4091,20 @@ function artPool(){
         if(dx) dx.onclick=function(ev){ ev.preventDefault(); ev.stopPropagation(); openDelModal(p); };
         var dch=d.querySelector('.pvdate');
         if(dch) dch.onclick=function(ev){ ev.preventDefault(); ev.stopPropagation(); openScheduler(p); };
+        var fbA=d.querySelector('.fbAdd');
+        if(fbA) fbA.onclick=function(ev){
+          ev.preventDefault(); ev.stopPropagation();
+          var tx=d.querySelector('.fbText'); var v=(tx&&tx.value||'').trim();
+          if(!v){ showToast('Write the feedback first'); return; }
+          p.feedback=p.feedback||[];
+          p.feedback.push({by:(whoRaw()||'Team'), at:new Date().toISOString(), text:v});
+          showToast('Feedback added — saved with the post');
+          syncView();
+        };
+        var rvD=d.querySelector('.rvwDate');
+        if(rvD) rvD.onchange=function(){ var v=rvD.value; if(!v) return; p.when=v; dateChanged(p); };
+        var rvB=d.querySelector('.rvwBook');
+        if(rvB) rvB.onclick=function(ev){ ev.preventDefault(); ev.stopPropagation(); openScheduler(p); };
         var capEl=d.querySelector('.pvcap');
         capEl.addEventListener('focus', function(){
           var mr=d.querySelector('.pvmore');
@@ -4118,7 +4174,7 @@ function artPool(){
       empty.textContent = anyFilter ? 'No posts match the current search/filters \u2014 clear them above to see everything.' :
         filterFree ? 'No posts for this platform yet.' :
         activeEnv==='copy' ? 'Compose is quiet \u2014 the muse is waiting. Hit + New post.' :
-        activeEnv==='creative' ? 'Visualize is empty \u2014 attach an image (or Drive link) to a post and it lands here on its own.' :
+        activeEnv==='creative' ? 'Review is empty \u2014 attach an image (or Drive link) to a post and it lands here on its own.' :
         'Deploy is clear \u2014 set a publish day on any post and it lands here on its own.';
       list.appendChild(empty);
     }
@@ -4852,7 +4908,7 @@ var PLANSEP = {"PLAN": [{"gi": 1, "time": "9:30 AM", "why": "Hub-assigned Deploy
   var PLAT_ICON = {LinkedIn:'in', Instagram:'ig', Facebook:'f', X:'𝕏', YouTube:'▶'};
   var PLAT_DOT  = {LinkedIn:'#0A66C2', Instagram:'#E1306C', Facebook:'#1877F2', X:'#111', YouTube:'#FF0000'};
   var PILL_CLS  = {'Data & Index':'pi-data','Testimonial':'pi-test','Zero-CTA':'pi-zcta','Education':'pi-edu','Product':'pi-prod'};
-  var STAGE_LBL = {ready:'Deploy · ready', creative:'Visualize', copy:'Compose · idea', scheduled:'Scheduled', published:'Published'};
+  var STAGE_LBL = {ready:'Deploy · ready', creative:'Review', copy:'Compose · idea', scheduled:'Scheduled', published:'Published'};
   var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
