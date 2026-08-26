@@ -2201,28 +2201,50 @@
     </section>
     <section class="view" id="view-claims">
       <h1>Data &amp; Claims Register</h1>
-      <div class="sub">Every claim in Content Studio that leans on data — what we’re saying, and exactly what would prove it. This page reads the live posts: edit a caption and the register updates on the next refresh. <mark class="cl-tbd">[Red brackets]</mark> are unvalidated placeholders — they never ship.</div>
+      <div class="sub">Three sections: <b>1)</b> every claim in the posts and the data that proves it · <b>2)</b> how we get the numbers — windows, refresh cadence, and raw access vs. SkySlope’s team running the pulls · <b>3)</b> the ready-to-send request. Generated live from Content Studio — <mark class="cl-tbd">[red brackets]</mark> are unvalidated placeholders and never ship.</div>
       <div id="claims-mount"></div>
       <style>
-        #view-claims .cl-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 14px}
+        #view-claims{--clink:#1A2533;--clsub:#2E4256}
+        #view-claims .cl-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 18px}
         #view-claims .cl-tile{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:12px 14px}
-        #view-claims .cl-tile b{display:block;font-size:1.5rem;line-height:1.1}
-        #view-claims .cl-tile span{font-size:.78rem;color:var(--baseline);font-weight:700}
-        #view-claims mark.cl-tbd,#view-claims .cl-snip mark.cl-tbd{background:rgba(220,53,69,.13);color:#DC3545;font-weight:700;border-radius:3px;padding:0 2px}
-        #view-claims .cl-pipe{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:12px 16px;margin:0 0 16px;font-size:.86rem}
-        #view-claims .cl-pipe b{color:var(--blue)}
-        #view-claims .cl-need{margin:8px 0 0;padding-left:18px}
-        #view-claims .cl-need li{margin:4px 0;font-size:.86rem}
-        #view-claims .cl-meta{font-size:.8rem;color:var(--baseline);margin:8px 0 0}
-        #view-claims .cl-meta b{color:inherit}
-        #view-claims .cl-bar{border-left:3px solid #DC3545;padding:6px 10px;margin:10px 0 0;font-size:.82rem;background:rgba(220,53,69,.05);border-radius:0 8px 8px 0}
-        #view-claims .cl-posts{margin:12px 0 0;border-top:1px dashed var(--grid);padding-top:8px}
-        #view-claims .cl-post{padding:7px 0;border-bottom:1px dashed var(--grid)}
-        #view-claims .cl-post:last-child{border-bottom:0}
-        #view-claims .cl-chip{display:inline-block;color:#fff;border-radius:999px;padding:0 8px;font-size:.7rem;font-weight:800;margin-right:6px;vertical-align:1px}
-        #view-claims .cl-ttl{font-weight:800;font-size:.86rem}
-        #view-claims .cl-snip{font-size:.82rem;color:var(--baseline);margin:3px 0 0 2px}
-        #view-claims .cl-cnt{font-weight:400;color:var(--baseline);font-size:.85em}
+        #view-claims .cl-tile b{display:block;font-size:1.5rem;line-height:1.1;color:var(--clink)}
+        #view-claims .cl-tile span{font-size:.78rem;color:var(--clsub);font-weight:700}
+        #view-claims mark.cl-tbd{background:rgba(220,53,69,.13);color:#DC3545;font-weight:700;border-radius:3px;padding:0 2px}
+        #view-claims .cl-sec{margin:26px 0 10px;display:flex;align-items:baseline;gap:10px}
+        #view-claims .cl-sec b{font-size:1.25rem;color:var(--clink)}
+        #view-claims .cl-sec .n{background:var(--blue);color:#fff;border-radius:8px;font-weight:900;padding:1px 10px;font-size:1rem}
+        #view-claims .cl-secsub{color:var(--clsub);font-size:.88rem;margin:0 0 14px}
+        #view-claims .cl2-row{display:grid;grid-template-columns:1.1fr 1fr;border:1px solid var(--grid);border-radius:12px;margin:0 0 12px;overflow:hidden;background:var(--surface)}
+        #view-claims .cl2-left{padding:14px 16px;border-right:1px solid var(--grid);min-width:0}
+        #view-claims .cl2-right{padding:14px 16px;background:rgba(0,89,218,.04);min-width:0}
+        @media(max-width:900px){#view-claims .cl2-row{grid-template-columns:1fr}#view-claims .cl2-left{border-right:0;border-bottom:1px solid var(--grid)}}
+        #view-claims .cl2-lab{font-size:.68rem;font-weight:900;letter-spacing:.08em;color:var(--blue);margin:0 0 6px}
+        #view-claims .cl2-claim{font-weight:800;font-size:.95rem;color:var(--clink)}
+        #view-claims .cl2-quote{font-size:.86rem;color:var(--clink);margin:6px 0 0;font-style:italic}
+        #view-claims .cl2-kind{display:inline-block;font-size:.66rem;font-weight:900;border-radius:999px;padding:1px 8px;margin-left:8px;vertical-align:2px;letter-spacing:.03em}
+        #view-claims .k-sky{background:rgba(0,89,218,.12);color:#0059DA}
+        #view-claims .k-cust{background:rgba(83,61,177,.12);color:#533DB1}
+        #view-claims .k-ext{background:rgba(40,167,69,.13);color:#1d7a34}
+        #view-claims .cl2-posts{margin:10px 0 0}
+        #view-claims .cl2-post{font-size:.82rem;color:var(--clink);padding:3px 0;display:flex;gap:7px;align-items:baseline}
+        #view-claims .cl2-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;position:relative;top:0px}
+        #view-claims .cl2-stage{font-size:.68rem;font-weight:800;color:var(--clsub)}
+        #view-claims .cl2-need{margin:0;padding-left:18px}
+        #view-claims .cl2-need li{margin:5px 0;font-size:.85rem;color:var(--clink)}
+        #view-claims .cl-card{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:16px 18px;margin:0 0 12px}
+        #view-claims .cl-card h3{margin:0 0 8px;color:var(--clink);font-size:1rem}
+        #view-claims .cl-card p,#view-claims .cl-card li{color:var(--clink);font-size:.88rem}
+        #view-claims .cl-card ul{margin:6px 0 0;padding-left:18px}
+        #view-claims .cl-card li{margin:5px 0}
+        #view-claims .cl-wtab{width:100%;border-collapse:collapse;font-size:.86rem}
+        #view-claims .cl-wtab th{text-align:left;font-size:.7rem;letter-spacing:.06em;color:var(--clsub);border-bottom:2px solid var(--grid);padding:6px 10px 6px 0}
+        #view-claims .cl-wtab td{border-bottom:1px dashed var(--grid);padding:8px 10px 8px 0;vertical-align:top;color:var(--clink)}
+        #view-claims .cl-wtab td b{color:var(--clink)}
+        #view-claims .cl-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        @media(max-width:900px){#view-claims .cl-2col{grid-template-columns:1fr}}
+        #view-claims .cl-reco{border-left:4px solid var(--blue);background:rgba(0,89,218,.05);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0 0;font-size:.88rem;color:var(--clink)}
+        #view-claims .cl-req{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:18px 22px;white-space:pre-wrap;font-size:.88rem;line-height:1.55;color:var(--clink)}
+        #view-claims .cl-req b{color:var(--clink)}
       </style>
     </section>
     <!-- ============ PLANS · September Plan ============ -->
@@ -5908,151 +5930,190 @@ Array.prototype.forEach.call(document.querySelectorAll('table'), function(t){
 </script>
 
 <script>
-// ---------- Data & Claims Register: live evidence map over Content Studio ----------
+// ---------- Data & Claims Register: claims vs. evidence, operating model, and the request ----------
 (function(){
   function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
   function markPH(s){ return esc(s).replace(/\[([^\]\n]{1,60})\]/g,'<mark class="cl-tbd">[$1]</mark>'); }
   var ENVL={copy:'Compose',creative:'Review',ready:'Deploy'};
-  var ENVC={copy:'#0059DA',creative:'#533DB1',ready:'#28A745'};
   var PLATC={LinkedIn:'#0a66c2',Instagram:'#dd2a7b',Facebook:'#1877f2',YouTube:'#ff0000',X:'#555555',TikTok:'#4a4a4a'};
-  function sentences(p){
-    return (p.title+'. '+(p.cap||'')).split(/(?<=[.!?])\s+|\n+/).map(function(s){return s.trim();}).filter(Boolean);
-  }
-  var FAMS=[
-    {key:'anatomy',icon:'\ud83d\udcc4',name:'Transaction anatomy (SkySlope Index)',
-     what:'Documents, signatures, hours and paper per closing \u2014 the flagship Index Drop numbers.',
-     rx:/\b(docs?|documents?|signatures?|initials|paperwork|lbs)\b/i,
-     guard:/clos|file|transaction|envelope|paper|index/i,
-     need:['Documents per closed file: median and mean checklist-document count across every file closed in a trailing 12-month window \u2014 with a written rule for what counts as a document (checklist items vs uploads vs re-issued versions).',
-           'Signatures per closing: signature + initial field counts from the file\u2019s completed DigiSign envelopes.',
-           'The \u201c[3.2] hours to get through them\u201d line has no clean platform measure of active working time \u2014 define a defensible proxy (e.g. summed envelope completion spans) or reword to something measurable before it ships.',
-           'Paper weight is a derived stat \u2014 publish the conversion (docs \u00d7 average pages \u00d7 sheet weight) alongside it.'],
-     source:'Platform analytics warehouse (transactions + checklist + DigiSign field telemetry). Owner: SkySlope data team; Rob signs off.',
-     bar:'Methodology footnote on the graphic (\u201cmedian across N closings on SkySlope, [window]\u201d). Say \u201con SkySlope\u201d \u2014 it\u2019s a platform average, not the whole market. Legal/comms review before Index Drop #1.'},
-    {key:'speed',icon:'\u23f1\ufe0f',name:'Closing speed & geography',
-     what:'The state leaderboard, contract-to-close day counts, and the \u201c3M+ transactions a year\u201d scale line under them.',
-     rx:/contract-to-close|days? (faster|slower)|closing speed|leaderboard|fastest state|3M\+/i,
-     need:['Under-contract date and close date on every file \u2014 audit the fill-rate of those two fields first; the leaderboard is only as good as they are.',
-           'Median contract-to-close days by property state, trailing 12 months, with an outlier rule (e.g. drop files >180 days) and a per-state sample floor \u2014 states under the floor are excluded and noted.',
-           'One canonical, finance-approved annual transaction volume figure behind every \u201c3M+ transactions\u201d mention \u2014 the same number, verbatim, everywhere.'],
-     source:'Transaction records + property address state. Owner: data team; finance confirms the volume figure.',
-     bar:'Publish as \u201cdeals on SkySlope\u201d. Refresh quarterly so the leaderboard doesn\u2019t fossilize.'},
-    {key:'compliance',icon:'\ud83d\udea9',name:'Compliance flags & audit stats',
-     what:'\u201c[31%] of files hit a flag\u201d, the top-culprit rankings, and the flags-that-stall-closings education posts.',
-     rx:/compliance flag|missing initials|disclosure version|signature date mismatch|file[- ]review|audit season/i,
-     need:['A written definition of a \u201ccompliance flag\u201d (automated check failure? reviewer rejection?) \u2014 the percentage moves wildly with the definition.',
-           'Share of closed files with \u22651 flag, deduped per file, trailing 12 months; flag reasons categorized and ranked for the top-3 / top-5 lists.',
-           '\u201cStall the most closings\u201d implies causation \u2014 pair each flag type with the median contract-to-close delta vs unflagged files, or soften the copy to \u201cthe most common flags\u201d.'],
-     source:'File-review / broker-review event log. Owner: data team + compliance PM.',
-     bar:'Legal framing review: \u201c31% hit a flag\u201d must read as caught-and-fixed by SkySlope, never as \u201c31% of customers are non-compliant\u201d.'},
-    {key:'esign',icon:'\u270d\ufe0f',name:'DigiSign turnaround',
-     what:'Median e-sign return time, the long-tail share, holiday-week comparisons, and envelope prep timings.',
-     rx:/e-?sign|envelope|digisign|signature.*(back|returned|turnaround)|minutes total/i,
-     need:['Envelope sent \u2192 completed timestamps: median and p90, plus the % beyond 48 hours. Decide wall-clock vs business-hours once and use it in every post.',
-           'Holiday-week claims: the same metric for the holiday window vs a 4-week baseline, both windows named.',
-           'Prep-time claims (8 minutes \u2192 4) only if envelope-building is instrumented \u2014 otherwise film a scripted run and label it a demo, not data.',
-           'Exclude internal/test envelopes and voided sends from every cut.'],
-     source:'DigiSign event stream. Owner: data team + DigiSign PM.',
-     bar:'One clock definition across all posts; demo timings labeled as demos on the video itself.'},
-    {key:'seasonal',icon:'\ud83d\udcc5',name:'Timing & seasonality patterns',
-     what:'Tuesday contract day, the Friday filing rush, busiest closing month, quarter-over-quarter file-open spikes, and the Wrapped-style \u201cYour Year in Closings\u201d.',
-     rx:/busiest|file-?opens?|filing (rush|spike|day)|upload|contract day|closing month|restart|spring surge|year in closings|labor day|thanksgiving/i,
-     need:['Event timestamps (file-opens, uploads, under-contract, closings) bucketed by hour / day / month \u2014 normalized to the property\u2019s local timezone, and the methodology says so.',
-           'At least two full years of events, so one odd year doesn\u2019t become \u201cthe pattern\u201d.',
-           '\u201cYour Year in Closings\u201d: per-account aggregates only, opt-in, nothing that exposes client names or addresses \u2014 privacy review before it\u2019s built.'],
-     source:'Platform event stream. Owner: data team; privacy review for any account-facing stat.',
-     bar:'Day-of-week and hour-of-day claims need \u226512 months of events behind them; seasonal comparisons always name both windows.'},
-    {key:'scale',icon:'\ud83c\udfd7\ufe0f',name:'Platform scale & customer milestones',
-     what:'\u201c3M+ transactions a year\u201d, \u201cmillions of transactions\u201d, and per-customer milestone congrats.',
-     rx:/3M\+|millions? of transactions|files closed on skyslope|10,000\] files/i,
-     need:['The official annual volume figure from the analytics-of-record, blessed by finance, refreshed once a year.',
-           'Customer milestone counts pulled per account \u2014 shared with the customer and approved by them before the congrats post ships.',
-           'Pick a unit and define it once: \u201ctransactions\u201d, \u201csides\u201d and \u201cfiles\u201d are three different numbers.'],
-     source:'Finance / analytics of record; account data with customer consent.',
-     bar:'Milestone posts don\u2019t ship without the customer\u2019s OK \u2014 it\u2019s their number too.'},
-    {key:'customer',icon:'\ud83c\udfc6',name:'Customer results & spotlights',
-     what:'Audit-time stories, hours-saved quotes, migration counts, TC of the Month \u2014 numbers that belong to a customer, not to the platform.',
+  function sentences(p){ return (p.title+'. '+(p.cap||'')).split(/(?<=[.!?])\s+|\n+/).map(function(s){return s.trim();}).filter(Boolean); }
+  var GROUPS=[
+    {id:'docsigs',kind:'sky',claim:'Documents & signatures per closing',
+     quote:'\u201cThe average home closing runs on [42] documents and [187] signatures.\u201d',
+     rx:/\b(docs?|documents?|signatures?|initials)\b/i, guard:/clos|file|transaction|paper|stack|sprint|census|lbs/i,
+     need:['Median and mean checklist-document count per closed file, trailing 12 months \u2014 with the written rule for what counts as a document (checklist items vs uploads vs re-issued versions).',
+           'Signature + initial field counts from each file\u2019s completed DigiSign envelopes.',
+           'Paper weight is derived \u2014 publish the conversion (docs \u00d7 avg pages \u00d7 sheet weight).']},
+    {id:'hours32',kind:'sky',claim:'Hours to get through a closing\u2019s paperwork',
+     quote:'\u201cAgents on SkySlope get through them in [3.2] hours.\u201d',
+     rx:/get through them in|\[3\.2\] hours/i,
+     need:['There is no clean platform measure of active working time. Either define a defensible proxy (e.g. summed envelope completion spans) and label it, or reword the claim to something measurable before it ships.']},
+    {id:'statespeed',kind:'sky',claim:'State-by-state closing speed',
+     quote:'\u201cDeals in [Texas] close [9] days faster than [California].\u201d',
+     rx:/contract-to-close|days? (faster|slower)|closing speed|fastest state/i,
+     need:['Under-contract date and close date per file \u2014 audit the fill-rate of those two fields first.',
+           'Median contract-to-close days by property state, trailing 12 months, outlier rule (e.g. drop >180-day files), and a per-state sample floor; states under the floor excluded and noted.']},
+    {id:'volume',kind:'sky',claim:'Platform scale \u2014 \u201c3M+ transactions a year\u201d',
+     quote:'\u201cThe full state leaderboard, from 3M+ transactions a year.\u201d',
+     rx:/3M\+|millions? of transactions/i,
+     need:['One canonical, finance-approved annual transaction volume figure \u2014 the same number verbatim in every post, refreshed once a year.',
+           'Pick the unit once: \u201ctransactions\u201d, \u201csides\u201d and \u201cfiles\u201d are three different numbers.']},
+    {id:'flags',kind:'sky',claim:'Compliance-flag census',
+     quote:'\u201c[31%] of transaction files hit at least one compliance flag before closing.\u201d',
+     rx:/compliance flag|missing initials|disclosure version|signature date mismatch/i,
+     need:['A written definition of a \u201cflag\u201d (automated check failure? reviewer rejection?) \u2014 the % moves wildly with it.',
+           'Share of closed files with \u22651 flag, deduped per file, trailing 12 months; reasons categorized and ranked for the top-3 / top-5 lists.',
+           'Legal framing pass: must read as caught-and-fixed by SkySlope, never \u201c31% of customers are non-compliant\u201d.']},
+    {id:'stall',kind:'sky',claim:'Flags that \u201cstall\u201d closings',
+     quote:'\u201cThe [5] compliance flags that stall the most closings \u2014 and the fix for each.\u201d',
+     rx:/flags? that stall/i,
+     need:['\u201cStall\u201d implies causation: pair each flag type with the median contract-to-close delta vs unflagged files \u2014 or soften the copy to \u201cthe most common flags\u201d.']},
+    {id:'esign',kind:'sky',claim:'E-signature turnaround',
+     quote:'\u201cThe median e-signature comes back in [4.2] hours. But [18%] of envelopes wait more than [2] days.\u201d',
+     rx:/median e-sign|e-?sign(ature)? turnaround|envelopes? wait|signature comes back/i,
+     need:['Envelope sent \u2192 completed timestamps: median, p90, and % beyond 48 hours, trailing 12 months.',
+           'Decide wall-clock vs business-hours once and use it in every post; exclude internal/test and voided envelopes.']},
+    {id:'holiday',kind:'sky',claim:'Holiday-week turnaround',
+     quote:'\u201cE-sign turnaround over the holiday week runs [X] hours \u2014 [faster/slower] than a normal week.\u201d',
+     rx:/thanksgiving|holiday week/i,
+     need:['The same turnaround metric for the holiday window vs a 4-week baseline \u2014 both windows named in the post.']},
+    {id:'prep',kind:'sky',claim:'Envelope prep & demo timings',
+     quote:'\u201cEnvelope prep used to take 8 minutes\u2026 [X] minutes total.\u201d',
+     rx:/envelope prep|minutes total|8 minutes/i,
+     need:['Only claimable as data if envelope-building is instrumented; otherwise film a scripted run and label it a demo on the video itself.']},
+    {id:'dayofweek',kind:'sky',claim:'Day-of-week & hour patterns',
+     quote:'\u201cThe most common day to go under contract? [Tuesday]. The busiest hour for uploads? [Friday, 4\u20135pm].\u201d',
+     rx:/contract day|busiest hour|busiest closing month|filing rush|upload/i,
+     need:['Under-contract events by day-of-week and document uploads by day + hour, normalized to the property\u2019s local timezone (and the methodology says so).',
+           'At least 24 months of events so one odd year doesn\u2019t become \u201cthe pattern\u201d.']},
+    {id:'periods',kind:'sky',claim:'Seasonal spikes & period comparisons',
+     quote:'\u201cQ4 file-opens run [X%] ahead of Q3\u2026 file-opens spike [X%] over the December average.\u201d',
+     rx:/labor day|ahead of q3|january restart|file-opens? spike|spring surge|march over february|opens up \[/i,
+     need:['File-opens by month for the last 24 months \u2014 one pull covers Q4-vs-Q3, the January restart, the spring surge and the Labor-Day week.',
+           'Every comparison names both windows in the caption or footnote.']},
+    {id:'wrapped',kind:'sky',claim:'Year-in-review & \u201cYour Year in Closings\u201d',
+     quote:'\u201c[X] files closed \u00b7 [X] documents processed \u00b7 [X] signatures collected \u00b7 [X] deadlines met.\u201d',
+     rx:/year in closings|year in review|files closed \u00b7|busiest closing month, your fastest file/i,
+     need:['Per-account aggregates only (the account\u2019s own numbers), opt-in, nothing that exposes client names or addresses.',
+           'Privacy review before the Wrapped-style feature is built or teased.']},
+    {id:'milestone',kind:'sky',claim:'Customer milestone congrats',
+     quote:'\u201c[10,000] files closed on SkySlope. Congratulations to [Brokerage].\u201d',
+     rx:/10,000\] files|files closed on skyslope/i,
+     need:['The account\u2019s file count pulled for that customer \u2014 shared with them and approved before the post ships. It\u2019s their number too.']},
+    {id:'customer',kind:'cust',claim:'Customer-reported results & spotlights',
+     quote:'\u201cOur annual audit used to take [three weeks]. Last year it took [an afternoon].\u201d',
      match:function(p){ return p.pillar==='Testimonial'; },
-     rx:/saved me|used to take|migrated \[|hours a month on manual|hours is six working days/i,
-     need:['A real named customer \u2014 name, role, brokerage \u2014 with a signed marketing release before the post is scheduled.',
-           'The quote verbatim from a dated interview or email. The numbers are the customer\u2019s claim, attributed to them and fact-checked with them \u2014 these posts need consent and provenance, not platform queries.',
-           'Support stories: the ticket / chat timestamp on file.',
-           'RealTrends congrats: confirm the ranking entry and that the brokerage is a current customer.'],
-     source:'Customer marketing pipeline (interviews + releases). Owner: Click Shift + SkySlope customer marketing.',
-     bar:'No release, no post \u2014 the placeholders stay red and the post stays in Compose until the release is on file.'},
-    {key:'external',icon:'\ud83c\udf10',name:'External market data \u2014 needs a citation, not our data',
-     what:'NAR EHS numbers, REALTOR\u00ae profile stats, RealTrends rankings, ShowingTime, Zillow, mortgage-rate lock-in \u2014 the market posts that lean on someone else\u2019s dataset.',
+     need:['A real named customer (name, role, brokerage) with a signed marketing release before scheduling.',
+           'The quote verbatim from a dated interview or email \u2014 the numbers are the customer\u2019s claim, attributed to them and fact-checked with them.',
+           'Support stories: the ticket/chat timestamp on file. RealTrends congrats: confirm the ranking and that they\u2019re a current customer.',
+           'No release, no post \u2014 the post stays in Compose until the release is on file.']},
+    {id:'external',kind:'ext',claim:'External market data \u2014 citation, not our data',
+     quote:'\u201cExisting-home sales in July: down 1.7% for the month, UP 0.7% on the year.\u201d (NAR)',
      rx:/\bNAR\b|EHS|existing-home|realtor|realtrends|showingtime|zillow|median price|first-time (home)?buyer|market share|lock-in|concessions|1\.44M|mortgages? near|sides last year/i,
-     need:['Source name + report + release date on every stat \u2014 and re-pull the latest release the week the post ships (EHS revises monthly).',
-           'Links in the first comment on LinkedIn; the full citation in the caption on X and Instagram where links don\u2019t travel.',
-           'Never blend a platform stat and an external stat in one graphic without labeling each.'],
-     source:'NAR, RealTrends, ShowingTime, Zillow, Freddie Mac \u2014 bookmarked under Inspiration \u2192 Sources.',
-     bar:'Date-stamp every external number. The [source ___] placeholder in the concessions post is the model: no source, no ship.'}
+     need:['Source name + report + release date on every stat; re-pull the latest release the week the post ships (EHS revises monthly).',
+           'Links in the first comment on LinkedIn; full citation in the caption on X/Instagram.',
+           'Never blend a platform stat and an external stat in one graphic without labeling each.']}
   ];
-  function famSnips(p, f){
-    var out=[], ss=sentences(p);
-    for(var i=0;i<ss.length&&out.length<3;i++){
+  var KINDLBL={sky:'SKYSLOPE DATA',cust:'CUSTOMER CONSENT',ext:'EXTERNAL CITATION'};
+  var REQUEST=[
+'Subject: Data pulls to validate the social claims (Index drops + launch posts)',
+'',
+'Hi Rob \u2014 locking the content calendar, and every red [bracket] in the posts traces back to one of the pulls below. Grouped so the data team can run them as a batch. For each we need the number, the window it covers, and a one-line note on how it was measured \u2014 we turn that note into the methodology footnote on the graphic, and nothing ships until you sign off.',
+'',
+'1. Docs & signatures per closing \u2014 median and mean checklist documents per closed file, plus signature + initial field counts from completed DigiSign envelopes. Trailing 12 months. Please include the doc-counting rule used.',
+'2. Contract-to-close by state \u2014 median days by property state, trailing 12 months, with per-state file counts so we can set a sample floor.',
+'3. Annual volume \u2014 the official finance-approved transactions-per-year figure to use wherever \u201c3M+\u201d appears (and the unit: transactions, sides, or files).',
+'4. Compliance flags \u2014 % of closed files with at least one flag (deduped per file) and the top 5 flag reasons ranked, trailing 12 months, plus the definition of a \u201cflag\u201d.',
+'5. E-sign turnaround \u2014 median and p90 sent-to-completed, and % beyond 48 hours, trailing 12 months. Note whether that\u2019s wall-clock or business hours.',
+'6. Timing patterns \u2014 under-contract events by day-of-week, and document uploads by day and hour (property-local time), last 24 months.',
+'7. Monthly file-opens \u2014 by month for the last 24 months (one pull covers the Q4-vs-Q3, January-restart and spring-surge posts).',
+'8. Customer stories \u2014 intros to 2\u20133 customers for the testimonial slots (TC spotlight, the audit story, a migration story), plus your standard marketing release.',
+'',
+'Access option: if it\u2019s easier than fielding these one by one, read access to an anonymized extract \u2014 event timestamps and counts only, no client names or addresses \u2014 lets us run the pulls ourselves and bring you numbers + methodology to approve. Happy to go either way; #1\u2013#5 are what September needs.',
+'',
+'\u2014 Dave / Click Shift'].join('\n');
+  function groupSnips(p,g){
+    var out=[],ss=sentences(p);
+    for(var i=0;i<ss.length&&out.length<2;i++){
       var s=ss[i];
-      if(f.rx&&f.rx.test(s)&&/[\d\[]/.test(s)){ if(!f.guard||f.guard.test(s)||/\[/.test(s)) out.push(s); }
-    }
-    if(!out.length&&f.match&&f.match(p)){
-      for(var j=0;j<ss.length&&out.length<2;j++){ if(/\[|\d/.test(ss[j])) out.push(ss[j]); }
-      if(!out.length&&ss.length) out.push(ss[Math.min(1,ss.length-1)]);
+      if(g.rx&&g.rx.test(s)&&/[\d\[]/.test(s)){ if(!g.guard||g.guard.test(s)||/\[/.test(s)) out.push(s); }
     }
     return out;
   }
   window.renderClaims=function(){
     var mount=document.getElementById('claims-mount');
     if(!mount||typeof ccPosts==='undefined') return;
-    var perFam={}, postSet={}, phTotal=0, extPosts=0;
-    FAMS.forEach(function(f){ perFam[f.key]=[]; });
-    ccPosts.forEach(function(p){
-      var tagged=false;
-      FAMS.forEach(function(f){
-        var sn=famSnips(p,f);
-        if(sn.length||(f.match&&f.match(p))){
-          perFam[f.key].push({p:p,sn:sn});
-          tagged=true;
-          if(f.key==='external') extPosts++;
-        }
+    var postSet={},phTotal=0;
+    var rows=GROUPS.map(function(g){
+      var hits=[];
+      ccPosts.forEach(function(p){
+        var sn=groupSnips(p,g);
+        if(sn.length||(g.match&&g.match(p))){ hits.push({p:p,sn:sn}); postSet[p.title]=1; }
       });
-      if(tagged){
-        postSet[p.title]=1;
-        var m=(p.cap||'').match(/\[([^\]\n]{1,60})\]/g); if(m) phTotal+=m.length;
-      }
+      return {g:g,hits:hits};
     });
-    var claimPosts=Object.keys(postSet).length;
+    Object.keys(postSet).length&&ccPosts.forEach(function(p){
+      if(postSet[p.title]){ var m=(p.cap||'').match(/\[([^\]\n]{1,60})\]/g); if(m) phTotal+=m.length; }
+    });
     var html='';
     html+='<div class="cl-tiles">'
-      +'<div class="cl-tile"><b>'+claimPosts+'</b><span>posts lean on data</span></div>'
-      +'<div class="cl-tile"><b>'+phTotal+'</b><span>red placeholders to validate</span></div>'
-      +'<div class="cl-tile"><b>'+(FAMS.length-1)+'</b><span>SkySlope-data claim families</span></div>'
-      +'<div class="cl-tile"><b>'+extPosts+'</b><span>posts need an external citation</span></div>'
+      +'<div class="cl-tile"><b>'+Object.keys(postSet).length+'</b><span>posts lean on data</span></div>'
+      +'<div class="cl-tile"><b>'+phTotal+'</b><span>red placeholders open</span></div>'
+      +'<div class="cl-tile"><b>'+rows.filter(function(r){return r.g.kind==='sky'&&r.hits.length;}).length+'</b><span>claims need SkySlope pulls</span></div>'
+      +'<div class="cl-tile"><b>'+(rows.filter(function(r){return r.g.kind==='ext';})[0]||{hits:[]}).hits.length+'</b><span>posts need an external citation</span></div>'
       +'</div>';
-    html+='<div class="cl-pipe"><b>From bracket to shipped number:</b> 1) the claim is drafted in Content Studio with red [brackets] \u00b7 2) this register names the query or release it needs \u00b7 3) the owner pulls the number and writes the one-line methodology \u00b7 4) Rob / legal sign off \u00b7 5) the bracket is replaced in the caption \u2014 and this page clears it automatically.</div>';
-    FAMS.forEach(function(f){
-      var rows=perFam[f.key];
-      html+='<details class="card"><summary>'+f.icon+' '+esc(f.name)
-        +'<span class="tag">'+rows.length+' post'+(rows.length===1?'':'s')+'</span><span class="chev">\u25b6</span></summary><div class="body">'
-        +'<p style="margin:0">'+esc(f.what)+'</p>'
-        +'<h4 style="margin:12px 0 0">What we need before these ship</h4><ul class="cl-need">'
-        +f.need.map(function(n){ return '<li>'+esc(n)+'</li>'; }).join('')+'</ul>'
-        +'<div class="cl-meta"><b>Source of truth:</b> '+esc(f.source)+'</div>'
-        +'<div class="cl-bar">'+esc(f.bar)+'</div>';
-      if(rows.length){
-        html+='<div class="cl-posts">'+rows.map(function(r){
-          var p=r.p;
-          return '<div class="cl-post">'
-            +'<span class="cl-chip" style="background:'+(PLATC[p.platform]||'#888')+'">'+esc(p.platform)+'</span>'
-            +'<span class="cl-chip" style="background:'+(ENVC[p.env]||'#888')+'">'+esc(ENVL[p.env]||p.env)+'</span>'
-            +'<span class="cl-ttl">'+markPH(p.title)+'</span>'
-            +r.sn.map(function(s){ return '<div class="cl-snip">\u201c'+markPH(s)+'\u201d</div>'; }).join('')
-            +'</div>';
-        }).join('')+'</div>';
-      }
-      html+='</div></details>';
+    // ---- Section 1 ----
+    html+='<div class="cl-sec"><span class="n">1</span><b>The claims, and the data that proves them</b></div>'
+      +'<div class="cl-secsub">Posts making the same claim are grouped on the left; the right column is exactly what we need before their red brackets can be replaced.</div>';
+    rows.forEach(function(r){
+      if(!r.hits.length) return;
+      var g=r.g;
+      html+='<div class="cl2-row"><div class="cl2-left">'
+        +'<div class="cl2-lab">THE CLAIM</div>'
+        +'<div class="cl2-claim">'+esc(g.claim)+'<span class="cl2-kind k-'+g.kind+'">'+KINDLBL[g.kind]+'</span></div>'
+        +'<div class="cl2-quote">'+markPH(g.quote)+'</div>'
+        +'<div class="cl2-posts">'+r.hits.map(function(h){
+          var p=h.p;
+          return '<div class="cl2-post"><span class="cl2-dot" style="background:'+(PLATC[p.platform]||'#888')+'" title="'+esc(p.platform)+'"></span><span>'+markPH(p.title)+' <span class="cl2-stage">\u00b7 '+esc(ENVL[p.env]||p.env)+'</span></span></div>';
+        }).join('')+'</div>'
+        +'</div><div class="cl2-right">'
+        +'<div class="cl2-lab">DATA TO SUPPORT IT</div>'
+        +'<ul class="cl2-need">'+g.need.map(function(n){return '<li>'+esc(n)+'</li>';}).join('')+'</ul>'
+        +'</div></div>';
     });
+    // ---- Section 2 ----
+    html+='<div class="cl-sec"><span class="n">2</span><b>How we get the numbers</b></div>'
+      +'<div class="cl-secsub">The windows each claim type needs, and the two ways to run the pulls.</div>';
+    html+='<div class="cl-card"><h3>Date ranges &amp; refresh cadence</h3><table class="cl-wtab">'
+      +'<tr><th>CLAIM TYPE</th><th>WINDOW</th><th>REFRESH</th></tr>'
+      +'<tr><td><b>Structural stats</b> \u2014 docs, signatures, flags, e-sign turnaround</td><td>Trailing 12 months of closed files</td><td>Quarterly, with each Index drop</td></tr>'
+      +'<tr><td><b>Day-of-week / hour patterns</b></td><td>24 months minimum, property-local time</td><td>Twice a year</td></tr>'
+      +'<tr><td><b>Period comparisons</b> \u2014 Q4 vs Q3, January restart, spring surge</td><td>Last 24 months so this year has a baseline</td><td>Per post; both windows named</td></tr>'
+      +'<tr><td><b>Annual volume</b> (\u201c3M+\u201d)</td><td>Last full calendar year</td><td>Once a year, from finance</td></tr>'
+      +'<tr><td><b>Customer stories</b></td><td>Quote dated within 12 months</td><td>Re-confirm the release before re-use</td></tr>'
+      +'<tr><td><b>External stats</b> \u2014 NAR, RealTrends, ShowingTime, Zillow</td><td>Latest release at ship time</td><td>Re-pull the week the post goes out (EHS revises monthly)</td></tr>'
+      +'</table></div>';
+    html+='<div class="cl-2col">'
+      +'<div class="cl-card"><h3>Option A \u2014 SkySlope\u2019s team runs the pulls</h3>'
+      +'<p>We send the request in section 3; their data team returns each number with a one-line \u201chow it was measured\u201d note; we draft the methodology footnote; Rob signs off.</p>'
+      +'<ul><li><b>Pros:</b> zero access setup, their definitions, fastest way to unblock September.</li>'
+      +'<li><b>Cons:</b> every new stat is a new ticket \u2014 a monthly Index series will bottleneck on their queue.</li></ul></div>'
+      +'<div class="cl-card"><h3>Option B \u2014 we get read access to an anonymized extract</h3>'
+      +'<p>Event timestamps and counts only \u2014 file-opens, doc counts, signature fields, envelope sent/complete, property state, flag category. No client names, no addresses, no PII. We build repeatable queries and bring numbers + methodology for sign-off.</p>'
+      +'<ul><li><b>Pros:</b> supports a standing monthly Index cadence, consistent definitions, makes \u201cYour Year in Closings\u201d buildable.</li>'
+      +'<li><b>Cons:</b> access + legal setup up front.</li></ul></div>'
+      +'</div>'
+      +'<div class="cl-reco"><b>Recommendation:</b> start with Option A for the September batch (requests 1\u20135 unblock the Index drops), and agree Option B in parallel as the standing pipeline for the monthly series. Customer stories run through marketing releases either way, and external stats need no access at all \u2014 just citations.</div>';
+    // ---- Section 3 ----
+    html+='<div class="cl-sec"><span class="n">3</span><b>The request, ready to send</b></div>'
+      +'<div class="cl-secsub">Draft note for Rob and the data team \u2014 the eight asks map one-to-one onto section 1. <button class="cbtn push" type="button" id="clReqCopy" style="margin-left:6px">\u29c9 Copy the request</button></div>'
+      +'<div class="cl-req">'+esc(REQUEST)+'</div>';
     mount.innerHTML=html;
+    var cb=document.getElementById('clReqCopy');
+    if(cb) cb.onclick=function(){
+      if(window.copyText){ window.copyText(REQUEST,'Request copied \u2014 paste into email or Slack'); }
+      else if(navigator.clipboard){ navigator.clipboard.writeText(REQUEST); }
+    };
   };
   try{ window.renderClaims(); }catch(e){}
 })();
