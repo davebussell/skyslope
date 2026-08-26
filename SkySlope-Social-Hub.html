@@ -593,6 +593,9 @@
       <button class="navlink" data-view="inspo" data-terms="inspiration hooks formulas influencers watering holes accounts articles stats sources">Inspiration</button>
       <button class="navlink" data-view="operate" data-terms="operations follow unfollow automation policy weekly rhythm naomi">Operations</button>
     </div>
+    <div class="navgroup"><div class="gt">Plans</div>
+      <button class="navlink" data-view="plansep" data-terms="plans september plan content calendar schedule posting mockups image prompts monthly">September Plan</button>
+    </div>
     <div class="navgroup deepgroup"><div class="gt">Jump to</div>
       <button class="navlink deep sub" data-view="d1" data-terms="doc 1 executive summary strategy">Doc 1 · Executive Summary</button>
       <button class="navlink deep sub" data-view="d1" data-jump="d1-audit" data-terms="june audit baseline engagement likes comments johnny qa">June audit baseline</button>
@@ -2189,6 +2192,319 @@
       <div id="csList"></div>
       <button class="cbtn push" id="csAdd" type="button" style="margin:2px 0 14px">+ Add item</button>
     </section>
+    <!-- ============ PLANS · September Plan ============ -->
+    <section class="view" id="view-plansep">
+      <style id="plansep-css">
+#view-plansep{
+ --blue:#0059DA; --eblue:#006BED; --sky:#87C6FF; --slate:#3F5B77; --navy:#151A27; --navy2:#161B28;
+ --ice:#F4F8FC; --cloud:#E1F1FF; --green:#28A745; --red:#DC3545; --amber:#FFC107;
+ --sans:'Montserrat','Proxima Nova','Avenir Next','Segoe UI',system-ui,sans-serif;
+ --serif:'Libre Baskerville',Georgia,serif;
+}
+#view-plansep{box-sizing:border-box;margin:0;padding:0}
+#view-plansep{font-family:var(--sans);background:var(--ice);color:#1c2733;line-height:1.5;-webkit-font-smoothing:antialiased}
+#view-plansep img{max-width:100%}
+#view-plansep a{color:var(--blue)}
+#view-plansep .sp-hero{position:relative;overflow:hidden;background:linear-gradient(175deg,#161B28 0%,#0A2642 55%,#006BED 130%);color:#fff;padding:64px 24px 56px}
+#view-plansep .sp-stars{position:absolute;inset:0;background-image:radial-gradient(1.4px 1.4px at 12% 22%,#ffffffcc,transparent 60%),radial-gradient(1px 1px at 32% 68%,#ffffff99,transparent 60%),radial-gradient(1.6px 1.6px at 52% 14%,#ffffffbb,transparent 60%),radial-gradient(1px 1px at 68% 48%,#ffffff88,transparent 60%),radial-gradient(1.3px 1.3px at 84% 26%,#ffffffcc,transparent 60%),radial-gradient(1px 1px at 91% 74%,#ffffff77,transparent 60%),radial-gradient(1.2px 1.2px at 22% 86%,#ffffff99,transparent 60%),radial-gradient(1px 1px at 45% 38%,#ffffff66,transparent 60%),radial-gradient(1.5px 1.5px at 75% 88%,#ffffffaa,transparent 60%);opacity:.7;pointer-events:none}
+#view-plansep .sp-heroAstro{position:absolute;right:-30px;bottom:-36px;width:340px;opacity:.92;filter:drop-shadow(0 20px 50px rgba(0,107,237,.45));pointer-events:none}
+/* ---- v7: full-width September Plan + generated post mockups ---- */
+.main{min-width:0}
+.main:has(#view-plansep.active){max-width:none}
+.pvmedia.art{flex-direction:column;align-items:stretch;padding:0;background:none;border:0;min-height:0;gap:0}
+.pvart{position:relative;width:100%;aspect-ratio:1.91/1;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:20px 22px;text-align:left}
+.pvart.sq{aspect-ratio:1/1}
+.pvart .k{font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-bottom:8px}
+.pvart .big{font-weight:800;font-size:clamp(16px,2.6vw,26px);line-height:1.15;letter-spacing:-.4px;word-break:break-word}
+.pvart .big.xl{font-size:clamp(20px,3.4vw,34px)}
+.pvart .big.ctr{text-align:center;text-transform:uppercase;font-size:clamp(15px,2.4vw,22px)}
+.pvart .sub{margin-top:8px;font-size:12px;opacity:.78;line-height:1.45}
+.pvart .smark{position:absolute;right:12px;bottom:9px;display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;opacity:.85}
+.pvart.data{background:linear-gradient(160deg,#161B28,#0A2642 55%,#006BED 170%);color:#fff}
+.pvart.stat{background:#fff;border:1px solid #dbe6f2;color:#0A2642}
+.pvart.stat .num{font-weight:900;font-size:clamp(38px,7vw,72px);line-height:.95;color:#006BED;letter-spacing:-.02em}
+.pvart.stat .num.flag{text-decoration:underline dotted #C22 3px;text-underline-offset:6px}
+.pvart.stat .unit{font-weight:800;font-size:clamp(15px,2.4vw,24px);letter-spacing:.04em;text-transform:uppercase;color:#0A2642;margin-top:2px}
+.pvart.stat .flagnote{margin-top:8px;font-size:10.5px;color:#C22;font-weight:600}
+.pvart.graphic{background:#fff;border:1px solid #dbe6f2;color:#0A2642}
+.pvart.graphic.tone{background:#006BED;border:0;color:#fff}
+.pvart.caro{background:#fff;border:1px solid #dbe6f2;color:#0A2642}
+.pvart .cpage{position:absolute;top:10px;right:12px;background:rgba(10,38,66,.8);color:#fff;font-size:10px;font-weight:700;border-radius:999px;padding:2px 8px}
+.pvart .cdots{display:flex;gap:5px;margin-top:12px}
+.pvart .cdots i{width:6px;height:6px;border-radius:50%;background:#c9dcf3}
+.pvart .cdots i.on{background:#006BED}
+.pvart.meme{background:#EAF3FF;color:#0A2642;justify-content:center}
+.pvart.pollc{background:#fff;border:1px solid #dbe6f2;color:#0A2642}
+.pvart .pbars{display:grid;gap:6px;margin-top:12px;max-width:75%}
+.pvart .pbars span{display:block;height:13px;border-radius:5px;background:linear-gradient(90deg,#006BED,#3E8EF0)}
+.pvart.video{background:linear-gradient(165deg,#0F1420,#0A2642);color:#fff;justify-content:flex-end;min-height:150px}
+.pvart .playw{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.92);color:#0A2642;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.artbar{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+.artprompt{font-family:inherit;font-size:11.5px;font-weight:700;border:1px solid #006BED;color:#006BED;background:none;border-radius:999px;padding:4px 12px;cursor:pointer}
+.artprompt:hover{background:#EAF3FF}
+.artnote{font-size:10.5px;color:var(--muted,#6b7a8c);font-style:italic}
+#view-plansep .sp-heroInner{position:relative;max-width:none;margin:0;padding-left:clamp(16px,2.5vw,40px);padding-right:340px}
+#view-plansep .sp-kicker{font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--sky)}
+#view-plansep .sp-hero h1{font-size:clamp(34px,5vw,58px);font-weight:800;line-height:1.04;margin:14px 0 14px;letter-spacing:-.01em}
+#view-plansep .sp-heroSub{max-width:640px;color:#cfe4ff;font-size:15.5px}
+#view-plansep .sp-statRow{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+#view-plansep .sp-stat{background:rgba(255,255,255,.07);border:1px solid rgba(135,198,255,.28);border-radius:14px;padding:10px 18px;backdrop-filter:blur(4px)}
+#view-plansep .sp-stat b{display:block;font-size:22px;font-weight:800;color:#fff}
+#view-plansep .sp-stat span{font-size:11px;color:#a9cdf6;font-weight:600}
+#view-plansep .sp-stat.hi{background:rgba(0,107,237,.32);border-color:var(--sky)}
+@media(max-width:860px){
+#view-plansep .sp-heroInner{padding-right:0}
+#view-plansep .sp-heroAstro{width:210px;opacity:.35}
+}
+#view-plansep .sp-toc{position:sticky;top:0;z-index:50;display:flex;gap:4px;flex-wrap:wrap;background:#ffffffee;backdrop-filter:blur(8px);border-bottom:1px solid #dbe6f2;padding:10px 24px;justify-content:center}
+#view-plansep .sp-toc a{font-size:12.5px;font-weight:700;color:var(--slate);text-decoration:none;padding:7px 14px;border-radius:999px}
+#view-plansep .sp-toc a:hover{background:var(--cloud);color:var(--blue)}
+#view-plansep .sp-monthWrap{max-width:none;margin:34px 0 6px;padding:0 clamp(16px,2.5vw,40px);display:grid;grid-template-columns:1.35fr 1fr;gap:20px}
+@media(max-width:960px){
+#view-plansep .sp-monthWrap{grid-template-columns:1fr}
+}
+#view-plansep .sp-monthCard{background:#fff;border:1px solid #e2eaf4;border-radius:18px;padding:22px 24px;box-shadow:0 14px 40px -22px rgba(21,26,39,.25)}
+#view-plansep .sp-monthCard h3{font-size:15px;font-weight:800;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+#view-plansep .sp-legend{font-size:10.5px;font-weight:600;color:var(--slate);display:flex;align-items:center;gap:8px}
+#view-plansep .sp-legend i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:-3px}
+#view-plansep .sp-mGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+#view-plansep .sp-mgHead{font-size:10px;font-weight:700;color:#8aa3bd;text-align:center;padding-bottom:2px;letter-spacing:.08em}
+#view-plansep .sp-mgCell{background:var(--ice);border:1px solid #e4edf7;border-radius:9px;min-height:52px;padding:5px 7px;position:relative}
+#view-plansep .sp-mgCell.aug{background:#fbf6ea}
+#view-plansep .sp-mgD{font-size:10.5px;font-weight:700;color:var(--slate)}
+#view-plansep .sp-mgDots{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+#view-plansep .sp-mgDots i{width:8px;height:8px;border-radius:50%;display:block;cursor:help}
+#view-plansep .sp-mgNote{font-size:11.5px;color:var(--slate);margin-top:12px;line-height:1.55}
+#view-plansep .sp-how ol{margin-left:18px;display:grid;gap:9px;font-size:12.5px;color:#2a3b4d}
+#view-plansep mark.sp-ph{background:#fde8e8;color:var(--red);font-weight:700;padding:0 3px;border-radius:4px}
+#view-plansep .sp-week{max-width:none;margin:38px 0;padding:0 clamp(16px,2.5vw,40px)}
+#view-plansep .sp-weekHead{background:linear-gradient(135deg,var(--navy) 0%,#0A2642 100%);border-radius:18px;color:#fff;padding:20px 26px;margin-bottom:20px;position:relative;overflow:hidden}
+#view-plansep .sp-weekHead:after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(0,107,237,.5),transparent 70%)}
+#view-plansep .sp-wkTag{font-size:10.5px;font-weight:800;letter-spacing:.2em;color:var(--sky)}
+#view-plansep .sp-weekHead h2{font-size:21px;font-weight:800;margin:4px 0 4px}
+#view-plansep .sp-weekHead p{font-size:12.5px;color:#b9d6f8;max-width:760px}
+#view-plansep .sp-post{background:#fff;border:1px solid #e2eaf4;border-radius:18px;margin-bottom:22px;box-shadow:0 18px 44px -28px rgba(21,26,39,.28);overflow:hidden}
+#view-plansep .sp-postTop{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:13px 18px;border-bottom:1px solid #ecf2f9;background:#fbfdff}
+#view-plansep .sp-dchip{font-size:12px;font-weight:600;color:var(--slate);background:var(--ice);border:1px solid #dfe9f4;border-radius:8px;padding:4px 10px}
+#view-plansep .sp-dchip b{color:#16273a}
+#view-plansep .sp-pchip{font-size:11.5px;font-weight:800;color:#fff;border-radius:8px;padding:4px 10px}
+#view-plansep .sp-pchip.LinkedIn{background:#0A66C2}
+#view-plansep .sp-pchip.Instagram{background:linear-gradient(45deg,#f09433,#dc2743 60%,#bc1888)}
+#view-plansep .sp-pchip.Facebook{background:#1877F2}
+#view-plansep .sp-pchip.X{background:#111}
+#view-plansep .sp-pill{font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 11px}
+#view-plansep .pi-data{background:#D9E7FF;color:#0b3fa0}
+#view-plansep .pi-test{background:#E2F5E9;color:#177a3c}
+#view-plansep .pi-zcta{background:#FFF3D6;color:#8a6503}
+#view-plansep .pi-edu{background:#EFE7FB;color:#5f37a0}
+#view-plansep .pi-prod{background:#DFF3F8;color:#0b6c86}
+#view-plansep .sp-stage{font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 11px;border:1.5px dashed}
+#view-plansep .st-ready{color:#177a3c;border-color:#8fd3a6;background:#f2fbf5}
+#view-plansep .st-creative{color:#7a4bd0;border-color:#c9b2f2;background:#f8f4ff}
+#view-plansep .st-copy{color:#8a6503;border-color:#e8ce85;background:#fffaf0}
+#view-plansep .sp-ptitle{font-size:12.5px;font-weight:700;color:#67809a;margin-left:auto}
+#view-plansep .sp-postBody{display:grid;grid-template-columns:minmax(340px,470px) 1fr;gap:26px;padding:22px}
+@media(max-width:900px){
+#view-plansep .sp-postBody{grid-template-columns:1fr}
+}
+#view-plansep .sp-pcard{border:1px solid #dfe7f0;border-radius:14px;overflow:hidden;background:#fff;font-family:var(--sans);box-shadow:0 10px 26px -18px rgba(21,26,39,.3)}
+#view-plansep .sp-pHead{display:flex;align-items:center;gap:10px;padding:11px 14px}
+#view-plansep .sp-pHead>div{display:flex;flex-direction:column;line-height:1.25}
+#view-plansep .sp-pHead b{font-size:13.5px;font-weight:700;color:#111}
+#view-plansep .sp-pHead span{font-size:11px;color:#7b8a99}
+#view-plansep .sp-pHead .sp-xline{flex-direction:row;gap:5px;align-items:baseline}
+#view-plansep .sp-dots3{width:20px;height:20px;color:#9aa8b6;margin-left:auto;flex:none}
+#view-plansep .sp-avatar{flex:none;border-radius:50%;background:radial-gradient(120% 120% at 30% 25%,#2f7ff0 0%,#0A2642 78%);color:#fff;font-weight:800;display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans);box-shadow:inset 0 0 0 1.5px rgba(135,198,255,.55)}
+#view-plansep .sp-pCap{padding:2px 14px 12px;font-size:12.8px;color:#20303f;line-height:1.5}
+#view-plansep .sp-pCap.x{font-size:13.5px}
+#view-plansep .igCap{padding-top:10px}
+#view-plansep .sp-pActs{display:flex;gap:4px;padding:6px 8px;border-top:1px solid #eef2f6;color:#5b6b7b}
+#view-plansep .sp-pActs span{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:8px 10px;border-radius:8px;flex:1;justify-content:center}
+#view-plansep .sp-pActs span:hover{background:#f2f6fa}
+#view-plansep .sp-pActs svg{width:17px;height:17px}
+#view-plansep .sp-pActs.ig span{flex:none;padding:8px 6px}
+#view-plansep .sp-pActs.ig .sp-right{margin-left:auto}
+#view-plansep .sp-pActs.x{justify-content:space-between;padding:6px 16px}
+#view-plansep .sp-pActs.x span{flex:none;font-weight:600;color:#63707d}
+#view-plansep .sp-creative{position:relative;overflow:hidden;background:var(--navy)}
+#view-plansep .sp-ar-191{aspect-ratio:1.91/1}
+#view-plansep .sp-ar-11{aspect-ratio:1/1}
+#view-plansep .sp-ar-45{aspect-ratio:4/5}
+#view-plansep .sp-ar-169{aspect-ratio:16/9}
+#view-plansep .sp-ar-916{aspect-ratio:9/16}
+#view-plansep .sp-ph-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+#view-plansep .sp-ph-img.sp-blur{filter:blur(3px) brightness(.55) saturate(.8);transform:scale(1.06)}
+#view-plansep .sp-creative .sp-scrim{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:8%;color:#fff}
+#view-plansep .sp-scrim.sp-dkBottom{background:linear-gradient(180deg,rgba(21,26,39,0) 30%,rgba(21,26,39,.88) 78%)}
+#view-plansep .sp-scrim.sp-dkBottom.sp-tall{background:linear-gradient(180deg,rgba(21,26,39,0) 8%,rgba(21,26,39,.9) 62%)}
+#view-plansep .sp-scrim.sp-dkAll{background:linear-gradient(180deg,rgba(21,26,39,.55),rgba(10,38,66,.82));justify-content:center}
+#view-plansep .sp-scrim.sp-dkLeft{background:linear-gradient(90deg,rgba(21,26,39,.92) 34%,rgba(21,26,39,.25) 75%,rgba(21,26,39,0));justify-content:center;padding-right:34%}
+#view-plansep .sp-scrim.sp-ctr{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:9%;color:#fff}
+#view-plansep .sp-scrim.sp-center{justify-content:center;align-items:center;text-align:center}
+#view-plansep .sp-creative .sp-kicker{font-size:9.5px;margin-bottom:8px}
+#view-plansep .sp-kicker.dk{color:var(--blue)}
+#view-plansep .sp-heroNum{font-size:clamp(30px,7vw,54px);font-weight:900;line-height:1;letter-spacing:-.02em;color:#fff}
+#view-plansep .sp-heroNum .sp-phv{color:#7db9ff}
+#view-plansep .sp-heroLabel{font-size:12.5px;font-weight:600;color:#dcebff;margin-top:7px;max-width:90%}
+#view-plansep .sp-heroTitle{font-size:clamp(17px,2.6vw,24px);font-weight:800;line-height:1.16;letter-spacing:-.01em}
+#view-plansep .sp-heroTitle.xl{font-size:clamp(20px,3vw,27px)}
+#view-plansep .sp-heroTitle.dk, #view-plansep .sp-slideHead.dk{color:#16273a}
+#view-plansep .sp-srcLine{font-size:10.5px;color:#b7cfec;margin-top:9px;font-weight:500}
+#view-plansep .sp-phv{color:#ff9d9d;font-weight:800}
+#view-plansep .sp-lightSlide .sp-phv, #view-plansep .sp-guardian .sp-phv, #view-plansep .sp-teachPanel .sp-phv, #view-plansep .sp-slideHead.sp-phv{color:var(--red)}
+#view-plansep .sp-phFlag{margin-top:8px;font-size:11px;font-weight:700;color:#a33;background:#fdeeee;border:1px solid #f3c9c9;border-radius:9px;padding:7px 11px}
+#view-plansep .sp-space{background:linear-gradient(180deg,#161B28 0%,#0A2642 55%,#006BED 145%)}
+#view-plansep .sp-creative .sp-stars, #view-plansep .sp-slide .sp-stars{position:absolute;inset:0;background-image:radial-gradient(1.3px 1.3px at 15% 25%,#fff,transparent 60%),radial-gradient(1px 1px at 40% 70%,#ffffffaa,transparent 60%),radial-gradient(1.5px 1.5px at 62% 18%,#ffffffcc,transparent 60%),radial-gradient(1px 1px at 80% 55%,#ffffff99,transparent 60%),radial-gradient(1.2px 1.2px at 28% 88%,#ffffff88,transparent 60%),radial-gradient(1px 1px at 90% 82%,#ffffff77,transparent 60%);opacity:.8}
+#view-plansep .sp-planet{position:absolute;right:-8%;top:-22%;width:45%;opacity:.5;filter:blur(.4px)}
+#view-plansep .sp-cdWrap{position:absolute;left:7%;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;color:#fff;max-width:52%}
+#view-plansep .sp-cdBig{font-size:clamp(30px,5vw,48px);font-weight:900;letter-spacing:-.02em;line-height:1.05;margin:6px 0}
+#view-plansep .sp-cdSub{font-size:13px;color:#cfe4ff}
+#view-plansep .sp-reportCover{position:absolute;right:7%;top:50%;transform:translateY(-50%) rotate(3deg);width:27%;aspect-ratio:3/4;background:linear-gradient(165deg,#fff, #EAF3FF);border-radius:10px;box-shadow:0 24px 50px -12px rgba(0,0,0,.55),0 0 0 1px #ffffff33;padding:8% 7%;display:flex;flex-direction:column}
+#view-plansep .sp-rcKicker{font-size:8.5px;font-weight:800;letter-spacing:.16em;color:var(--eblue)}
+#view-plansep .sp-rcTitle{font-size:clamp(11px,1.35vw,15px);font-weight:900;color:#16273a;line-height:1.12;margin-top:6px}
+#view-plansep .sp-rcRule{height:3px;width:34%;background:var(--blue);border-radius:2px;margin:9% 0 8%}
+#view-plansep .sp-rcFoot{font-size:8.5px;color:var(--slate);font-weight:600;margin-top:auto}
+#view-plansep .sp-memeTop{position:absolute;top:0;left:0;right:0;padding:7% 8%;background:linear-gradient(180deg,rgba(21,26,39,.88) 55%,transparent);color:#fff;font-weight:800;font-size:clamp(15px,2.4vw,21px);line-height:1.25;text-align:center}
+#view-plansep .sp-clockChip{position:absolute;bottom:6%;right:6%;background:#ffffffe8;color:#c0392b;font-weight:900;font-size:13px;border-radius:9px;padding:6px 11px;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+#view-plansep .sp-ribbon{position:absolute;top:5%;left:0;background:linear-gradient(90deg,var(--blue),var(--eblue));color:#fff;font-weight:800;font-size:12.5px;padding:8px 16px 8px 12px;border-radius:0 999px 999px 0;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+#view-plansep .sp-quoteMark{font-family:var(--serif);font-size:64px;line-height:.6;color:var(--sky);margin-bottom:2px}
+#view-plansep .sp-quote{font-family:var(--serif);font-style:italic;font-size:clamp(14px,2vw,19px);line-height:1.45;color:#fff}
+#view-plansep .sp-quote .sp-phv, #view-plansep .sp-attr .sp-phv{color:#ffb3b3;font-style:normal}
+#view-plansep .sp-attr{font-size:11px;color:#c9ddf5;margin-top:10px;font-weight:600}
+#view-plansep .sp-playBtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:rgba(21,26,39,.55);backdrop-filter:blur(3px);border:2px solid #ffffffcc;display:flex;align-items:center;justify-content:center;color:#fff}
+#view-plansep .sp-playBtn svg{width:26px;height:26px;margin-left:3px}
+#view-plansep .sp-playBtn.sp-sm{width:48px;height:48px}
+#view-plansep .sp-playBtn.sp-sm svg{width:20px;height:20px}
+#view-plansep .sp-vidLen{position:absolute;right:4%;bottom:6%;background:rgba(0,0,0,.72);color:#fff;font-size:10.5px;font-weight:700;border-radius:6px;padding:3px 8px}
+#view-plansep .sp-lowerThird{position:absolute;left:0;right:18%;bottom:8%;background:linear-gradient(90deg,var(--navy) 0%,rgba(21,26,39,.85) 80%,transparent);color:#fff;padding:10px 16px;border-left:4px solid var(--eblue)}
+#view-plansep .sp-lowerThird b{display:block;font-size:13px}
+#view-plansep .sp-lowerThird span{font-size:10.5px;color:#bcd6f5}
+#view-plansep .sp-panel{position:absolute;left:8%;right:8%;top:50%;transform:translateY(-50%);background:rgba(21,26,39,.86);border:1px solid rgba(135,198,255,.35);border-radius:16px;padding:7% 7%;color:#fff;backdrop-filter:blur(4px)}
+#view-plansep .sp-pStat{font-size:clamp(17px,2.6vw,24px);font-weight:900;line-height:1.2}
+#view-plansep .sp-pSub{font-size:11.5px;color:#a9cdf6;margin-top:4px}
+#view-plansep .sp-pFoot{font-size:10.5px;color:var(--sky);margin-top:12px;font-weight:700;border-top:1px solid rgba(135,198,255,.25);padding-top:9px}
+#view-plansep .sp-triRow{display:flex;gap:4%;justify-content:center;margin:4% 0}
+#view-plansep .sp-tri{background:rgba(21,26,39,.7);border:1px solid rgba(135,198,255,.35);border-radius:13px;padding:4% 4.5%;text-align:center;flex:1}
+#view-plansep .sp-tri b{display:block;font-size:clamp(13px,2vw,19px);font-weight:900}
+#view-plansep .sp-tri span{font-size:10px;color:#a9cdf6;font-weight:600}
+#view-plansep .sp-tpRow{display:flex;align-items:center;gap:8px;font-size:12px;color:#2a3b4d;padding:7px 0;border-bottom:1px dashed #dfe9f4;flex-wrap:wrap}
+#view-plansep .sp-tpRow b{font-weight:800}
+#view-plansep .sp-tpRow.sp-inv{color:#eaf3ff;border-color:rgba(135,198,255,.25);font-size:12.5px}
+#view-plansep .sp-tpRow.sp-inv b{color:#fff}
+#view-plansep .sp-tpDate{margin-left:auto;font-size:10.5px;font-weight:800;color:var(--blue);background:var(--cloud);border-radius:6px;padding:2px 8px}
+#view-plansep .sp-stackCard{display:flex;flex-direction:column;background:#fff}
+#view-plansep .sp-topPhoto{position:relative;flex:1.05;overflow:hidden}
+#view-plansep .sp-topPhoto .sp-ph-img{position:absolute}
+#view-plansep .sp-teachPanel{flex:1;background:#fff;padding:6% 7%;display:flex;flex-direction:column;justify-content:center}
+#view-plansep .sp-tpHead{font-size:13.5px;font-weight:800;color:#16273a;margin-bottom:6px}
+#view-plansep .sp-split{display:flex}
+#view-plansep .sp-half{position:relative;flex:1;overflow:hidden}
+#view-plansep .sp-half .sp-ph-img{position:absolute}
+#view-plansep .sp-half:first-child:after{content:"";position:absolute;top:0;bottom:0;right:0;width:3px;background:#fff}
+#view-plansep .sp-halfLbl{position:absolute;bottom:7%;left:7%;background:rgba(21,26,39,.82);color:#fff;font-size:11px;font-weight:800;border-radius:8px;padding:5px 11px}
+#view-plansep .sp-halfLbl.sp-right{left:auto;right:7%}
+#view-plansep .sp-pollBox{border-top:1px solid #eef2f6;padding:12px 14px}
+#view-plansep .sp-pollQ{font-size:12.5px;font-weight:700;color:#20303f;margin-bottom:9px}
+#view-plansep .sp-pollOpt{border:1.6px solid #0A66C2;color:#0A66C2;font-weight:700;font-size:12px;border-radius:999px;padding:7px 14px;margin-bottom:7px;text-align:center}
+#view-plansep .sp-pollOpt:hover{background:#eaf3ff}
+#view-plansep .sp-pollMeta{font-size:10.5px;color:#7b8a99;margin-top:4px}
+#view-plansep .sp-carWrap{position:relative}
+#view-plansep .sp-slideStrip{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+#view-plansep .sp-slideStrip::-webkit-scrollbar{height:6px}
+#view-plansep .sp-slideStrip::-webkit-scrollbar-thumb{background:#c9d9ea;border-radius:3px}
+#view-plansep .sp-slide{position:relative;flex:0 0 86%;scroll-snap-align:start;border-radius:10px;overflow:hidden;background:var(--navy)}
+#view-plansep .sp-slide.sp-lightSlide{background:linear-gradient(180deg,#fff,#F4F8FC);display:flex;flex-direction:column;justify-content:center;padding:8%}
+#view-plansep .sp-slide.sp-navySlide{background:linear-gradient(160deg,#151A27,#0A2642);display:flex;flex-direction:column;justify-content:center;padding:8%;color:#fff}
+#view-plansep .sp-slidePill{position:absolute;top:5%;right:5%;background:rgba(0,0,0,.62);color:#fff;font-size:10.5px;font-weight:800;border-radius:999px;padding:3px 10px}
+#view-plansep .sp-slideHead{font-size:clamp(15px,2.2vw,20px);font-weight:800;color:#16273a;line-height:1.2}
+#view-plansep .sp-slideHead.sp-inv{color:#fff}
+#view-plansep .sp-slideSub{font-size:11px;color:var(--slate);margin-top:8px;font-weight:600}
+#view-plansep .sp-slideSub.sp-inv{color:#a9cdf6}
+#view-plansep .sp-slideNum{width:34px;height:34px;border-radius:10px;background:var(--blue);color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+#view-plansep .sp-slideNum.sp-inv{background:#fff;color:var(--blue)}
+#view-plansep .sp-methHead{font-size:11px;font-weight:800;letter-spacing:.18em;color:var(--sky);margin-bottom:10px}
+#view-plansep .sp-methBody{font-size:12.5px;color:#dcebff;line-height:1.6;max-width:92%}
+#view-plansep .sp-carDots{display:flex;gap:5px;justify-content:center;padding:9px 0 2px}
+#view-plansep .sp-carDots i{width:6px;height:6px;border-radius:50%;background:#c7d6e6}
+#view-plansep .sp-carDots i.sp-on{background:var(--blue);width:16px;border-radius:3px}
+#view-plansep .sp-bigPair{font-size:clamp(19px,3vw,27px);font-weight:900;color:#16273a;margin:6px 0}
+#view-plansep .sp-bigPair.sp-inv{color:#fff}
+#view-plansep .sp-bars{display:grid;gap:8px;margin-top:10px}
+#view-plansep .sp-barRow{display:grid;grid-template-columns:82px 1fr 44px;align-items:center;gap:8px;font-size:10.5px;font-weight:700;color:var(--slate)}
+#view-plansep .sp-barRow i{height:13px;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--eblue));display:block}
+#view-plansep .sp-barRow b{text-align:right;font-size:10.5px}
+#view-plansep .sp-barRow.sp-dim i{background:#c7d6e6}
+#view-plansep .sp-guardian{border-top:5px solid var(--blue)}
+#view-plansep .sp-lockRow{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+#view-plansep .sp-chipRow{display:flex;gap:8px;margin:14px 0 4px}
+#view-plansep .sp-chipRow i{width:30px;height:30px;border-radius:9px;background:var(--cloud);color:var(--blue);font-weight:900;font-style:normal;font-size:14px;display:flex;align-items:center;justify-content:center;border:1.5px solid #bcd9ff}
+#view-plansep .sp-miniChart{width:78%;margin-top:12px}
+#view-plansep .sp-phone{display:flex;justify-content:center;padding:16px 0;background:linear-gradient(160deg,#0e1420,#1a2331)}
+#view-plansep .sp-phone .sp-creative{width:min(64%,270px);border-radius:22px;box-shadow:0 24px 54px -16px rgba(0,0,0,.7),0 0 0 5px #10161f,0 0 0 6.5px #2c3a4d}
+#view-plansep .sp-reelUI{position:absolute;right:5%;bottom:16%;display:flex;flex-direction:column;gap:16px;color:#fff}
+#view-plansep .sp-reelUI svg{width:24px;height:24px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.6))}
+#view-plansep .sp-reelTag{position:absolute;top:4.5%;left:6%;background:rgba(0,0,0,.55);color:#fff;font-size:9.5px;font-weight:800;letter-spacing:.06em;border-radius:999px;padding:3px 10px}
+#view-plansep .sp-dayBars{display:flex;align-items:flex-end;gap:6px;height:76px;margin-top:16px}
+#view-plansep .sp-dayBars span{flex:1;background:#ffffff55;border-radius:4px 4px 0 0}
+#view-plansep .sp-dayBars span.sp-hot{background:var(--sky);box-shadow:0 0 18px #87C6FF88}
+#view-plansep .sp-dayBars span.sp-cold{background:#ffffff2e}
+#view-plansep .sp-dayLbls{display:flex;gap:6px;margin-top:6px}
+#view-plansep .sp-dayLbls i{flex:1;text-align:center;font-size:9px;font-weight:800;color:#ffffff99;font-style:normal}
+#view-plansep .sp-dayLbls i.sp-hot{color:var(--sky)}
+#view-plansep .sp-dayLbls i.sp-cold{color:#ffffff55}
+#view-plansep .sp-tcode{font-size:13px;color:#dcebff;font-weight:600}
+#view-plansep .sp-tcode.sp-big{font-size:16.5px;color:#fff;margin:4px 0 8px}
+#view-plansep .sp-uiFloat{width:74%;margin:10px auto;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px -8px rgba(0,0,0,.65),0 0 0 1px #ffffff30;transform:rotate(-2deg)}
+#view-plansep .sp-uiFloat img{display:block}
+#view-plansep .sp-iconRow{display:flex;gap:12px;margin-top:14px}
+#view-plansep .sp-iconRow img{width:38px;height:38px;background:#fff;border-radius:11px;padding:6px;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+#view-plansep .sp-specs{display:grid;gap:12px;align-content:start}
+#view-plansep .sp-specBlock{background:#f8fbff;border:1px solid #e2ecf7;border-radius:13px;padding:13px 15px}
+#view-plansep .sp-specBlock.warn{background:#fff7f5;border-color:#f2d3cd}
+#view-plansep .sp-specBlock h5{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+#view-plansep .sp-specBlock.warn h5{color:#a33}
+#view-plansep .sp-specBlock p{font-size:12.5px;color:#2a3b4d}
+#view-plansep .sp-specBlock p.vis{font-style:italic;color:#40566d}
+#view-plansep .sp-tagRow{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+#view-plansep .sp-tag{font-size:10px;font-weight:700;background:var(--cloud);color:#0b3fa0;border-radius:6px;padding:3px 8px}
+#view-plansep .sp-copyBtn{margin-left:auto;font-family:var(--sans);font-size:10.5px;font-weight:800;color:#fff;background:var(--blue);border:none;border-radius:7px;padding:5px 11px;cursor:pointer;letter-spacing:.02em}
+#view-plansep .sp-copyBtn:hover{background:var(--eblue)}
+#view-plansep details summary{font-size:11.5px;font-weight:600;color:var(--blue);cursor:pointer}
+#view-plansep details pre{margin-top:9px;background:#0f1622;color:#cfe0f5;font-size:10.6px;line-height:1.55;padding:14px;border-radius:10px;white-space:pre-wrap;max-height:300px;overflow:auto;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
+#view-plansep .sp-phChips{display:flex;flex-wrap:wrap;gap:6px}
+#view-plansep .sp-phChips span{font-size:10.5px;font-weight:700;color:var(--red);background:#fde8e8;border:1px solid #f3c9c9;border-radius:6px;padding:3px 8px}
+#view-plansep ul.sp-qa{margin-left:16px;display:grid;gap:6px;font-size:11.8px;color:#2a3b4d}
+#view-plansep .sp-creds{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+#view-plansep .sp-credChip{font-size:10.5px;font-weight:700;color:#0b3fa0;background:var(--cloud);border-radius:7px;padding:4px 9px;text-decoration:none}
+#view-plansep .sp-credChip.brand{background:#e8f0fe;color:#4a3aa0}
+#view-plansep .sp-credNote{flex-basis:100%;font-size:10px;color:#7b8a99;margin-top:2px}
+#view-plansep .sp-opsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px}
+#view-plansep .sp-opsCard{background:#fff;border:1px solid #e2eaf4;border-radius:15px;padding:18px 20px}
+#view-plansep .sp-opsCard h4{font-size:13px;font-weight:800;margin-bottom:10px;color:#16273a}
+#view-plansep .sp-opsCard ul{margin-left:16px;display:grid;gap:7px;font-size:11.8px;color:#2a3b4d}
+#view-plansep .sp-swatches{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px}
+#view-plansep .sp-swatches span{font-size:9px;font-weight:800;color:#fff;border-radius:6px;padding:4px 8px}
+#view-plansep .sp-foot{max-width:none;margin:30px 0 46px;padding:0 clamp(16px,2.5vw,40px);display:grid;gap:10px}
+#view-plansep .sp-foot p{font-size:11.5px;color:var(--slate);line-height:1.6}
+#view-plansep .sp-foot .tiny{font-size:10.5px;color:#8aa3bd}
+#view-plansep .sp-lockTime{position:absolute;top:14%;left:0;right:0;text-align:center;font-size:clamp(38px,6vw,58px);font-weight:300;color:#ffffffee;letter-spacing:.02em;text-shadow:0 4px 22px rgba(0,0,0,.55)}
+#view-plansep .sp-notifCard{position:absolute;left:8%;right:8%;top:42%;background:rgba(250,250,252,.94);border-radius:15px;padding:11px 13px;display:flex;gap:10px;align-items:flex-start;box-shadow:0 16px 38px rgba(0,0,0,.5);backdrop-filter:blur(6px)}
+#view-plansep .sp-notifCard .sp-nIcon{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#3F5B77,#151A27);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+#view-plansep .sp-notifCard b{font-size:10.5px;letter-spacing:.06em;color:#5c6b7a}
+#view-plansep .sp-notifCard .sp-nTime{float:right;font-size:10px;color:#8a97a5;margin-left:8px}
+#view-plansep .sp-notifCard p{font-size:13.5px;font-weight:600;color:#111;margin-top:1px}
+
+/* heading overrides — beat the hub's global h1..h4 colors inside the section */
+#view-plansep .sp-hero h1{color:#fff}
+#view-plansep .sp-weekHead h2{color:#fff}
+#view-plansep .sp-monthCard h3{color:#16273a}
+#view-plansep .sp-opsCard h4{color:#16273a}
+#view-plansep h1,#view-plansep h2,#view-plansep h3,#view-plansep h4{margin:0;font-family:var(--sans);letter-spacing:-.01em}
+#view-plansep .sp-hero h1{font-size:clamp(34px,5vw,58px);font-weight:800;line-height:1.04}
+
+</style>
+      <div id="plansep-mount"></div>
+    </section>
   </main>
 </div>
 <div class="tooltip" id="tooltip"></div>
@@ -3481,7 +3797,7 @@ try{
     var lk=document.getElementById('wkOpenStudio');
     if(lk) lk.onclick=function(e){ e.preventDefault(); var nl=document.querySelector('.navlink[data-view="studio"]'); if(nl) nl.click(); };
   }
-  function refreshAll(){ tiles(); envTabs(); filters(); render(); updateCart(); renderWeek(); }
+  function refreshAll(){ tiles(); envTabs(); filters(); render(); updateCart(); renderWeek(); try{ window.genPrompt=genPrompt; window.copyText=copyText; window.showToast=showToast; if(window.renderPlanSep) window.renderPlanSep(); }catch(e){} }
   // normalize whatever state was loaded (shipped, saved, or team-synced)
   ccPosts.forEach(function(p){ var e=derivedEnv(p); if(e!==p.env) p.env=e; if(creativeFulfilled(p)) inferKind(p); });
   function moveEnv(p,env,act,msg){
@@ -3565,7 +3881,50 @@ try{
     };
     return b;
   }
-  function pvMedia(p){
+function artKind(p){
+    var f=(p.format||'').toLowerCase();
+    if(/video|reel|clip|screen/.test(f)) return 'video';
+    if(/poll/.test(f)) return 'poll';
+    if(/carousel|document/.test(f)) return 'carousel';
+    if(/single stat/.test(f)) return 'stat';
+    if(/meme/.test(f)) return 'meme';
+    return 'graphic';
+  }
+  function artMark(){ return '<span class="smark"><svg viewBox="-0.7 -0.2 24.9 25.4" width="14" height="14" aria-hidden="true"><use href="#ss-mark"/></svg>SkySlope</span>'; }
+  function artFor(p){
+    var kind=artKind(p);
+    var sq=(p.platform==='Instagram')?' sq':'';
+    var lines=(p.cap||'').split('\n').filter(function(l){return l.trim();});
+    var big=(lines[0]||p.title||'').slice(0,110);
+    var sub=(lines[1]||'').slice(0,90);
+    var kick=escAttr((p.pillar||'')+' \u00b7 '+(p.format||''));
+    if(kind==='stat'){
+      var line=lines[0]||'';
+      var m=line.match(/\[([^\]]{1,14})\]\s*([A-Za-z][A-Za-z-]*)/);
+      var num='', unit='', flagged=false;
+      if(m){ num=m[1]; unit=m[2]; flagged=true; }
+      else { num=heroNumber(line.replace(/\[|\]/g,'')); if(num){ var after=line.replace(/\[|\]/g,'').split(num)[1]||''; unit=(after.trim().split(/\s+/)[0]||'').replace(/[^A-Za-z-]/g,''); } }
+      if(num){
+        return '<div class="pvart stat'+sq+'"><span class="k">'+kick+'</span>'
+          +'<div class="num'+(flagged?' flag':'')+'">'+escAttr(num)+'</div>'
+          +'<div class="unit">'+escAttr(unit||'')+'</div>'
+          +(flagged?'<div class="flagnote">[placeholder] \u2014 validate before publishing</div>':'')
+          +artMark()+'</div>';
+      }
+      return '<div class="pvart data'+sq+'"><span class="k">'+kick+'</span><div class="big xl">'+capHTML(big)+'</div>'+(sub?'<div class="sub">'+capHTML(sub)+'</div>':'')+artMark()+'</div>';
+    }
+    if(kind==='video')
+      return '<div class="pvart video'+sq+'"><span class="k">'+kick+'</span><div class="playw"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div><div class="big">'+capHTML(big)+'</div>'+artMark()+'</div>';
+    if(kind==='poll')
+      return '<div class="pvart pollc'+sq+'"><span class="k">'+kick+'</span><div class="big">'+capHTML(big)+'</div><div class="pbars"><span style="width:78%"></span><span style="width:52%"></span><span style="width:34%"></span></div>'+artMark()+'</div>';
+    if(kind==='carousel')
+      return '<div class="pvart caro'+sq+'"><span class="k">'+kick+'</span><div class="big">'+capHTML(big)+'</div>'+(sub?'<div class="sub">'+capHTML(sub)+'</div>':'')+'<div class="cdots"><i class="on"></i><i></i><i></i><i></i><i></i></div><span class="cpage">1/6</span>'+artMark()+'</div>';
+    if(kind==='meme')
+      return '<div class="pvart meme'+sq+'"><div class="big ctr">'+capHTML(big)+'</div>'+artMark()+'</div>';
+    var tone=(p.pillar==='Zero-CTA'||p.pillar==='Education')?' tone':'';
+    return '<div class="pvart graphic'+sq+tone+'"><span class="k">'+kick+'</span><div class="big">'+capHTML(big)+'</div>'+(sub?'<div class="sub">'+capHTML(sub)+'</div>':'')+artMark()+'</div>';
+  }
+    function pvMedia(p){
     if(p.creative&&p.creative.link){
       var kind=p.creative.kind||'asset';
       var lk=p.creative.link;
@@ -3575,7 +3934,7 @@ try{
       return '<a class="pvmedia has" href="'+lk.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+(kind==='video'?'\u25b6':'\ud83d\uddbc\ufe0f')+' '+kind+' attached \u2014 open in Drive</a>';
     }
     if(p.img) return '<div class="pvmedia img"><img src="'+p.img+'" alt=""><button type="button" class="imgrm" title="Remove image (moves the post back a stage)">✕</button></div>';
-    return '<div class="pvmedia ghost"><span>planned visual</span>'+capHTML((p.visual||'No visual brief yet').slice(0,150))+'</div>';
+    return '<div class="pvmedia art">'+artFor(p)+'<div class="artbar"><span class="artnote">generated mockup \u2014 \u29c9 Image prompt \u2192 Gemini, then attach the real creative to replace it</span></div></div>';
   }
   function escAttr(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
   function dayLabel(ds){
@@ -4341,6 +4700,7 @@ try{
     showToast('Excel export downloaded — one row per post, grouped by platform, with platform rules');
   };
   filters();syncView();renderWeek();
+  try{ window.genPrompt=genPrompt; window.copyText=copyText; window.showToast=showToast; if(window.renderPlanSep) window.renderPlanSep(); }catch(e){}
 })();
 
 // ---------- CloudSync: shared team state via Supabase (inactive until configured) ----------
@@ -4464,6 +4824,175 @@ try{
   setInterval(function(){ pull(false); }, 45000);
   setInterval(push, 6000);
 })();
+
+/* ===== injected: Plans › September Plan renderer ===== */
+/* ===== Plans › September Plan — live renderer (runs inside the hub's main closure) ===== */
+var PLANSEP = {"PLAN": [{"gi": 1, "time": "9:30 AM", "why": "Hub-assigned Deploy date. Rankings start comment arguments — seed first comment with methodology."}, {"gi": 0, "time": "10:00 AM", "why": "Hub-assigned Deploy date. Index Drop #1 — the first give-first data post."}, {"gi": 47, "time": "9:30 AM", "why": "T-14 countdown. Exactly two weeks before the Sep 15 quarterly drop."}, {"gi": 7, "time": "12:00 PM", "why": "IG week-lead is relatable (zero-CTA) per Doc 1. Lunch-scroll window."}, {"gi": 26, "time": "12:30 PM", "why": "FB community conversation starter; reply to every story as a named human."}, {"gi": 5, "time": "9:30 AM", "why": "Testimonial cadence — the audit’s only proven format. Rally 3+ team engagements in hour one."}, {"gi": 172, "time": "10:15 AM", "why": "X echo of the Aug 30 Index drop; LinkedIn link in the reply."}, {"gi": 9, "time": "10:00 AM", "why": "Native LinkedIn poll — engagement play for the Q3 comments goal."}, {"gi": 4, "time": "11:30 AM", "why": "IG week-lead testimonial. Cut the 15-sec vertical teaser from the long interview."}, {"gi": 27, "time": "9:30 AM", "why": "\"Save this for release morning\" — NAR EHS (Aug data) releases Thu Sep 10 (verified, nar.realtor)."}, {"gi": 30, "time": "12:30 PM", "why": "FB data-calendar card pairs with tomorrow’s EHS release."}, {"gi": 170, "time": "10:30 AM", "why": "EHS release morning (10:00 AM ET release). News register — numbers from the actual print."}, {"gi": 3, "time": "9:00 AM", "why": "HERO: first quarterly State of the Transaction. Press outreach to Inman/HousingWire/RISMedia same week. (Hub date Aug 23 slipped — rescheduled to match the T-14 teaser.)"}, {"gi": 138, "time": "11:00 AM", "why": "X echo of the quarterly drop, two hours after LinkedIn."}, {"gi": 2, "time": "12:00 PM", "why": "\"Tuesday is contract day\" — posted ON a Tuesday. Tag-an-agent engagement reel."}, {"gi": 171, "time": "8:30 AM", "why": "FOMC decision day (Sep 15–16 meeting, verified, federalreserve.gov). Caption references \"whatever happens at 2pm.\""}, {"gi": 6, "time": "11:30 AM", "why": "TC of the Month — nomination thread feeds next month’s pick."}, {"gi": 51, "time": "12:30 PM", "why": "FB monthly market-in-3-numbers series debut; numbers from the Sep 10 EHS print."}, {"gi": 12, "time": "9:30 AM", "why": "Education carousel in the calm-guardian register; compliance = no wink."}, {"gi": 17, "time": "9:30 AM", "why": "Data carousel; $80K experience gap — identity-call for the long-tail agent audience."}, {"gi": 80, "time": "11:30 AM", "why": "IG week-lead testimonial reel; full cut goes to YouTube per platform spec."}, {"gi": 82, "time": "12:30 PM", "why": "FB cross-post of proven Spotlight content (Doc 1: cross-post testimonials to FB)."}, {"gi": 128, "time": "10:00 AM", "why": "X product digest; changelog link in the reply, not the post."}, {"gi": 85, "time": "12:00 PM", "why": "Product Info Play after the week’s testimonial lead; support article in first comment."}, {"gi": 111, "time": "9:30 AM", "why": "Monthly what’s-new carousel closes the month; support links in first comment."}, {"gi": 61, "time": "12:30 PM", "why": "FB community fun to close the week — wrong answers welcome."}], "WEEKS": [{"tag": "LEAD-IN", "title": "Already staged in the hub", "note": "Two Deploy-stage Index posts carry the give-first reset into September.", "from": "2026-08-24", "to": "2026-08-30"}, {"tag": "WEEK 1", "title": "Sep 1 – 4 · Give-first reset + countdown", "note": "The T–14 teaser starts the quarterly clock; Instagram opens relatable; the proven Spotlight format returns.", "from": "2026-08-31", "to": "2026-09-04"}, {"tag": "WEEK 2", "title": "Sep 8 – 11 · Engagement week + EHS release", "note": "Poll for comments (the Q3 goal), spotlight the hero user, and own release morning — NAR EHS drops Thu Sep 10 (verified).", "from": "2026-09-05", "to": "2026-09-11"}, {"tag": "WEEK 3", "title": "Sep 14 – 18 · THE QUARTERLY DROP + Fed day", "note": "State of the Transaction lands Tue 9:00 AM with press outreach the same week; Fed decision Wed Sep 16 (verified); guardian-tone education closes the week.", "from": "2026-09-12", "to": "2026-09-18"}, {"tag": "WEEK 4", "title": "Sep 21 – 25 · Product Info Plays + community", "note": "Product month-close: Lightning Fill, the September digest and what’s-new carousel — after the week’s testimonial leads.", "from": "2026-09-19", "to": "2026-09-27"}], "CREATIVES": {"1": "\n<div class=\"sp-carWrap\">\n <div class=\"sp-slideStrip\">\n  <div class=\"sp-slide sp-ar-11\">\n   <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?auto=format&fit=crop&w=1200&q=80\" alt=\"Aerial suburb\">\n   <div class=\"sp-scrim sp-dkAll\"><div class=\"sp-kicker\">THE SKYSLOPE INDEX</div>\n    <div class=\"sp-heroTitle\">Fastest-closing states, ranked.</div>\n    <div class=\"sp-srcLine\">From 3M+ transactions a year</div></div>\n   <span class=\"sp-slidePill\">1 / 12</span>\n  </div>\n  <div class=\"sp-slide sp-ar-11 sp-lightSlide\">\n   <div class=\"sp-slideHead\">Top 10 by days, contract → close</div>\n   <div class=\"sp-bars\">\n    <div class=\"sp-barRow\"><span>1 · Texas</span><i style=\"width:92%\"></i><b class=\"sp-phv\">[28]</b></div>\n    <div class=\"sp-barRow\"><span>2 · Georgia</span><i style=\"width:84%\"></i><b class=\"sp-phv\">[30]</b></div>\n    <div class=\"sp-barRow\"><span>3 · Arizona</span><i style=\"width:78%\"></i><b class=\"sp-phv\">[31]</b></div>\n    <div class=\"sp-barRow\"><span>4 · Florida</span><i style=\"width:72%\"></i><b class=\"sp-phv\">[33]</b></div>\n    <div class=\"sp-barRow sp-dim\"><span>… California</span><i style=\"width:38%\"></i><b class=\"sp-phv\">[37]</b></div>\n   </div>\n  </div>\n  <div class=\"sp-slide sp-ar-11 sp-navySlide\">\n   <div class=\"sp-methHead\">Methodology</div>\n   <div class=\"sp-methBody\">Median days from mutual acceptance to file-complete, anonymized aggregate across SkySlope closings, trailing 12&nbsp;mo. Full notes in the comments.</div>\n  </div>\n </div>\n <div class=\"sp-carDots\"><i class=\"sp-on\"></i><i></i><i></i><i></i><i></i></div>\n</div>\n<div class=\"sp-phFlag\">⚠ bar values are placeholders from the hub card — validate in the data working session</div>", "0": "\n<div class=\"sp-creative sp-ar-191\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1583521214690-73421a1829a9?auto=format&fit=crop&w=1200&q=80\" alt=\"Stacks of contracts\">\n <div class=\"sp-scrim\"><div class=\"sp-heroNum\"><span class=\"sp-phv\">[42]</span> documents. <span class=\"sp-phv\">[187]</span> signatures.</div><div class=\"sp-heroLabel\">The average home closing, by the numbers</div><div class=\"sp-srcLine\">SkySlope Index · methodology in comments</div></div>\n</div>\n<div class=\"sp-phFlag\">⚠ placeholder numbers — validate before publishing</div>", "47": "\n<div class=\"sp-creative sp-ar-191 sp-space\">\n <div class=\"sp-stars\"></div>\n <img class=\"sp-planet\" src=\"https://skyslope.com/wp-content/uploads/2022/07/planet-02-blue-768x764.png\" alt=\"\">\n <div class=\"sp-cdWrap\">\n  <div class=\"sp-kicker\">THE SKYSLOPE INDEX</div>\n  <div class=\"sp-cdBig\">T–14 days</div>\n  <div class=\"sp-cdSub\">The first <b>State of the Transaction</b> report</div>\n </div>\n <div class=\"sp-reportCover\">\n  <div class=\"sp-rcKicker\">Q3 · 2026</div>\n  <div class=\"sp-rcTitle\">State of the<br>Transaction</div>\n  <div class=\"sp-rcRule\"></div>\n  <div class=\"sp-rcFoot\">5 numbers nobody<br>has published before</div>\n </div>\n</div>", "7": "\n<div class=\"sp-creative sp-ar-45\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1523380262778-076eb862d38f?auto=format&fit=crop&w=1200&q=80\" alt=\"Desk lamp at night\">\n <div class=\"sp-memeTop\">POV:</div>\n <div class=\"sp-notifCard\"><div class=\"sp-nIcon\">L</div><div><b>LENDER</b><span class=\"sp-nTime\">now</span><p>quick question</p></div></div>\n <div class=\"sp-lockTime\">4:58</div>\n <div class=\"sp-clockChip\">FRIDAY</div>\n</div>", "26": "\n<div class=\"sp-creative sp-ar-45\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1468779036391-52341f60b55d?auto=format&fit=crop&w=1200&q=80\" alt=\"Thick folders\">\n <div class=\"sp-scrim sp-dkBottom\">\n  <div class=\"sp-heroTitle\">What’s the single worst file<br>you’ve ever inherited?</div>\n  <div class=\"sp-srcLine\">Wrong answers welcome. Therapy optional.</div>\n </div>\n</div>", "5": "\n<div class=\"sp-creative sp-ar-169\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1656399910089-b7ead999bf23?auto=format&fit=crop&w=1200&q=80\" alt=\"Broker portrait\" style=\"object-position:50% 30%\">\n <div class=\"sp-scrim sp-dkLeft\">\n  <div class=\"sp-quoteMark\">“</div>\n  <div class=\"sp-quote\">Our annual audit used to take <em class=\"sp-phv\">[three weeks]</em>.<br>Last year it took <em class=\"sp-phv\">[an afternoon]</em>.”</div>\n  <div class=\"sp-attr\"><b class=\"sp-phv\">[Marcus Reid]</b> · Broker-Owner, <span class=\"sp-phv\">[Summit Realty Group]</span></div>\n </div>\n <span class=\"sp-playBtn\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M8 5v14l11-7z\"/></svg></span>\n <span class=\"sp-vidLen\">2:04</span>\n</div>\n<div class=\"sp-phFlag\">⚠ name, brokerage and figures are placeholders — confirm with the customer before filming</div>", "172": "\n<div class=\"sp-creative sp-ar-11\">\n <img class=\"sp-ph-img sp-blur\" src=\"https://images.unsplash.com/photo-1741156386380-0236c72eb6f9?auto=format&fit=crop&w=1200&q=80\" alt=\"Keys\">\n <div class=\"sp-panel\">\n  <div class=\"sp-kicker\">THE SKYSLOPE INDEX</div>\n  <div class=\"sp-pStat\"><span class=\"sp-phv\">[42]</span> documents per closing</div>\n  <div class=\"sp-pSub\">from 3M+ transactions a year</div>\n  <div class=\"sp-pFoot\">Full drop → LinkedIn (link in reply)</div>\n </div>\n</div>\n<div class=\"sp-phFlag\">⚠ placeholder numbers — validate before publishing</div>", "2": "\n<div class=\"sp-phone\">\n <div class=\"sp-creative sp-ar-916\">\n  <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80\" alt=\"Signing a contract\">\n  <div class=\"sp-scrim sp-dkAll sp-center\">\n   <div class=\"sp-kicker\">THE SKYSLOPE INDEX</div>\n   <div class=\"sp-heroTitle xl\">The most common day<br>to go under contract?</div>\n   <div class=\"sp-cdBig\">Tuesday.</div>\n   <div class=\"sp-dayBars\">\n    <span style=\"height:26%\"></span><span class=\"sp-hot\" style=\"height:100%\"></span><span style=\"height:74%\"></span><span style=\"height:66%\"></span><span style=\"height:58%\"></span><span style=\"height:34%\"></span><span class=\"sp-cold\" style=\"height:12%\"></span>\n   </div>\n   <div class=\"sp-dayLbls\"><i>M</i><i class=\"sp-hot\">T</i><i>W</i><i>T</i><i>F</i><i>S</i><i class=\"sp-cold\">S</i></div>\n  </div>\n  <div class=\"sp-reelUI\"><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"><path d=\"M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5C21 14 12 21 12 21Z\"/></svg></span><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5Z\"/></svg></span><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"m3 12 18-8-6 18-3-7-9-3Z\"/></svg></span></div>\n  <span class=\"sp-reelTag\">Reel · 0:18</span>\n </div>\n</div>", "9": "\n<div class=\"sp-creative sp-ar-191 sp-split\">\n <div class=\"sp-half\"><img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1583521214690-73421a1829a9?auto=format&fit=crop&w=800&q=80\" alt=\"Chaos\"><span class=\"sp-halfLbl\">closing week</span></div>\n <div class=\"sp-half\"><img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1554325139-bbd006cd3e5a?auto=format&fit=crop&w=800&q=80\" alt=\"Calm\"><span class=\"sp-halfLbl sp-right\">you, allegedly</span></div>\n</div>\n<div class=\"sp-pollBox\">\n <div class=\"sp-pollQ\">Worst part of closing week — be honest:</div>\n <div class=\"sp-pollOpt\">Chasing signatures</div>\n <div class=\"sp-pollOpt\">The 11th-hour lender doc</div>\n <div class=\"sp-pollOpt\">“Can we move the date?”</div>\n <div class=\"sp-pollOpt\">Explaining all of the above to the client</div>\n <div class=\"sp-pollMeta\">You can see how people vote. · 1w left</div>\n</div>", "4": "\n<div class=\"sp-phone\">\n <div class=\"sp-creative sp-ar-916\">\n  <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=900&q=80\" alt=\"TC portrait\" style=\"object-position:50% 25%\">\n  <div class=\"sp-scrim sp-dkBottom sp-tall\">\n   <div class=\"sp-quoteMark\">“</div>\n   <div class=\"sp-quote\">She closes <em class=\"sp-phv\">[40]</em> files a month.<br>Without weekends.”</div>\n   <div class=\"sp-attr\"><b class=\"sp-phv\">[Dana Whitfield]</b> · TC, <span class=\"sp-phv\">[Keller Williams Sacramento]</span></div>\n  </div>\n  <div class=\"sp-reelUI\"><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"><path d=\"M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5C21 14 12 21 12 21Z\"/></svg></span><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5Z\"/></svg></span><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"m3 12 18-8-6 18-3-7-9-3Z\"/></svg></span></div>\n  <span class=\"sp-playBtn sp-sm\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M8 5v14l11-7z\"/></svg></span>\n  <span class=\"sp-reelTag\">Spotlight · 0:45</span>\n </div>\n</div>\n<div class=\"sp-phFlag\">⚠ customer name & figures are placeholders — confirm before filming</div>", "27": "\n<div class=\"sp-carWrap\">\n <div class=\"sp-slideStrip\">\n  <div class=\"sp-slide sp-ar-11\">\n   <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=1200&q=80\" alt=\"Explaining at whiteboard\">\n   <div class=\"sp-scrim sp-dkAll\">\n    <div class=\"sp-kicker\">RELEASE MORNING · SEP 10</div>\n    <div class=\"sp-heroTitle\">How to read the EHS report<br>like an economist</div>\n    <div class=\"sp-srcLine\">in 90 seconds · save this 🧵</div>\n   </div>\n   <span class=\"sp-slidePill\">1 / 4</span>\n  </div>\n  <div class=\"sp-slide sp-ar-11 sp-lightSlide\">\n   <div class=\"sp-slideNum\">1</div>\n   <div class=\"sp-slideHead\">Sales pace → the headline</div>\n   <svg class=\"sp-miniChart\" viewBox=\"0 0 200 90\"><polyline points=\"0,55 30,50 60,58 90,48 120,52 150,45 180,49 200,46\" fill=\"none\" stroke=\"#0059DA\" stroke-width=\"3\"/><circle cx=\"200\" cy=\"46\" r=\"4\" fill=\"#0059DA\"/><text x=\"128\" y=\"34\" font-size=\"11\" fill=\"#3F5B77\">≈ 4.0M annualized</text></svg>\n   <div class=\"sp-slideSub\">July: “remarkably stable” — NAR</div>\n  </div>\n </div>\n <div class=\"sp-carDots\"><i class=\"sp-on\"></i><i></i><i></i><i></i></div>\n</div>", "30": "\n<div class=\"sp-creative sp-ar-45 sp-stackCard\">\n <div class=\"sp-topPhoto\"><img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1572021335469-31706a17aaef?auto=format&fit=crop&w=1200&q=80\" alt=\"Team at laptop\"></div>\n <div class=\"sp-teachPanel\">\n  <div class=\"sp-tpHead\">Mark these — the data drops worth reading:</div>\n  <div class=\"sp-tpRow\"><b>Monthly</b> NAR Existing-Home Sales <span class=\"sp-tpDate\">next: Sep 10 ✓</span></div>\n  <div class=\"sp-tpRow\"><b>Monthly</b> Pending Home Sales <span class=\"sp-tpDate\">Sep 17</span></div>\n  <div class=\"sp-tpRow\"><b>Quarterly</b> SkySlope State of the Transaction <span class=\"sp-tpDate\">Sep 15</span></div>\n  <div class=\"sp-tpRow\"><b>Annual</b> NAR Member Profile · RealTrends Verified</div>\n </div>\n</div>", "170": "\n<div class=\"sp-creative sp-ar-11\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?auto=format&fit=crop&w=1200&q=80\" alt=\"Suburb aerial\">\n <div class=\"sp-scrim sp-dkAll\">\n  <div class=\"sp-kicker\">EXISTING-HOME SALES · AUGUST PRINT</div>\n  <div class=\"sp-triRow\">\n   <div class=\"sp-tri\"><b class=\"sp-phv\">[X.XXM]</b><span>pace</span></div>\n   <div class=\"sp-tri\"><b class=\"sp-phv\">[±X%]</b><span>m/m</span></div>\n   <div class=\"sp-tri\"><b class=\"sp-phv\">[±X%]</b><span>y/y</span></div>\n  </div>\n  <div class=\"sp-srcLine\">Stable is the story. Again. · Full: link in reply</div>\n </div>\n</div>\n<div class=\"sp-phFlag\">⚠ fill from the actual 10:00 AM print before posting</div>", "3": "\n<div class=\"sp-carWrap\">\n <div class=\"sp-slideStrip\">\n  <div class=\"sp-slide sp-ar-11 sp-space\">\n   <div class=\"sp-stars\"></div>\n   <div class=\"sp-scrim sp-ctr\">\n    <div class=\"sp-kicker\">THE SKYSLOPE INDEX · Q3 2026</div>\n    <div class=\"sp-heroTitle\">How real estate<br><em>actually</em> closed in Q3</div>\n    <div class=\"sp-srcLine\">5 numbers from 3M+ transactions a year</div>\n   </div>\n   <span class=\"sp-slidePill\">1 / 7</span>\n  </div>\n  <div class=\"sp-slide sp-ar-11 sp-lightSlide\">\n   <div class=\"sp-slideNum\">1</div>\n   <div class=\"sp-slideHead\">The average closing</div>\n   <div class=\"sp-bigPair\"><span class=\"sp-phv\">[42]</span> docs · <span class=\"sp-phv\">[187]</span> signatures</div>\n   <div class=\"sp-slideSub\">per file, mutual acceptance → complete</div>\n  </div>\n  <div class=\"sp-slide sp-ar-11 sp-navySlide\">\n   <div class=\"sp-slideNum sp-inv\">2</div>\n   <div class=\"sp-slideHead sp-inv\">Fastest state</div>\n   <div class=\"sp-bigPair sp-inv\"><span class=\"sp-phv\">[TX — 28 days]</span></div>\n   <div class=\"sp-slideSub sp-inv\">contract to close</div>\n  </div>\n </div>\n <div class=\"sp-carDots\"><i class=\"sp-on\"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>\n</div>\n<div class=\"sp-phFlag\">⚠ every number is a placeholder — BLOCKED on data working session + legal sign-off</div>", "138": "\n<div class=\"sp-creative sp-ar-11 sp-space\">\n <div class=\"sp-stars\"></div>\n <div class=\"sp-scrim sp-ctr\">\n  <div class=\"sp-kicker\">OUT NOW</div>\n  <div class=\"sp-heroTitle\">State of the<br>Transaction · Q3</div>\n  <div class=\"sp-srcLine\">5 numbers nobody has published before<br>Full drop → LinkedIn (link in reply)</div>\n </div>\n</div>", "6": "\n<div class=\"sp-creative sp-ar-45\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1573497019236-17f8177b81e8?auto=format&fit=crop&w=1200&q=80\" alt=\"TC of the month\" style=\"object-position:50% 22%\">\n <div class=\"sp-ribbon\">🏆 TC of the Month</div>\n <div class=\"sp-scrim sp-dkBottom\">\n  <div class=\"sp-heroTitle\"><span class=\"sp-phv\">[Priya Shah]</span></div>\n  <div class=\"sp-srcLine\"><span class=\"sp-phv\">[Closed 22 files in June — while training two new hires]</span></div>\n </div>\n</div>\n<div class=\"sp-phFlag\">⚠ name/win are placeholders — swap for the confirmed nominee</div>", "51": "\n<div class=\"sp-creative sp-ar-45\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1573165850883-9b0e18c44bd2?auto=format&fit=crop&w=1200&q=80\" alt=\"Agent at laptop\" style=\"object-position:50% 30%\">\n <div class=\"sp-scrim sp-dkBottom sp-tall\">\n  <div class=\"sp-kicker\">THIS MONTH’S MARKET · 3 NUMBERS</div>\n  <div class=\"sp-tpRow sp-inv\">🏠 Sales pace <b class=\"sp-phv\">[4.0M]</b></div>\n  <div class=\"sp-tpRow sp-inv\">📦 Inventory <b class=\"sp-phv\">[4.6 months]</b></div>\n  <div class=\"sp-tpRow sp-inv\">💰 Median price <b class=\"sp-phv\">[$440,600]</b></div>\n  <div class=\"sp-srcLine\">what it means for your office ↓ comments</div>\n </div>\n</div>\n<div class=\"sp-phFlag\">⚠ pull final numbers from the Sep 10 EHS print</div>", "171": "\n<div class=\"sp-creative sp-ar-11\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/flagged/photo-1564767609342-620cb19b2357?auto=format&fit=crop&w=1200&q=80\" alt=\"Keys in hand\">\n <div class=\"sp-scrim sp-dkBottom\">\n  <div class=\"sp-heroTitle\">Fed day.</div>\n  <div class=\"sp-srcLine\">Whatever happens at 2pm, your buyers’ group chat already has an opinion. The professional move: wait for the actual statement.</div>\n </div>\n</div>", "12": "\n<div class=\"sp-carWrap\">\n <div class=\"sp-slideStrip\">\n  <div class=\"sp-slide sp-ar-11 sp-lightSlide sp-guardian\">\n   <div class=\"sp-lockRow\"><svg viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" fill=\"none\" stroke=\"#0059DA\" stroke-width=\"2\"><rect x=\"4\" y=\"10\" width=\"16\" height=\"10\" rx=\"2\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3\"/></svg><span class=\"sp-kicker dk\">FILE-REVIEW PATTERNS · <span class=\"sp-phv\">[MILLIONS]</span> OF TRANSACTIONS</span></div>\n   <div class=\"sp-heroTitle dk\">The <span class=\"sp-phv\">[5]</span> compliance flags<br>that stall the most closings</div>\n   <div class=\"sp-chipRow\"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></div>\n   <div class=\"sp-slideSub\">and the fix for each → swipe</div>\n  </div>\n  <div class=\"sp-slide sp-ar-11\">\n   <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1554325139-bbd006cd3e5a?auto=format&fit=crop&w=1200&q=80\" alt=\"Checklist desk\">\n   <div class=\"sp-scrim sp-dkAll\"><div class=\"sp-slideNum sp-inv\">1</div>\n   <div class=\"sp-heroTitle\"><span class=\"sp-phv\">[Missing initials]</span></div>\n   <div class=\"sp-srcLine\">the fix: flag it the moment the doc lands — not at year-end</div></div>\n  </div>\n </div>\n <div class=\"sp-carDots\"><i class=\"sp-on\"></i><i></i><i></i><i></i><i></i><i></i></div>\n</div>\n<div class=\"sp-phFlag\">⚠ guardian register: no wink on compliance content</div>", "80": "\n<div class=\"sp-phone\">\n <div class=\"sp-creative sp-ar-916\">\n  <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1590650153855-d9e808231d41?auto=format&fit=crop&w=900&q=80\" alt=\"TC at desk\" style=\"object-position:50% 30%\">\n  <div class=\"sp-scrim sp-dkBottom sp-tall\">\n   <div class=\"sp-tcode\">7:04am — coffee</div>\n   <div class=\"sp-tcode sp-big\">7:12am — <b>31 files open</b></div>\n   <div class=\"sp-srcLine\">ride along with <span class=\"sp-phv\">[Name]</span>, TC at <span class=\"sp-phv\">[Brokerage]</span> ▶</div>\n  </div>\n  <div class=\"sp-reelUI\"><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"><path d=\"M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5C21 14 12 21 12 21Z\"/></svg></span><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5Z\"/></svg></span><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"m3 12 18-8-6 18-3-7-9-3Z\"/></svg></span></div>\n  <span class=\"sp-playBtn sp-sm\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M8 5v14l11-7z\"/></svg></span>\n  <span class=\"sp-reelTag\">Reel · 0:38</span>\n </div>\n</div>\n<div class=\"sp-phFlag\">⚠ cast the featured TC — placeholders in caption & cover</div>", "17": "\n<div class=\"sp-creative sp-ar-11\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1605146769289-440113cc3d00?auto=format&fit=crop&w=1200&q=80\" alt=\"Home exterior\">\n <div class=\"sp-scrim sp-dkBottom sp-tall\">\n  <div class=\"sp-kicker\">NAR MEMBER PROFILE · 2026</div>\n  <div class=\"sp-heroNum\">$80,000</div>\n  <div class=\"sp-heroLabel\">the experience gap — 16+ yrs ($88.5K) vs first 2 yrs ($8K)</div>\n  <svg class=\"sp-curve\" viewBox=\"0 0 220 46\"><path d=\"M2 42 C 60 40, 90 34, 120 22 S 190 4, 218 3\" fill=\"none\" stroke=\"#87C6FF\" stroke-width=\"2.5\"/><circle cx=\"218\" cy=\"3\" r=\"3.5\" fill=\"#87C6FF\"/></svg>\n  <div class=\"sp-srcLine\">experience compounds — so does every system that saves it</div>\n </div>\n</div>", "82": "\n<div class=\"sp-creative sp-ar-169\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1622117529958-21841d15c368?auto=format&fit=crop&w=1200&q=80\" alt=\"Interview still\" style=\"object-position:50% 25%\">\n <span class=\"sp-playBtn\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M8 5v14l11-7z\"/></svg></span>\n <div class=\"sp-lowerThird\">\n  <b>Spotlight rewind · Century 21 Judge Fite</b>\n  <span>what changed when the back office stopped being the bottleneck</span>\n </div>\n <span class=\"sp-vidLen\">1:31</span>\n</div>", "85": "\n<div class=\"sp-phone\">\n <div class=\"sp-creative sp-ar-916\">\n  <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1780594774174-01b48ac0ac8b?auto=format&fit=crop&w=900&q=80\" alt=\"Driveway\">\n  <div class=\"sp-scrim sp-dkAll sp-center\">\n   <div class=\"sp-kicker\">PRODUCT INFO PLAY</div>\n   <div class=\"sp-heroTitle xl\">Tap. Filled.</div>\n   <div class=\"sp-uiFloat\"><img src=\"https://skyslope.com/wp-content/uploads/2024/06/Frame-3575-1.png\" alt=\"SkySlope mobile app UI\"></div>\n   <div class=\"sp-srcLine\">Lightning Fill, from the driveway · how-to in first comment</div>\n  </div>\n  <div class=\"sp-reelUI\"><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"><path d=\"M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5C21 14 12 21 12 21Z\"/></svg></span><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5Z\"/></svg></span><span><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\"><path d=\"m3 12 18-8-6 18-3-7-9-3Z\"/></svg></span></div>\n  <span class=\"sp-reelTag\">Screen-record · 0:20</span>\n </div>\n</div>", "128": "\n<div class=\"sp-creative sp-ar-11\">\n <img class=\"sp-ph-img sp-blur\" src=\"https://images.unsplash.com/photo-1709787627975-9cb37bbeca60?auto=format&fit=crop&w=1200&q=80\" alt=\"New homeowners\">\n <div class=\"sp-panel\">\n  <div class=\"sp-kicker\">SEPTEMBER UPDATES · LIVE</div>\n  <div class=\"sp-tpRow sp-inv\">✓ <b class=\"sp-phv\">[Feature 1]</b></div>\n  <div class=\"sp-tpRow sp-inv\">✓ <b class=\"sp-phv\">[Feature 2]</b></div>\n  <div class=\"sp-tpRow sp-inv\">✓ <b class=\"sp-phv\">[Feature 3]</b></div>\n  <div class=\"sp-pFoot\">Changelog → link in reply</div>\n </div>\n</div>\n<div class=\"sp-phFlag\">⚠ fill from the September release notes</div>", "111": "\n<div class=\"sp-carWrap\">\n <div class=\"sp-slideStrip\">\n  <div class=\"sp-slide sp-ar-11\">\n   <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1731341711713-4c3d394f610c?auto=format&fit=crop&w=1200&q=80\" alt=\"Porch welcome\">\n   <div class=\"sp-scrim sp-dkAll\">\n    <div class=\"sp-kicker\">WHAT’S NEW · SEPTEMBER</div>\n    <div class=\"sp-heroTitle\">3 things SkySlope shipped<br>that are already in your account</div>\n    <div class=\"sp-iconRow\"><img src=\"https://skyslope.com/wp-content/uploads/2022/02/logo-icon-ds3.svg\" alt=\"DigiSign\"><img src=\"https://skyslope.com/wp-content/uploads/2022/02/SkySlope-Forms_favicon.svg\" alt=\"Forms\"><img src=\"https://skyslope.com/wp-content/uploads/2023/02/logo-icon-offers.svg\" alt=\"Offers\"></div>\n   </div>\n   <span class=\"sp-slidePill\">1 / 4</span>\n  </div>\n  <div class=\"sp-slide sp-ar-11 sp-lightSlide\">\n   <div class=\"sp-slideNum\">1</div>\n   <div class=\"sp-slideHead sp-phv\">[Feature name]</div>\n   <div class=\"sp-slideSub\">what it fixes, in one line · support article in first comment</div>\n  </div>\n </div>\n <div class=\"sp-carDots\"><i class=\"sp-on\"></i><i></i><i></i><i></i></div>\n</div>\n<div class=\"sp-phFlag\">⚠ features TBD from the September release notes</div>", "61": "\n<div class=\"sp-creative sp-ar-45\">\n <img class=\"sp-ph-img\" src=\"https://images.unsplash.com/photo-1526656001029-20a71b17f7ba?auto=format&fit=crop&w=1200&q=80\" alt=\"Rows of binders\">\n <div class=\"sp-scrim sp-dkBottom\">\n  <div class=\"sp-heroTitle\">TCs: what’s the most files<br>you’ve carried at once?</div>\n  <div class=\"sp-srcLine\">Wrong answers welcome. Exaggeration encouraged.</div>\n </div>\n</div>"}, "CRED": {"1": [{"kind": "unsplash", "name": "Breno Assis", "href": "https://unsplash.com/photos/1516156008625-3a9d6067fab5"}], "0": [{"kind": "unsplash", "name": "Wesley Tingey", "href": "https://unsplash.com/photos/1583521214690-73421a1829a9"}], "47": [{"kind": "brand", "name": "Planet illustration — skyslope.com"}], "7": [{"kind": "unsplash", "name": "Beth Stevenson", "href": "https://unsplash.com/photos/1523380262778-076eb862d38f"}], "26": [{"kind": "unsplash", "name": "Beatriz Pérez Moya", "href": "https://unsplash.com/photos/1468779036391-52341f60b55d"}], "5": [{"kind": "unsplash", "name": "itay verchik", "href": "https://unsplash.com/photos/1656399910089-b7ead999bf23"}], "172": [{"kind": "unsplash", "name": "Jakub Żerdzicki", "href": "https://unsplash.com/photos/1741156386380-0236c72eb6f9"}], "2": [{"kind": "unsplash", "name": "Scott Graham", "href": "https://unsplash.com/photos/1450101499163-c8848c66ca85"}], "9": [{"kind": "unsplash", "name": "Wesley Tingey", "href": "https://unsplash.com/photos/1583521214690-73421a1829a9"}, {"kind": "unsplash", "name": "Marissa Grootes", "href": "https://unsplash.com/photos/1554325139-bbd006cd3e5a"}], "4": [{"kind": "unsplash", "name": "Christina @ wocintechchat.com", "href": "https://unsplash.com/photos/1573497019940-1c28c88b4f3e"}], "27": [{"kind": "unsplash", "name": "ThisisEngineering", "href": "https://unsplash.com/photos/1580894732444-8ecded7900cd"}], "30": [{"kind": "unsplash", "name": "Jud Mackrill", "href": "https://unsplash.com/photos/1572021335469-31706a17aaef"}], "170": [{"kind": "unsplash", "name": "Breno Assis", "href": "https://unsplash.com/photos/1516156008625-3a9d6067fab5"}], "3": [{"kind": "unsplash", "name": "Wesley Tingey", "href": "https://unsplash.com/photos/1583521214690-73421a1829a9"}], "138": [], "6": [{"kind": "unsplash", "name": "Christina @ wocintechchat.com", "href": "https://unsplash.com/photos/1573497019236-17f8177b81e8"}], "51": [{"kind": "unsplash", "name": "Christina @ wocintechchat.com", "href": "https://unsplash.com/photos/1573165850883-9b0e18c44bd2"}], "171": [{"kind": "unsplash", "name": "Maria Ziegler", "href": "https://unsplash.com/photos/1564767609342-620cb19b2357"}], "12": [{"kind": "unsplash", "name": "Marissa Grootes", "href": "https://unsplash.com/photos/1554325139-bbd006cd3e5a"}], "80": [{"kind": "unsplash", "name": "LinkedIn Sales Solutions", "href": "https://unsplash.com/photos/1590650153855-d9e808231d41"}], "17": [{"kind": "unsplash", "name": "Dillon Kydd", "href": "https://unsplash.com/photos/1605146769289-440113cc3d00"}], "82": [{"kind": "unsplash", "name": "Ofspace LLC", "href": "https://unsplash.com/photos/1622117529958-21841d15c368"}], "85": [{"kind": "unsplash", "name": "Virginia Marinova", "href": "https://unsplash.com/photos/1780594774174-01b48ac0ac8b"}, {"kind": "brand", "name": "SkySlope mobile Forms UI — skyslope.com"}], "128": [{"kind": "unsplash", "name": "Jennifer Kalenberg", "href": "https://unsplash.com/photos/1709787627975-9cb37bbeca60"}], "111": [{"kind": "unsplash", "name": "Samuel Yongbo Kwon", "href": "https://unsplash.com/photos/1731341711713-4c3d394f610c"}, {"kind": "brand", "name": "DigiSign / Forms / Offers product icons — skyslope.com"}], "61": [{"kind": "unsplash", "name": "Sear Greyson", "href": "https://unsplash.com/photos/1526656001029-20a71b17f7ba"}]}, "ASTRO": "https://skyslope.com/wp-content/uploads/2021/03/astronaut-control-pod-1024x772.png"};
+(function(){
+  var esc = function(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+  var PLAT_ICON = {LinkedIn:'in', Instagram:'ig', Facebook:'f', X:'𝕏', YouTube:'▶'};
+  var PLAT_DOT  = {LinkedIn:'#0A66C2', Instagram:'#E1306C', Facebook:'#1877F2', X:'#111', YouTube:'#FF0000'};
+  var PILL_CLS  = {'Data & Index':'pi-data','Testimonial':'pi-test','Zero-CTA':'pi-zcta','Education':'pi-edu','Product':'pi-prod'};
+  var STAGE_LBL = {ready:'Deploy · ready', creative:'Visualize', copy:'Compose · idea', scheduled:'Scheduled', published:'Published'};
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  function dOnly(iso){ var a=(iso||'').split('-'); return a.length===3 ? new Date(Date.UTC(+a[0],+a[1]-1,+a[2])) : null; }
+  function nice(iso){ var d=dOnly(iso); if(!d) return ''; return DOW[d.getUTCDay()]+', '+MON[d.getUTCMonth()]+' '+d.getUTCDate(); }
+  function inRange(iso, a, b){ return iso>=a && iso<=b; }
+
+  function capHi(cap){
+    return esc(cap).replace(/\[([^\]]+)\]/g,'<mark class="sp-ph" title="Placeholder — validate before publishing">[$1]</mark>').replace(/\n/g,'<br>');
+  }
+
+  function avatar(sz){ sz=sz||44; return '<span class="sp-avatar" style="width:'+sz+'px;height:'+sz+'px;font-size:'+Math.round(sz*0.45)+'px">S</span>'; }
+  var SVG={like:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 10v11M3 12v7a2 2 0 0 0 2 2h2V10H5a2 2 0 0 0-2 2Zm7-8 1 5h6a2 2 0 0 1 2 2l-2 8a2 2 0 0 1-2 2H7V10l3-8Z"/></svg>',
+    cmt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5Z"/></svg>',
+    share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m3 12 18-8-6 18-3-7-9-3Z"/></svg>',
+    rt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h11l-3-3M20 17H9l3 3M4 7v6m16 4v-6"/></svg>',
+    heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 9 2.5C21 14 12 21 12 21Z"/></svg>',
+    book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4V3Z"/></svg>'};
+
+  function chrome(p, creative){
+    var cap=capHi(p.cap), plat=p.platform;
+    if(plat==='LinkedIn') return '<div class="sp-pcard li"><div class="sp-pHead">'+avatar()+'<div><b>SkySlope</b><span>5,147 followers · <i>🕑 '+esc(nice(p.when))+'</i></span></div></div><div class="sp-pCap">'+cap+'</div>'+creative+'<div class="sp-pActs li"><span>'+SVG.like+' Like</span><span>'+SVG.cmt+' Comment</span><span>'+SVG.rt+' Repost</span><span>'+SVG.share+' Send</span></div></div>';
+    if(plat==='Instagram') return '<div class="sp-pcard ig"><div class="sp-pHead ig">'+avatar(36)+'<div><b>skyslope</b><span>Original audio</span></div></div>'+creative+'<div class="sp-pActs ig"><span>'+SVG.heart+'</span><span>'+SVG.cmt+'</span><span>'+SVG.share+'</span><span class="sp-right">'+SVG.book+'</span></div><div class="sp-pCap igCap"><b>skyslope</b> '+cap+'</div></div>';
+    if(plat==='Facebook') return '<div class="sp-pcard fb"><div class="sp-pHead">'+avatar(40)+'<div><b>SkySlope</b><span>'+esc(nice(p.when))+' · 🌎</span></div></div><div class="sp-pCap">'+cap+'</div>'+creative+'<div class="sp-pActs fb"><span>'+SVG.like+' Like</span><span>'+SVG.cmt+' Comment</span><span>'+SVG.share+' Share</span></div></div>';
+    return '<div class="sp-pcard x"><div class="sp-pHead x">'+avatar(40)+'<div class="sp-xline"><b>SkySlope</b> <span>@skyslope · '+esc(nice(p.when))+'</span></div></div><div class="sp-pCap x">'+cap+'</div>'+creative+'<div class="sp-pActs x"><span>'+SVG.cmt+' 12</span><span>'+SVG.rt+' 8</span><span>'+SVG.heart+' 41</span><span>'+SVG.share+'</span></div></div>';
+  }
+
+  function specPanel(p, gi){
+    var prompt = (typeof window.genPrompt==='function') ? window.genPrompt(p) : '';
+    var arM = prompt.match(/Aspect ratio: ([^\n]+)/); var ar = arM?arM[1].replace(/\.$/,''):'';
+    var tmM = prompt.match(/Template: ([A-Z][A-Z ]+[A-Z])/); var tmpl = tmM?tmM[1]:'';
+    var phs = (p.cap||'').match(/\[([^\]]+)\]/g) || [];
+    var qa=[]; if(p.note) qa.push(p.note);
+    if(p.pillar==='Zero-CTA') qa.push('Zero-CTA rule: no link, no pitch, no product name in the caption — the product answer lives in a comment reply.');
+    if(p.platform==='LinkedIn') qa.push('Links go in the FIRST COMMENT, never the post body. Hook inside the first 125 characters.');
+    if(p.platform==='Instagram') qa.push('No generic hashtags. Keep text inside the middle 80% safe zone on 9:16.');
+    if(/reel|video|screen|clip/i.test(p.format||'')) qa.push('Video: open on the outcome (1.5-second rule), burned-in captions, cut a 15-sec vertical teaser from any long master.');
+    var qaHtml = qa.map(function(x){return '<li>'+esc(x)+'</li>';}).join('');
+    var phHtml = phs.length ? '<div class="sp-specBlock warn"><h5>⚠ Placeholders to validate</h5><div class="sp-phChips">'+phs.slice(0,8).map(function(x){return '<span>'+esc(x)+'</span>';}).join('')+(phs.length>8?'<span>…</span>':'')+'</div></div>' : '';
+    var cred=(PLANSEP.CRED[gi]||[]).map(function(c){ return c.kind==='brand' ? '<span class="sp-credChip brand">◈ '+esc(c.name)+'</span>' : '<a class="sp-credChip" href="'+esc(c.href)+'" target="_blank" rel="noopener">📷 Unsplash · '+esc(c.name)+'</a>'; }).join('');
+    var credHtml = cred ? '<div class="sp-specBlock"><h5>Comp imagery (mockup)</h5><div class="sp-creds">'+cred+'<span class="sp-credNote">Free Unsplash photos (Unsplash License) + SkySlope’s own graphics — swap for the generated image at production.</span></div></div>' : '';
+    var visTags='<div class="sp-tagRow">'+(ar?'<span class="sp-tag">'+esc(ar)+'</span>':'')+(tmpl?'<span class="sp-tag">'+esc(tmpl)+'</span>':'')+'<span class="sp-tag">'+esc(p.format)+'</span></div>';
+    return '<aside class="sp-specs">'+
+      '<div class="sp-specBlock"><h5>Planned visual (from the hub)</h5><p class="vis">'+esc(p.visual||'Native poll — no graphic.')+'</p>'+visTags+'</div>'+
+      '<div class="sp-specBlock"><h5>Image-generation prompt <button class="sp-copyBtn pl-copy" data-gi="'+gi+'">⧉ Copy</button></h5><details><summary>Show the full self-contained prompt ('+prompt.length.toLocaleString()+' chars — the hub’s live prompt for this card)</summary><pre class="pl-pre" data-gi="'+gi+'">'+esc(prompt)+'</pre></details></div>'+
+      phHtml+
+      '<div class="sp-specBlock"><h5>QA before publish</h5><ul class="sp-qa">'+qaHtml+'</ul></div>'+
+      '<div class="sp-specBlock"><h5>Why this slot</h5><p>'+esc(p._why||'')+'</p></div>'+
+      credHtml+'</aside>';
+  }
+
+  function monthGrid(byday){
+    var start=Date.UTC(2026,7,24), cells='';
+    for(var i=0;i<35;i++){
+      var d=new Date(start+i*86400000);
+      if(d>Date.UTC(2026,8,27)) break;
+      var iso=d.toISOString().slice(0,10);
+      var list=byday[iso]||[];
+      var dots=list.map(function(q){return '<i style="background:'+(PLAT_DOT[q.platform]||'#888')+'" title="'+esc((q._time||'')+' · '+q.platform+' · '+q.title)+'"></i>';}).join('');
+      var aug=d.getUTCMonth()===7?' aug':'';
+      var lbl=(d.getUTCMonth()===7&&d.getUTCDate()===24?'Aug ':'')+d.getUTCDate();
+      cells+='<div class="sp-mgCell'+aug+'"><span class="sp-mgD">'+lbl+'</span><div class="sp-mgDots">'+dots+'</div></div>';
+    }
+    var head=DOW.slice(1).concat([DOW[0]]).map(function(w){return '<div class="sp-mgHead">'+w+'</div>';}).join('');
+    return '<div class="sp-mGrid">'+head+cells+'</div>';
+  }
+
+  window.renderPlanSep = function(){
+    var mount=document.getElementById('plansep-mount'); if(!mount||typeof ccPosts==='undefined') return;
+    // live: attach time/why to planned posts, collect those with a date
+    var timeById={}, whyById={};
+    PLANSEP.PLAN.forEach(function(x){ timeById[x.gi]=x.time; whyById[x.gi]=x.why; });
+    var planned=[];
+    PLANSEP.PLAN.forEach(function(x){
+      var p=ccPosts[x.gi]; if(!p) return;
+      p._time=x.time; p._why=x.why;
+      planned.push({gi:x.gi, p:p});
+    });
+    // byday for the grid
+    var byday={};
+    planned.forEach(function(o){ if(o.p.when){ (byday[o.p.when]=byday[o.p.when]||[]).push(o.p); } });
+    var counts={LinkedIn:0,Instagram:0,Facebook:0,X:0,YouTube:0};
+    planned.forEach(function(o){ if(counts[o.p.platform]!=null) counts[o.p.platform]++; });
+    var total=planned.length;
+
+    var html='';
+    // hero
+    html+='<header class="sp-hero"><div class="sp-stars"></div><img class="sp-heroAstro" src="'+PLANSEP.ASTRO+'" alt="">'+
+      '<div class="sp-heroInner"><div class="sp-kicker">SKYSLOPE SOCIAL HUB · CLICK SHIFT · SEPTEMBER PLAN</div>'+
+      '<h1>The September<br>Content Calendar</h1>'+
+      '<p class="sp-heroSub">'+total+' posts, live from the Content Studio pipeline — laid out post-by-post with comp visuals and this hub’s own image prompt for every card. Reschedule a post in Content Studio and it moves here automatically.</p>'+
+      '<div class="sp-statRow"><div class="sp-stat"><b>'+total+'</b><span>scheduled posts</span></div>'+
+      '<div class="sp-stat"><b>'+counts.LinkedIn+'</b><span>LinkedIn</span></div>'+
+      '<div class="sp-stat"><b>'+counts.Instagram+'</b><span>Instagram</span></div>'+
+      '<div class="sp-stat"><b>'+counts.Facebook+'</b><span>Facebook</span></div>'+
+      '<div class="sp-stat"><b>'+counts.X+'</b><span>X</span></div>'+
+      '<div class="sp-stat hi"><b>Sep 15</b><span>Q3 “State of the Transaction”</span></div></div></div></header>';
+    // month + how
+    html+='<section class="sp-monthWrap"><div class="sp-monthCard"><h3>At a glance <span class="sp-legend"><i style="background:#0A66C2"></i>LinkedIn <i style="background:#E1306C"></i>Instagram <i style="background:#1877F2"></i>Facebook <i style="background:#111"></i>X</span></h3>'+monthGrid(byday)+
+      '<p class="sp-mgNote">Anchored dates verified: NAR Existing-Home Sales (Aug data) — <b>Thu Sep 10, 10:00 AM ET</b> · FOMC decision — <b>Wed Sep 16, 2:00 PM ET</b>. The Q3 report card was moved from Aug 23 to <b>Tue Sep 15</b> so the Sep 1 “T–14” teaser lands exactly two weeks out.</p></div>'+
+      '<div class="sp-monthCard sp-how"><h3>How this connects to the hub</h3><ol>'+
+      '<li><b>It’s live.</b> Every caption, date, stage and image prompt is read straight from Content Studio — this is the same data, not a copy.</li>'+
+      '<li><b>Reschedule anywhere.</b> Move a post’s day with its 📅 button in Content Studio and its card jumps to the right week here.</li>'+
+      '<li><b>Clear the red flags.</b> Anything in <mark class="sp-ph">[brackets]</mark> is an unvalidated placeholder — data working session + legal sign-off first.</li>'+
+      '<li><b>Generate the creative.</b> Hit <i>⧉ Copy</i> on any card for that post’s self-contained image prompt, then paste into Gemini or any image tool.</li></ol></div></section>';
+
+    // weeks
+    PLANSEP.WEEKS.forEach(function(w){
+      var inw=planned.filter(function(o){ return o.p.when && inRange(o.p.when, w.from, w.to); });
+      if(!inw.length) return;
+      inw.sort(function(a,b){ if(a.p.when!==b.p.when) return a.p.when<b.p.when?-1:1; return (a.p._time||'')<(b.p._time||'')?-1:1; });
+      html+='<section class="sp-week"><header class="sp-weekHead"><div><span class="sp-wkTag">'+esc(w.tag)+'</span><h2>'+esc(w.title)+'</h2><p>'+esc(w.note)+'</p></div></header>';
+      inw.forEach(function(o){
+        var p=o.p, gi=o.gi;
+        var creative=PLANSEP.CREATIVES[gi]||'<div class="sp-creative sp-ar-11"><div class="sp-scrim sp-dkAll sp-center"><div class="sp-heroTitle">'+esc(p.title)+'</div></div></div>';
+        var dchip='<span class="sp-dchip">'+esc(nice(p.when).split(', ')[0])+' <b>'+esc((nice(p.when).split(', ')[1]||''))+'</b> · '+esc(p._time||'')+' ET</span>';
+        html+='<article class="sp-post"><div class="sp-postTop">'+dchip+
+          '<span class="sp-pchip '+esc(p.platform)+'">'+(PLAT_ICON[p.platform]||'')+'&nbsp;'+esc(p.platform)+'</span>'+
+          '<span class="sp-pill '+(PILL_CLS[p.pillar]||'')+'">'+esc(p.pillar)+'</span>'+
+          '<span class="sp-stage st-'+esc(p.env)+'">'+esc(STAGE_LBL[p.env]||p.env)+'</span>'+
+          '<span class="sp-ptitle">'+esc(p.title)+'</span></div>'+
+          '<div class="sp-postBody"><div class="sp-mockCol">'+chrome(p, creative)+'</div>'+specPanel(p, gi)+'</div></article>';
+      });
+      html+='</section>';
+    });
+
+    // leftovers (rescheduled outside all week ranges)
+    var placed={}; PLANSEP.WEEKS.forEach(function(w){ planned.forEach(function(o){ if(o.p.when&&inRange(o.p.when,w.from,w.to)) placed[o.gi]=1; }); });
+    var left=planned.filter(function(o){ return o.p.when && !placed[o.gi]; });
+    if(left.length){
+      html+='<section class="sp-week"><header class="sp-weekHead"><div><span class="sp-wkTag">OTHER DATES</span><h2>Scheduled outside the September windows</h2><p>These were moved in Content Studio to a day outside the planned weeks.</p></div></header>';
+      left.sort(function(a,b){return a.p.when<b.p.when?-1:1;});
+      left.forEach(function(o){ var p=o.p, gi=o.gi; var creative=PLANSEP.CREATIVES[gi]||''; html+='<article class="sp-post"><div class="sp-postTop"><span class="sp-dchip"><b>'+esc(nice(p.when))+'</b> · '+esc(p._time||'')+'</span><span class="sp-pchip '+esc(p.platform)+'">'+(PLAT_ICON[p.platform]||'')+'&nbsp;'+esc(p.platform)+'</span><span class="sp-pill '+(PILL_CLS[p.pillar]||'')+'">'+esc(p.pillar)+'</span><span class="sp-ptitle">'+esc(p.title)+'</span></div><div class="sp-postBody"><div class="sp-mockCol">'+chrome(p, creative)+'</div>'+specPanel(p,gi)+'</div></article>'; });
+      html+='</section>';
+    }
+
+    // ops footer
+    html+='<section class="sp-week"><header class="sp-weekHead"><div><span class="sp-wkTag">RULES</span><h2>Cadence, QA &amp; brand quick-reference</h2><p>The operating rules this calendar was built against — from Doc 1, the Weekly Rhythm and the Image Style Guide.</p></div></header>'+
+      '<div class="sp-opsGrid">'+
+      '<div class="sp-opsCard"><h4>Platform lanes (Doc 1)</h4><ul><li><b>LinkedIn — insight.</b> 6–8/mo; Index stats &amp; reports as document/carousels; execs post personally 1×/wk; links in first comment.</li><li><b>Instagram — end user.</b> 4–6/mo; every week leads with a testimonial or relatable post before any feature content; no generic hashtags.</li><li><b>Facebook — community.</b> 4–6/mo; longer captions fine; cross-post testimonials; join groups as named humans.</li><li><b>X — maintenance.</b> News register; echo Index drops with the LinkedIn link in a reply.</li></ul></div>'+
+      '<div class="sp-opsCard"><h4>Weekly rhythm (Operations)</h4><ul><li><b>Mon</b> 60–90 min — finalize the week, voice checklist, schedule natively.</li><li><b>Tue–Thu</b> 20 min/day — reply to every comment &amp; DM; seed first comments; engage 5–10 follow-list accounts.</li><li><b>Wed</b> — Rob sign-offs at the 5:30 pm Dave/Rob/Jessica meeting.</li><li><b>Fri</b> 45 min — tracker, boost winners, pull next week’s drafts.</li></ul></div>'+
+      '<div class="sp-opsCard"><h4>Pre-publish QA (the “Johnny” rule)</h4><ul><li>Caption matches the visual; exact product spellings (SkySlope, DigiSign, SkyTC, Ayce…).</li><li>Zero-CTA posts carry <b>no link and no product name</b> — the answer lives in a comment reply.</li><li>Alt text on every image; red [bracketed] numbers never ship.</li><li>Boost only proven formats (testimonials; Index once validated) — never launch/waitlist posts.</li></ul></div>'+
+      '<div class="sp-opsCard"><h4>Brand system (Image Style Guide)</h4><div class="sp-swatches"><span style="background:#0059DA">Science Blue</span><span style="background:#006BED">Electric</span><span style="background:#87C6FF;color:#151A27">Sky Light</span><span style="background:#3F5B77">Slope Slate</span><span style="background:#151A27">Mirage Navy</span><span style="background:#F4F8FC;color:#3F5B77">Ice</span><span style="background:#28A745">Success</span><span style="background:#DC3545">Alert</span></div><ul><li>Photography-led; ONE hero accent per image; headlines ≤ 7 words, sentence case.</li><li>Light scenes for stat cards &amp; education; dark “Midnight Sky” gradient for hero drops.</li><li>Generated images: no logos, no fake platform UI, no invented or [bracketed] numbers.</li></ul></div>'+
+      '</div></section>';
+
+    html+='<footer class="sp-foot"><p><b>Live source.</b> Every card reads from this hub’s Content Studio (<code>ccPosts</code>) — captions, dates, stages and the image prompt are generated the same way as every other card in the hub. <b>Anchored dates:</b> NAR 2026 statistical release schedule · Federal Reserve FOMC calendar.</p><p><b>Imagery.</b> Comp photos are free Unsplash (Unsplash License; photographer credited per card); product icons, astronaut &amp; planet illustrations and app UI are SkySlope’s own assets from the Asset Library. Swap for generated or licensed creative at production.</p></footer>';
+
+    mount.innerHTML=html;
+  };
+
+  // delegated copy button -> hub's own genPrompt + copyText
+  document.addEventListener('click', function(e){
+    var b=e.target.closest && e.target.closest('.pl-copy'); if(!b) return;
+    var gi=+b.getAttribute('data-gi'); var p=(typeof ccPosts!=='undefined')&&ccPosts[gi]; if(!p) return;
+    if(typeof window.genPrompt==='function' && typeof window.copyText==='function'){ window.copyText(window.genPrompt(p),'Image prompt copied — self-contained, paste straight into Gemini or any image tool'); }
+  });
+})();
+
+try{ if(window.renderPlanSep) window.renderPlanSep(); }catch(e){}
 </script>
 <script>
 // =====================================================================
