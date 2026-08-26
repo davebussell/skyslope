@@ -322,6 +322,12 @@
   .pvtools{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
   .pvh{margin:26px 0 12px}
   .pvenv{display:inline-block;color:#fff;border-radius:999px;padding:1px 9px;font-weight:800;letter-spacing:.04em;border:0;cursor:pointer;font-family:inherit;font-size:inherit;transition:box-shadow .12s ease}
+  .pvstack{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 8px}
+  .stkch{border:1px solid var(--grid);background:var(--surface);color:var(--ink,#151A27);border-radius:999px;padding:3px 12px;font-weight:800;font-size:.78rem;cursor:pointer;font-family:inherit;transition:box-shadow .12s ease}
+  .stkch:hover{box-shadow:0 0 0 2px var(--ring)}
+  .stkn{font-size:.72rem;color:var(--baseline);font-weight:700;margin-left:auto}
+  .pv.fam .pvcard{box-shadow:5px 5px 0 -1px var(--surface),5px 5px 0 0 var(--grid),10px 10px 0 -2px var(--surface),10px 10px 0 -1px var(--grid)}
+  .pv.fam .pmock{padding-right:12px;padding-bottom:12px}
   .pvenv:hover{box-shadow:0 0 0 2px var(--ring)}
   .pv.pubdone{opacity:.55}
   .pvedit{display:flex;flex-direction:column;gap:8px;margin-top:8px;background:var(--surface);border:1px dashed var(--baseline);border-radius:10px;padding:10px}
@@ -3331,6 +3337,11 @@ var FOLLOWS = [
 // the list so Click Shift can prune the shipped defaults for real.
 var ccDeleted=[];
 var __shipPillar={}; ccPosts.forEach(function(p){ __shipPillar[p.title]=p.pillar; });
+// stable plan-index map: PLANSEP.CREATIVES/CRED/PLAN are keyed by the SHIPPED ccPosts
+// order; live indexes shift when channel versions are spliced in, so resolve by title
+var __shipTitles=ccPosts.map(function(p){return p.title;});
+window.__shipTitles=__shipTitles;
+window.__planIdx={}; __shipTitles.forEach(function(tt,i){ window.__planIdx[tt]=i; });
 try{
   var __ssState = JSON.parse(localStorage.getItem('sshub_state')||'null');
   if(__ssState){
@@ -3625,6 +3636,7 @@ try{
     document.getElementById('npCancel').onclick=function(){ ov.remove(); };
     document.getElementById('npGo').onclick=function(){
       var t=document.getElementById('npTitle').value.trim()||'New post idea';
+      var __b=t,__k=2; while(ccPosts.some(function(x){ return x.title===t||x.link===t; })){ t=__b+' '+__k; __k++; }
       var p={pillar:document.getElementById('npPil').value,platform:document.getElementById('npPlat').value,format:document.getElementById('npFmt').value,status:'Idea',env:'copy',creative:{kind:'',link:'',note:''},history:[],title:t,cap:document.getElementById('npCap').value.trim()||'Draft the caption here\u2026',visual:document.getElementById('npVis').value.trim()||'Describe the visual: format, composition, colors.',note:'',when:document.getElementById('npWhen').value||''};
       stamp(p,'created');
       p.env=derivedEnv(p);
@@ -3745,8 +3757,9 @@ try{
     if(!p.link) return;
     ccPosts.forEach(function(x){
       if(x===p||x.link!==p.link) return;
+      if(x.status==='Published') return; // shipped record stays as shipped
       if(!!x.reviewed!==!!p.reviewed){ if(p.reviewed) x.reviewed=true; else delete x.reviewed; }
-      if((x.when||'')!==(p.when||'')) x.when=p.when||'';
+      if(x.status!=='Scheduled'&&(x.when||'')!==(p.when||'')) x.when=p.when||'';
       syncEnv(x);
     });
   }
@@ -3974,9 +3987,10 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     }
     if(p.img) return '<div class="pvmedia img"><img src="'+escAttr(p.img)+'" alt=""><button type="button" class="imgrm" title="Remove image (moves the post back a stage)">✕</button></div>';
     var __gi=(p.__gi!=null?p.__gi:ccPosts.indexOf(p));
-    if(typeof PLANSEP!=='undefined'&&PLANSEP.CREATIVES&&PLANSEP.CREATIVES[__gi])
-      return '<div class="pvmedia spwrap">'+PLANSEP.CREATIVES[__gi]+'</div>';
-    return '<div class="pvmedia spwrap">'+artFor(p,__gi)+'</div>';
+    var __pgi=(window.__planIdx&&window.__planIdx[p.title]!=null)?window.__planIdx[p.title]:-1;
+    if(__pgi>-1&&typeof PLANSEP!=='undefined'&&PLANSEP.CREATIVES&&PLANSEP.CREATIVES[__pgi])
+      return '<div class="pvmedia spwrap">'+PLANSEP.CREATIVES[__pgi]+'</div>';
+    return '<div class="pvmedia spwrap">'+artFor(p,(__pgi>-1?__pgi:__gi))+'</div>';
   }
   function escAttr(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
   function dayLabel(ds){
@@ -4010,8 +4024,10 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
           c.textContent=p.platform+' \u00b7 '+p.title;
           c.title='Jump to this post below';
           c.onclick=function(){
-            var card=document.querySelector('#plist .pv[data-pvi="'+p.__gi+'"]');
-            if(!card){ renderCap=100000; render(); card=document.querySelector('#plist .pv[data-pvi="'+p.__gi+'"]'); }
+            if(p.link){ STACK_SEL[p.link]=p.title; render(); }
+            function findCard(){ var cc=document.querySelector('#plist .pv[data-pvi="'+ccPosts.indexOf(p)+'"]'); if(cc||!p.link) return cc; var all=document.querySelectorAll('#plist .pv'); for(var i=0;i<all.length;i++){ if(all[i].getAttribute('data-fam')===p.link) return all[i]; } return null; }
+            var card=findCard();
+            if(!card){ renderCap=100000; render(); card=findCard(); }
             if(card){ card.scrollIntoView({behavior:'smooth',block:'center'}); card.classList.add('flash'); setTimeout(function(){ card.classList.remove('flash'); },1700); }
           };
           row.appendChild(c);
@@ -4022,6 +4038,16 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     if(undatedN){ var u=document.createElement('div'); u.className='dsnone'; u.textContent=undatedN+' post'+(undatedN===1?'':'s')+' below still need'+(undatedN===1?'s':'')+' a day.'; box.appendChild(u); }
     list.appendChild(box);
   }
+  var STACK_SEL={}; // family link -> title of the version shown on the stacked card (view-only, never saved)
+  function famOf(p){
+    if(!p.link) return [p];
+    var fm=ccPosts.filter(function(x){ return x.link===p.link; });
+    return fm.length?fm:[p];
+  }
+  function famPrimary(fm){
+    for(var i=0;i<fm.length;i++){ if(fm[i].title===fm[i].link) return fm[i]; }
+    return fm[0];
+  }
   function render(){
     var list=document.getElementById('plist');list.innerHTML='';
     var shown=0;
@@ -4030,27 +4056,58 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     if(deployOrder) buildDeploySched(list);
     var groups = deployOrder ? ['__launch__'] : (pvPlatform==='All' ? PLATFORM_ORDER : [pvPlatform]);
     groups.forEach(function(plat){
-      var posts=ccPosts.map(function(p,gi){ p.__gi=gi; return p; }).filter(function(p){ return (deployOrder || p.platform===plat) && visible(p); });
+      var posts=ccPosts.map(function(p,gi){ p.__gi=gi; return p; }).filter(function(p){
+        if(p.link){
+          var fm=famOf(p);
+          if(fm.length>1&&famPrimary(fm)!==p) return false; // the family renders once, on its primary card
+          if(deployOrder) return fm.some(visible);
+          if(pvPlatform==='All'){ if(p.platform!==plat) return false; return fm.some(visible); }
+          return fm.some(function(x){ return x.platform===plat && visible(x); });
+        }
+        return (deployOrder || p.platform===plat) && visible(p);
+      });
       if(deployOrder) posts.sort(function(a,b){ var ka=a.when||'9999-12-31', kb=b.when||'9999-12-31'; return ka<kb?-1:ka>kb?1:0; });
       if(!posts.length) return;
-      if(pvPlatform==='All' && !deployOrder){
-        var hh=document.createElement('h2'); hh.className='pvh'; hh.textContent=plat+' \u00b7 '+posts.length+' post'+(posts.length>1?'s':'');
-        list.appendChild(hh);
-      }
+      var hhDone=false;
       posts.forEach(function(p){
         shown++;
         if(rendered>=renderCap) return;
         rendered++;
-        var pf=(plat==='__launch__')?p.platform:plat;
+        if(!hhDone&&pvPlatform==='All'&&!deployOrder){
+          hhDone=true;
+          var hh=document.createElement('h2'); hh.className='pvh'; hh.textContent=plat+' \u00b7 '+posts.length+' post'+(posts.length>1?'s':'');
+          list.appendChild(hh);
+        }
+        var fm=famOf(p), prim=p;
+        if(fm.length>1){
+          var __v=null, __selT=STACK_SEL[prim.link];
+          if(__selT){ fm.forEach(function(x){ if(x.title===__selT) __v=x; }); }
+          if(__v&&!visible(__v)) __v=null; // stale pick for this stage/filter
+          if(!__v&&pvPlatform!=='All'){ fm.forEach(function(x){ if(!__v&&x.platform===pvPlatform&&visible(x)) __v=x; }); }
+          if(!__v&&visible(prim)) __v=prim;
+          if(!__v){ fm.forEach(function(x){ if(!__v&&visible(x)) __v=x; }); }
+          p=__v||prim;
+        }
+        var __stackTabs='';
+        if(fm.length>1){
+          var __seen={};
+          __stackTabs='<div class="pvstack">'+fm.map(function(x){
+            var n=(__seen[x.platform]=(__seen[x.platform]||0)+1);
+            var on=(x===p);
+            return '<button type="button" class="stkch'+(on?' on':'')+'" data-t="'+escAttr(x.title)+'"'+(on?' style="background:'+(CAL_COLORS[x.platform]||'#555')+';border-color:'+(CAL_COLORS[x.platform]||'#555')+';color:#fff"':'')+' title="Show the '+escAttr(x.platform)+' version of this post">'+escAttr(x.platform)+(n>1?' '+n:'')+'</button>';
+          }).join('')+'<span class="stkn">'+fm.length+' versions</span></div>';
+        }
+        var pf=p.platform;
         var m=PV_META[pf]||PV_META.LinkedIn;
-        var d=document.createElement('div'); d.className='pv pv-'+pf.toLowerCase()+(p.sel?' incart':'')+(p.status==='Published'?' pubdone':'');
+        var d=document.createElement('div'); d.className='pv pv-'+pf.toLowerCase()+(fm.length>1?' fam':'')+(p.status==='Published'?' pubdone':'');
         d.setAttribute('data-pvi', p.__gi);
+        if(prim.link) d.setAttribute('data-fam', prim.link);
         d.style.animationDelay=Math.min(shown*35,350)+'ms';
         var folded = m.fold && p.cap.length>m.fold;
         var ls=(p.history&&p.history.length)?p.history[p.history.length-1]:null;
         d.innerHTML=
-          '<div class="pvstrip"><button type="button" class="pvenv" title="'+(p.env==='copy'?'Click to move this post to Review':p.env==='creative'?'Click to send back to Compose':'Deploy is date-driven \u2014 clear the \ud83d\udcc5 day to move it back')+'" style="background:'+(ENV_COLOR[p.env]||'#888')+'">'+(ENV_LABEL[p.env]||p.env)+'</button><button class="pvdate'+(p.when?' has':'')+'" type="button" title="'+(p.when?'Scheduled for '+p.when+' \u2014 click to change the day or see what else is booked':'Schedule this post \u2014 pick a day and see what else is booked')+'">\ud83d\udcc5 '+(p.when?fmtDay(p.when):'Schedule')+'</button> '+p.pillar+(p.link?' \u00b7 \ud83d\udd17 linked':'')+'<button class="delx" type="button" title="Delete this post" aria-label="Delete this post">\u2715</button></div>'+
-          '<div class="pgrid"><div class="pmock"><div class="pvcard">'+
+          '<div class="pvstrip"><button type="button" class="pvenv" title="'+(p.env==='copy'?'Click to move this post to Review':p.env==='creative'?'Click to send back to Compose':'Deploy is date-driven \u2014 clear the \ud83d\udcc5 day to move it back')+'" style="background:'+(ENV_COLOR[p.env]||'#888')+'">'+(ENV_LABEL[p.env]||p.env)+'</button><button class="pvdate'+(p.when?' has':'')+'" type="button" title="'+(p.when?'Scheduled for '+p.when+' \u2014 click to change the day or see what else is booked':'Schedule this post \u2014 pick a day and see what else is booked')+'">\ud83d\udcc5 '+(p.when?fmtDay(p.when):'Schedule')+'</button> '+p.pillar+(fm.length>1?' \u00b7 \ud83d\udd17 '+fm.length+' channels':'')+'<button class="delx" type="button" title="Delete this post" aria-label="Delete this post">\u2715</button></div>'+
+          '<div class="pgrid"><div class="pmock">'+__stackTabs+'<div class="pvcard">'+
             '<div class="pvhead"><svg class="pvavatar" viewBox="-0.7 -0.2 24.9 25.4" aria-hidden="true"><use href="#ss-mark"/></svg>'+
             '<div><b>'+m.name+'</b><div class="pvsub">'+m.sub+'</div></div></div>'+
             '<div class="pvcap" contenteditable="true" title="Tap to edit the caption; it saves when you click away">'+(folded&&p.env!=='copy'
@@ -4061,7 +4118,7 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
           '</div>'+
           (ls?'<div class="stamp">'+fmtAct(ls)+'</div>':'')+
           '<div class="pvtools"></div>'+
-          '<div class="pvedit" style="display:none"></div></div>'+'<div class="prail">'+reviewPanel(p)+((window.spSpecPanel&&typeof PLANSEP!=='undefined')?window.spSpecPanel(p,(p.__gi!=null?p.__gi:ccPosts.indexOf(p))):'')+'</div>'+'</div>';
+          '<div class="pvedit" style="display:none"></div></div>'+'<div class="prail">'+reviewPanel(p)+((window.spSpecPanel&&typeof PLANSEP!=='undefined')?window.spSpecPanel(p,((window.__planIdx&&window.__planIdx[p.title]!=null)?window.__planIdx[p.title]:-1)):'')+'</div>'+'</div>';
         var rmb=d.querySelector('.imgrm:not(.vidrm)');
         if(rmb) rmb.onclick=function(ev){ ev.stopPropagation(); ev.preventDefault(); removeImage(p); };
         var vrb=d.querySelector('.vidrm');
@@ -4070,6 +4127,15 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
         if(more) more.onclick=function(ev){ ev.preventDefault(); more.style.display='none'; d.querySelector('.pvrest').style.display='inline'; };
         var dx=d.querySelector('.delx');
         if(dx) dx.onclick=function(ev){ ev.preventDefault(); ev.stopPropagation(); openDelModal(p); };
+        Array.prototype.forEach.call(d.querySelectorAll('.stkch'), function(b){
+          b.onclick=function(ev){
+            ev.preventDefault(); ev.stopPropagation();
+            var tT=b.getAttribute('data-t'), tgt=null;
+            fm.forEach(function(x){ if(x.title===tT) tgt=x; });
+            if(tgt&&!visible(tgt)){ showToast(tgt.platform+' version is in '+(ENV_LABEL[tgt.env]||tgt.env)+' \u2014 open that stage (or clear the filters) to see it'); return; }
+            STACK_SEL[prim.link]=tT; render();
+          };
+        });
         var dch=d.querySelector('.pvdate');
         if(dch) dch.onclick=function(ev){ ev.preventDefault(); ev.stopPropagation(); openScheduler(p); };
         var evb=d.querySelector('.pvenv');
@@ -4078,8 +4144,11 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
           if(p.env==='ready'){ showToast('Deploy is date-driven \u2014 clear the \ud83d\udcc5 day to move it back'); return; }
           if(p.env==='copy'){ p.reviewed=true; syncEnv(p); propagateStage(p); refreshAll(); showToast('Moved to Review'+(p.link?' \u2014 linked channel copies came along':'')); }
           else {
+            var hadR=!!p.reviewed;
             delete p.reviewed;
-            var r=syncEnv(p); propagateStage(p); refreshAll();
+            var r=syncEnv(p);
+            if(r){ propagateStage(p); } else if(hadR){ p.reviewed=true; }
+            refreshAll();
             showToast(r?'Back to Compose'+(p.link?' \u2014 with its linked copies':''):'Stays in Review \u2014 it has creative attached');
           }
         };
@@ -4112,25 +4181,41 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
           }
         });
         var tools=d.querySelector('.pvtools');
-        var rc=document.createElement('select'); rc.className='status rcsel'; rc.title='Copy this post and recreate it for another channel';
+        var rc=document.createElement('select'); rc.className='status rcsel'; rc.title='Add a version of this post for another channel \u2014 it stacks on this card';
         var o0=document.createElement('option'); o0.textContent='\u21b7 Recreate for\u2026'; o0.value=''; rc.appendChild(o0);
-        ['LinkedIn','Instagram','Facebook','X','YouTube'].filter(function(ch){ return ch!==p.platform; }).forEach(function(ch){
+        ['LinkedIn','Instagram','Facebook','X','YouTube'].filter(function(ch){ return !fm.some(function(x){ return x.platform===ch; }); }).forEach(function(ch){
           var oc=document.createElement('option'); oc.textContent=ch; oc.value=ch; rc.appendChild(oc);
         });
+        if(rc.options.length===1){ rc.disabled=true; rc.title='Every channel already has a version of this post'; }
         rc.onchange=function(){
           var ch=rc.value; if(!ch) return; rc.value='';
-          var base=p.title+' \u2014 '+ch, t2=base, k=2;
+          var base=prim.title+' \u2014 '+ch, t2=base, k=2;
           while(ccPosts.some(function(x){ return x.title===t2; })){ t2=base+' '+k; k++; }
-          var np={pillar:p.pillar,platform:ch,format:p.format,status:'Idea',env:'copy',when:'',title:t2,cap:p.cap,visual:p.visual,
-                  note:'Adapted from the '+p.platform+' original \u2014 retune the voice and format for '+ch+' before it ships.',
-                  creative:{kind:'',link:'',note:''},history:[]};
-          if(typeof COMP_BY_TITLE!=='undefined'&&COMP_BY_TITLE[p.title]) np._comp=COMP_BY_TITLE[p.title];
+          var np={pillar:p.pillar,platform:ch,format:p.format,status:'Idea',env:p.env,when:(p.when||''),title:t2,cap:p.cap,visual:p.visual,
+                  note:'Adapted from the '+p.platform+' version \u2014 retune the voice and format for '+ch+' before it ships.',
+                  creative:{kind:'',link:'',note:''},
+                  history:[{act:'created',by:(whoRaw()||'Team'),at:new Date().toISOString().slice(0,16).replace('T',' ')}]};
+          if(p.env!=='copy') np.reviewed=true;
+          np.env=derivedEnv(np);
+          if(typeof COMP_BY_TITLE!=='undefined'&&COMP_BY_TITLE[prim.title]) np._comp=COMP_BY_TITLE[prim.title];
           else if(p._comp) np._comp=p._comp;
-          p.link=p.link||p.title; np.link=p.link;
-          stamp(np,'created');
-          var lx=ccPosts.indexOf(p); ccPosts.splice(lx+1,0,np);
+          if(!prim.link){
+            var key=prim.title, kk=2;
+            while(ccPosts.some(function(x){ return x!==prim&&(x.link===key||x.title===key); })){ key=prim.title+' ('+kk+')'; kk++; }
+            if(key!==prim.title) prim.title=key;
+            prim.link=key;
+          }
+          np.link=prim.link;
+          var lx=ccPosts.indexOf(prim); ccPosts.splice(lx+1,0,np);
+          STACK_SEL[prim.link]=np.title;
+          var keepCap=renderCap;
           refreshAll();
-          showToast('Recreated for '+ch+' \u2014 linked underneath the original');
+          if(keepCap>renderCap){ renderCap=keepCap; render(); }
+          var fc=null, fAll=document.querySelectorAll('#plist .pv');
+          for(var fi=0;fi<fAll.length;fi++){ if(fAll[fi].getAttribute('data-fam')===prim.link){ fc=fAll[fi]; break; } }
+          if(!fc){ renderCap=100000; render(); fAll=document.querySelectorAll('#plist .pv'); for(fi=0;fi<fAll.length;fi++){ if(fAll[fi].getAttribute('data-fam')===prim.link){ fc=fAll[fi]; break; } } }
+          if(fc){ fc.scrollIntoView({behavior:'smooth',block:'center'}); fc.classList.add('flash'); setTimeout(function(){ fc.classList.remove('flash'); },1700); }
+          showToast(ch+' version added \u2014 stacked on this card');
         };
         tools.appendChild(rc);
         function tbtn(label,cls,fn){ var b=document.createElement('button'); b.className='cbtn'+(cls?' '+cls:''); b.textContent=label; b.onclick=fn; tools.appendChild(b); return b; }
@@ -4219,6 +4304,7 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     if(ccDeleted.indexOf(p.title)===-1) ccDeleted.push(p.title);
     delete p.sel;
     tiles(); envTabs(); filters(); syncView(); updateCart();
+    try{ if(window.renderPlanSep) window.renderPlanSep(); }catch(e){}
     showToast('Deleted \u2014 \u201c'+p.title.slice(0,40)+(p.title.length>40?'\u2026':'')+'\u201d');
   }
   (function(){
@@ -4314,10 +4400,13 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
         c.textContent='['+envN+'] '+p.title;
         c.title=p.platform+' \u00b7 stage '+envN+' \u00b7 '+p.status+' \u2014 '+p.title;
         c.onclick=function(){
-          studioView='list'; activeEnv=p.env; activePillar='All'; activeStatus='All'; activeReady='All';
+          studioView='list'; activeEnv=p.env; activePillar='All'; activeStatus='All'; activeReady='All'; pvPlatform='All';
           try{localStorage.setItem('sshub_env',activeEnv);}catch(err){}
+          if(p.link){ STACK_SEL[p.link]=p.title; }
           filters(); syncView();
-          var card=document.querySelector('.pcard[data-idx="'+idx+'"]');
+          function findCard(){ var cc=document.querySelector('#plist .pv[data-pvi="'+ccPosts.indexOf(p)+'"]'); if(cc||!p.link) return cc; var all=document.querySelectorAll('#plist .pv'); for(var i=0;i<all.length;i++){ if(all[i].getAttribute('data-fam')===p.link) return all[i]; } return null; }
+          var card=findCard();
+          if(!card){ renderCap=100000; render(); card=findCard(); }
           if(card){ card.scrollIntoView({behavior:'smooth',block:'center'}); card.classList.add('flash'); setTimeout(function(){card.classList.remove('flash');},1700); }
         };
         cell.appendChild(c);
@@ -4955,7 +5044,7 @@ var PLANSEP = {"PLAN": [{"gi": 1, "time": "9:30 AM", "why": "Hub-assigned Deploy
     var visTags='<div class="sp-tagRow">'+(ar?'<span class="sp-tag">'+esc(ar)+'</span>':'')+(tmpl?'<span class="sp-tag">'+esc(tmpl)+'</span>':'')+'<span class="sp-tag">'+esc(p.format)+'</span></div>';
     return '<aside class="sp-specs">'+
       '<div class="sp-specBlock"><h5>Planned visual (from the hub)</h5><p class="vis">'+esc(p.visual||'Native poll — no graphic.')+'</p>'+visTags+'</div>'+
-      '<div class="sp-specBlock"><h5>Image-generation prompt <button class="sp-copyBtn pl-copy" data-gi="'+gi+'">⧉ Copy</button></h5><details><summary>Show the full self-contained prompt ('+prompt.length.toLocaleString()+' chars — the hub’s live prompt for this card)</summary><pre class="pl-pre" data-gi="'+gi+'">'+esc(prompt)+'</pre></details></div>'+
+      '<div class="sp-specBlock"><h5>Image-generation prompt <button class="sp-copyBtn pl-copy" data-gi="'+gi+'" data-t="'+esc(p.title).replace(/"/g,'&quot;')+'">⧉ Copy</button></h5><details><summary>Show the full self-contained prompt ('+prompt.length.toLocaleString()+' chars — the hub’s live prompt for this card)</summary><pre class="pl-pre" data-gi="'+gi+'">'+esc(prompt)+'</pre></details></div>'+
       phHtml+
       '<div class="sp-specBlock"><h5>QA before publish</h5><ul class="sp-qa">'+qaHtml+'</ul></div>'+
       ((p._why||p.when)?'<div class="sp-specBlock"><h5>Why this slot</h5><p>'+esc(p._why||('Scheduled '+nice(p.when)+(p._time?' \u00b7 '+p._time:'')))+'</p></div>':'')+
@@ -4985,7 +5074,10 @@ var PLANSEP = {"PLAN": [{"gi": 1, "time": "9:30 AM", "why": "Hub-assigned Deploy
     PLANSEP.PLAN.forEach(function(x){ timeById[x.gi]=x.time; whyById[x.gi]=x.why; });
     var planned=[];
     PLANSEP.PLAN.forEach(function(x){
-      var p=ccPosts[x.gi]; if(!p) return;
+      var p=null, __t=(window.__shipTitles?window.__shipTitles[x.gi]:null);
+      if(__t!=null){ for(var __i=0;__i<ccPosts.length;__i++){ if(ccPosts[__i].title===__t){ p=ccPosts[__i]; break; } } }
+      else p=ccPosts[x.gi];
+      if(!p) return;
       p._time=x.time; p._why=x.why;
       planned.push({gi:x.gi, p:p});
     });
@@ -5066,7 +5158,15 @@ var PLANSEP = {"PLAN": [{"gi": 1, "time": "9:30 AM", "why": "Hub-assigned Deploy
   // delegated copy button -> hub's own genPrompt + copyText
   document.addEventListener('click', function(e){
     var b=e.target.closest && e.target.closest('.pl-copy'); if(!b) return;
-    var gi=+b.getAttribute('data-gi'); var p=(typeof ccPosts!=='undefined')&&ccPosts[gi]; if(!p) return;
+    var p=null, tt=b.getAttribute('data-t');
+    if(tt&&typeof ccPosts!=='undefined'){ for(var i=0;i<ccPosts.length;i++){ if(ccPosts[i].title===tt){ p=ccPosts[i]; break; } } }
+    if(!p){
+      var gi=+b.getAttribute('data-gi');
+      var c=(typeof ccPosts!=='undefined')&&ccPosts[gi];
+      if(c&&(!window.__shipTitles||c.title===window.__shipTitles[gi])) p=c;
+      else { if(window.showToast) window.showToast('That post was deleted in Content Studio'); return; }
+    }
+    if(!p) return;
     if(typeof window.genPrompt==='function' && typeof window.copyText==='function'){ window.copyText(window.genPrompt(p),'Image prompt copied — self-contained, paste straight into Gemini or any image tool'); }
   });
 })();
