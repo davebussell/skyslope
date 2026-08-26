@@ -591,6 +591,7 @@
       <button class="navlink" data-view="amplify" data-terms="amplify employee advocacy team sales enablement distribution email list reshare engagement targets share kit">Employee Advocacy</button>
       <button class="navlink" data-view="assets" data-terms="asset library videos images embeds youtube playlists footage b-roll shorts">Asset Library</button>
       <button class="navlink" data-view="next" data-terms="action tracker decisions checklist rob meeting access walkthrough">Action Tracker</button>
+      <button class="navlink" data-view="claims" data-terms="claims data evidence register validation placeholders index stats proof sources methodology">Data &amp; Claims</button>
       <button class="navlink" data-view="support" data-terms="support contacts help operator naomi jess dave email version who">Support</button>
     </div>
     <div class="navgroup"><div class="gt">Playbook</div>
@@ -2173,6 +2174,10 @@
     <section class="view" id="view-next">
       <h1>Action Tracker</h1>
       <div class="sub">The decisions and kickoff actions across both documents. The For-Rob list is fully live — check off, add notes, add items — and syncs to the whole team.</div>
+      <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px"><b>🧾 Data &amp; Claims Register</b><div class="sub" style="margin:2px 0 0">Every data-backed claim in Content Studio, grouped by the evidence it needs before the red [brackets] can ship. Generated live from the posts.</div></div>
+        <button class="cbtn push" type="button" onclick="var n=document.querySelector('.navlink[data-view=claims]'); if(n) n.click();">Open the register →</button>
+      </div>
 
       <details class="card" open id="n-deliver"><summary>What Click Shift is delivering for SkySlope<span class="tag">The proposal in one card</span><span class="chev">▶</span></summary><div class="body">
         <ul>
@@ -2193,6 +2198,32 @@
       <p class="note-strip" style="margin:0 0 8px">Also live — check off, note, add, remove; synced to the team.</p>
       <div id="csList"></div>
       <button class="cbtn push" id="csAdd" type="button" style="margin:2px 0 14px">+ Add item</button>
+    </section>
+    <section class="view" id="view-claims">
+      <h1>Data &amp; Claims Register</h1>
+      <div class="sub">Every claim in Content Studio that leans on data — what we’re saying, and exactly what would prove it. This page reads the live posts: edit a caption and the register updates on the next refresh. <mark class="cl-tbd">[Red brackets]</mark> are unvalidated placeholders — they never ship.</div>
+      <div id="claims-mount"></div>
+      <style>
+        #view-claims .cl-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:0 0 14px}
+        #view-claims .cl-tile{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:12px 14px}
+        #view-claims .cl-tile b{display:block;font-size:1.5rem;line-height:1.1}
+        #view-claims .cl-tile span{font-size:.78rem;color:var(--baseline);font-weight:700}
+        #view-claims mark.cl-tbd,#view-claims .cl-snip mark.cl-tbd{background:rgba(220,53,69,.13);color:#DC3545;font-weight:700;border-radius:3px;padding:0 2px}
+        #view-claims .cl-pipe{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:12px 16px;margin:0 0 16px;font-size:.86rem}
+        #view-claims .cl-pipe b{color:var(--blue)}
+        #view-claims .cl-need{margin:8px 0 0;padding-left:18px}
+        #view-claims .cl-need li{margin:4px 0;font-size:.86rem}
+        #view-claims .cl-meta{font-size:.8rem;color:var(--baseline);margin:8px 0 0}
+        #view-claims .cl-meta b{color:inherit}
+        #view-claims .cl-bar{border-left:3px solid #DC3545;padding:6px 10px;margin:10px 0 0;font-size:.82rem;background:rgba(220,53,69,.05);border-radius:0 8px 8px 0}
+        #view-claims .cl-posts{margin:12px 0 0;border-top:1px dashed var(--grid);padding-top:8px}
+        #view-claims .cl-post{padding:7px 0;border-bottom:1px dashed var(--grid)}
+        #view-claims .cl-post:last-child{border-bottom:0}
+        #view-claims .cl-chip{display:inline-block;color:#fff;border-radius:999px;padding:0 8px;font-size:.7rem;font-weight:800;margin-right:6px;vertical-align:1px}
+        #view-claims .cl-ttl{font-weight:800;font-size:.86rem}
+        #view-claims .cl-snip{font-size:.82rem;color:var(--baseline);margin:3px 0 0 2px}
+        #view-claims .cl-cnt{font-weight:400;color:var(--baseline);font-size:.85em}
+      </style>
     </section>
     <!-- ============ PLANS · September Plan ============ -->
     <section class="view" id="view-plansep">
@@ -3812,7 +3843,7 @@ try{
     var lk=document.getElementById('wkOpenStudio');
     if(lk) lk.onclick=function(e){ e.preventDefault(); var nl=document.querySelector('.navlink[data-view="studio"]'); if(nl) nl.click(); };
   }
-  function refreshAll(){ tiles(); envTabs(); filters(); render(); updateCart(); renderWeek(); try{ window.genPrompt=genPrompt; window.copyText=copyText; window.showToast=showToast; window.hubRerender=function(){ try{ render(); }catch(e){} }; if(window.renderPlanSep) window.renderPlanSep(); }catch(e){} }
+  function refreshAll(){ tiles(); envTabs(); filters(); render(); updateCart(); renderWeek(); try{ window.genPrompt=genPrompt; window.copyText=copyText; window.showToast=showToast; window.hubRerender=function(){ try{ render(); }catch(e){} }; if(window.renderPlanSep) window.renderPlanSep(); if(window.renderClaims) window.renderClaims(); }catch(e){} }
   // normalize whatever state was loaded (shipped, saved, or team-synced)
   ccPosts.forEach(function(p){ var e=derivedEnv(p); if(e!==p.env) p.env=e; if(creativeFulfilled(p)) inferKind(p); });
   function moveEnv(p,env,act,msg){
@@ -5874,6 +5905,157 @@ Array.prototype.forEach.call(document.querySelectorAll('table'), function(t){
   var w=document.createElement('div'); w.className='tscroll';
   p.insertBefore(w,t); w.appendChild(t);
 });
+</script>
+
+<script>
+// ---------- Data & Claims Register: live evidence map over Content Studio ----------
+(function(){
+  function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function markPH(s){ return esc(s).replace(/\[([^\]\n]{1,60})\]/g,'<mark class="cl-tbd">[$1]</mark>'); }
+  var ENVL={copy:'Compose',creative:'Review',ready:'Deploy'};
+  var ENVC={copy:'#0059DA',creative:'#533DB1',ready:'#28A745'};
+  var PLATC={LinkedIn:'#0a66c2',Instagram:'#dd2a7b',Facebook:'#1877f2',YouTube:'#ff0000',X:'#555555',TikTok:'#4a4a4a'};
+  function sentences(p){
+    return (p.title+'. '+(p.cap||'')).split(/(?<=[.!?])\s+|\n+/).map(function(s){return s.trim();}).filter(Boolean);
+  }
+  var FAMS=[
+    {key:'anatomy',icon:'\ud83d\udcc4',name:'Transaction anatomy (SkySlope Index)',
+     what:'Documents, signatures, hours and paper per closing \u2014 the flagship Index Drop numbers.',
+     rx:/\b(docs?|documents?|signatures?|initials|paperwork|lbs)\b/i,
+     guard:/clos|file|transaction|envelope|paper|index/i,
+     need:['Documents per closed file: median and mean checklist-document count across every file closed in a trailing 12-month window \u2014 with a written rule for what counts as a document (checklist items vs uploads vs re-issued versions).',
+           'Signatures per closing: signature + initial field counts from the file\u2019s completed DigiSign envelopes.',
+           'The \u201c[3.2] hours to get through them\u201d line has no clean platform measure of active working time \u2014 define a defensible proxy (e.g. summed envelope completion spans) or reword to something measurable before it ships.',
+           'Paper weight is a derived stat \u2014 publish the conversion (docs \u00d7 average pages \u00d7 sheet weight) alongside it.'],
+     source:'Platform analytics warehouse (transactions + checklist + DigiSign field telemetry). Owner: SkySlope data team; Rob signs off.',
+     bar:'Methodology footnote on the graphic (\u201cmedian across N closings on SkySlope, [window]\u201d). Say \u201con SkySlope\u201d \u2014 it\u2019s a platform average, not the whole market. Legal/comms review before Index Drop #1.'},
+    {key:'speed',icon:'\u23f1\ufe0f',name:'Closing speed & geography',
+     what:'The state leaderboard, contract-to-close day counts, and the \u201c3M+ transactions a year\u201d scale line under them.',
+     rx:/contract-to-close|days? (faster|slower)|closing speed|leaderboard|fastest state|3M\+/i,
+     need:['Under-contract date and close date on every file \u2014 audit the fill-rate of those two fields first; the leaderboard is only as good as they are.',
+           'Median contract-to-close days by property state, trailing 12 months, with an outlier rule (e.g. drop files >180 days) and a per-state sample floor \u2014 states under the floor are excluded and noted.',
+           'One canonical, finance-approved annual transaction volume figure behind every \u201c3M+ transactions\u201d mention \u2014 the same number, verbatim, everywhere.'],
+     source:'Transaction records + property address state. Owner: data team; finance confirms the volume figure.',
+     bar:'Publish as \u201cdeals on SkySlope\u201d. Refresh quarterly so the leaderboard doesn\u2019t fossilize.'},
+    {key:'compliance',icon:'\ud83d\udea9',name:'Compliance flags & audit stats',
+     what:'\u201c[31%] of files hit a flag\u201d, the top-culprit rankings, and the flags-that-stall-closings education posts.',
+     rx:/compliance flag|missing initials|disclosure version|signature date mismatch|file[- ]review|audit season/i,
+     need:['A written definition of a \u201ccompliance flag\u201d (automated check failure? reviewer rejection?) \u2014 the percentage moves wildly with the definition.',
+           'Share of closed files with \u22651 flag, deduped per file, trailing 12 months; flag reasons categorized and ranked for the top-3 / top-5 lists.',
+           '\u201cStall the most closings\u201d implies causation \u2014 pair each flag type with the median contract-to-close delta vs unflagged files, or soften the copy to \u201cthe most common flags\u201d.'],
+     source:'File-review / broker-review event log. Owner: data team + compliance PM.',
+     bar:'Legal framing review: \u201c31% hit a flag\u201d must read as caught-and-fixed by SkySlope, never as \u201c31% of customers are non-compliant\u201d.'},
+    {key:'esign',icon:'\u270d\ufe0f',name:'DigiSign turnaround',
+     what:'Median e-sign return time, the long-tail share, holiday-week comparisons, and envelope prep timings.',
+     rx:/e-?sign|envelope|digisign|signature.*(back|returned|turnaround)|minutes total/i,
+     need:['Envelope sent \u2192 completed timestamps: median and p90, plus the % beyond 48 hours. Decide wall-clock vs business-hours once and use it in every post.',
+           'Holiday-week claims: the same metric for the holiday window vs a 4-week baseline, both windows named.',
+           'Prep-time claims (8 minutes \u2192 4) only if envelope-building is instrumented \u2014 otherwise film a scripted run and label it a demo, not data.',
+           'Exclude internal/test envelopes and voided sends from every cut.'],
+     source:'DigiSign event stream. Owner: data team + DigiSign PM.',
+     bar:'One clock definition across all posts; demo timings labeled as demos on the video itself.'},
+    {key:'seasonal',icon:'\ud83d\udcc5',name:'Timing & seasonality patterns',
+     what:'Tuesday contract day, the Friday filing rush, busiest closing month, quarter-over-quarter file-open spikes, and the Wrapped-style \u201cYour Year in Closings\u201d.',
+     rx:/busiest|file-?opens?|filing (rush|spike|day)|upload|contract day|closing month|restart|spring surge|year in closings|labor day|thanksgiving/i,
+     need:['Event timestamps (file-opens, uploads, under-contract, closings) bucketed by hour / day / month \u2014 normalized to the property\u2019s local timezone, and the methodology says so.',
+           'At least two full years of events, so one odd year doesn\u2019t become \u201cthe pattern\u201d.',
+           '\u201cYour Year in Closings\u201d: per-account aggregates only, opt-in, nothing that exposes client names or addresses \u2014 privacy review before it\u2019s built.'],
+     source:'Platform event stream. Owner: data team; privacy review for any account-facing stat.',
+     bar:'Day-of-week and hour-of-day claims need \u226512 months of events behind them; seasonal comparisons always name both windows.'},
+    {key:'scale',icon:'\ud83c\udfd7\ufe0f',name:'Platform scale & customer milestones',
+     what:'\u201c3M+ transactions a year\u201d, \u201cmillions of transactions\u201d, and per-customer milestone congrats.',
+     rx:/3M\+|millions? of transactions|files closed on skyslope|10,000\] files/i,
+     need:['The official annual volume figure from the analytics-of-record, blessed by finance, refreshed once a year.',
+           'Customer milestone counts pulled per account \u2014 shared with the customer and approved by them before the congrats post ships.',
+           'Pick a unit and define it once: \u201ctransactions\u201d, \u201csides\u201d and \u201cfiles\u201d are three different numbers.'],
+     source:'Finance / analytics of record; account data with customer consent.',
+     bar:'Milestone posts don\u2019t ship without the customer\u2019s OK \u2014 it\u2019s their number too.'},
+    {key:'customer',icon:'\ud83c\udfc6',name:'Customer results & spotlights',
+     what:'Audit-time stories, hours-saved quotes, migration counts, TC of the Month \u2014 numbers that belong to a customer, not to the platform.',
+     match:function(p){ return p.pillar==='Testimonial'; },
+     rx:/saved me|used to take|migrated \[|hours a month on manual|hours is six working days/i,
+     need:['A real named customer \u2014 name, role, brokerage \u2014 with a signed marketing release before the post is scheduled.',
+           'The quote verbatim from a dated interview or email. The numbers are the customer\u2019s claim, attributed to them and fact-checked with them \u2014 these posts need consent and provenance, not platform queries.',
+           'Support stories: the ticket / chat timestamp on file.',
+           'RealTrends congrats: confirm the ranking entry and that the brokerage is a current customer.'],
+     source:'Customer marketing pipeline (interviews + releases). Owner: Click Shift + SkySlope customer marketing.',
+     bar:'No release, no post \u2014 the placeholders stay red and the post stays in Compose until the release is on file.'},
+    {key:'external',icon:'\ud83c\udf10',name:'External market data \u2014 needs a citation, not our data',
+     what:'NAR EHS numbers, REALTOR\u00ae profile stats, RealTrends rankings, ShowingTime, Zillow, mortgage-rate lock-in \u2014 the market posts that lean on someone else\u2019s dataset.',
+     rx:/\bNAR\b|EHS|existing-home|realtor|realtrends|showingtime|zillow|median price|first-time (home)?buyer|market share|lock-in|concessions|1\.44M|mortgages? near|sides last year/i,
+     need:['Source name + report + release date on every stat \u2014 and re-pull the latest release the week the post ships (EHS revises monthly).',
+           'Links in the first comment on LinkedIn; the full citation in the caption on X and Instagram where links don\u2019t travel.',
+           'Never blend a platform stat and an external stat in one graphic without labeling each.'],
+     source:'NAR, RealTrends, ShowingTime, Zillow, Freddie Mac \u2014 bookmarked under Inspiration \u2192 Sources.',
+     bar:'Date-stamp every external number. The [source ___] placeholder in the concessions post is the model: no source, no ship.'}
+  ];
+  function famSnips(p, f){
+    var out=[], ss=sentences(p);
+    for(var i=0;i<ss.length&&out.length<3;i++){
+      var s=ss[i];
+      if(f.rx&&f.rx.test(s)&&/[\d\[]/.test(s)){ if(!f.guard||f.guard.test(s)||/\[/.test(s)) out.push(s); }
+    }
+    if(!out.length&&f.match&&f.match(p)){
+      for(var j=0;j<ss.length&&out.length<2;j++){ if(/\[|\d/.test(ss[j])) out.push(ss[j]); }
+      if(!out.length&&ss.length) out.push(ss[Math.min(1,ss.length-1)]);
+    }
+    return out;
+  }
+  window.renderClaims=function(){
+    var mount=document.getElementById('claims-mount');
+    if(!mount||typeof ccPosts==='undefined') return;
+    var perFam={}, postSet={}, phTotal=0, extPosts=0;
+    FAMS.forEach(function(f){ perFam[f.key]=[]; });
+    ccPosts.forEach(function(p){
+      var tagged=false;
+      FAMS.forEach(function(f){
+        var sn=famSnips(p,f);
+        if(sn.length||(f.match&&f.match(p))){
+          perFam[f.key].push({p:p,sn:sn});
+          tagged=true;
+          if(f.key==='external') extPosts++;
+        }
+      });
+      if(tagged){
+        postSet[p.title]=1;
+        var m=(p.cap||'').match(/\[([^\]\n]{1,60})\]/g); if(m) phTotal+=m.length;
+      }
+    });
+    var claimPosts=Object.keys(postSet).length;
+    var html='';
+    html+='<div class="cl-tiles">'
+      +'<div class="cl-tile"><b>'+claimPosts+'</b><span>posts lean on data</span></div>'
+      +'<div class="cl-tile"><b>'+phTotal+'</b><span>red placeholders to validate</span></div>'
+      +'<div class="cl-tile"><b>'+(FAMS.length-1)+'</b><span>SkySlope-data claim families</span></div>'
+      +'<div class="cl-tile"><b>'+extPosts+'</b><span>posts need an external citation</span></div>'
+      +'</div>';
+    html+='<div class="cl-pipe"><b>From bracket to shipped number:</b> 1) the claim is drafted in Content Studio with red [brackets] \u00b7 2) this register names the query or release it needs \u00b7 3) the owner pulls the number and writes the one-line methodology \u00b7 4) Rob / legal sign off \u00b7 5) the bracket is replaced in the caption \u2014 and this page clears it automatically.</div>';
+    FAMS.forEach(function(f){
+      var rows=perFam[f.key];
+      html+='<details class="card"><summary>'+f.icon+' '+esc(f.name)
+        +'<span class="tag">'+rows.length+' post'+(rows.length===1?'':'s')+'</span><span class="chev">\u25b6</span></summary><div class="body">'
+        +'<p style="margin:0">'+esc(f.what)+'</p>'
+        +'<h4 style="margin:12px 0 0">What we need before these ship</h4><ul class="cl-need">'
+        +f.need.map(function(n){ return '<li>'+esc(n)+'</li>'; }).join('')+'</ul>'
+        +'<div class="cl-meta"><b>Source of truth:</b> '+esc(f.source)+'</div>'
+        +'<div class="cl-bar">'+esc(f.bar)+'</div>';
+      if(rows.length){
+        html+='<div class="cl-posts">'+rows.map(function(r){
+          var p=r.p;
+          return '<div class="cl-post">'
+            +'<span class="cl-chip" style="background:'+(PLATC[p.platform]||'#888')+'">'+esc(p.platform)+'</span>'
+            +'<span class="cl-chip" style="background:'+(ENVC[p.env]||'#888')+'">'+esc(ENVL[p.env]||p.env)+'</span>'
+            +'<span class="cl-ttl">'+markPH(p.title)+'</span>'
+            +r.sn.map(function(s){ return '<div class="cl-snip">\u201c'+markPH(s)+'\u201d</div>'; }).join('')
+            +'</div>';
+        }).join('')+'</div>';
+      }
+      html+='</div></details>';
+    });
+    mount.innerHTML=html;
+  };
+  try{ window.renderClaims(); }catch(e){}
+})();
 </script>
 </body>
 </html>
