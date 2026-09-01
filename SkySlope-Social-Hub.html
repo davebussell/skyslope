@@ -4514,7 +4514,7 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
         tools.appendChild(rc);
         function tbtn(label,cls,fn){ var b=document.createElement('button'); b.className='cbtn'+(cls?' '+cls:''); b.textContent=label; b.onclick=fn; tools.appendChild(b); return b; }
         // universal tools
-        if(/reel|video|clip/i.test(p.format||'')){
+        if(isVideoPost(p)){
           tbtn('\u29c9 Video prompt','push',function(){ copyText(genPrompt(p),'Video generation prompt copied \u2014 paste into Veo, Sora or any video model'); });
           tbtn('\u29c9 Cover prompt','',function(){ copyText(genPrompt(p, true),'Cover/thumbnail image prompt copied \u2014 paste into Gemini or any image tool'); });
         } else {
@@ -5383,7 +5383,7 @@ var PLANSEP = {"PLAN": [{"gi": 1, "time": "9:30 AM", "why": "Hub-assigned Deploy
     var visTags='<div class="sp-tagRow">'+(ar?'<span class="sp-tag">'+esc(ar)+'</span>':'')+(tmpl?'<span class="sp-tag">'+esc(tmpl)+'</span>':'')+'<span class="sp-tag">'+esc(p.format)+'</span></div>';
     return '<aside class="sp-specs">'+
       '<div class="sp-specBlock"><h5>Planned visual (from the hub)</h5><p class="vis">'+esc(p.visual||'Native poll — no graphic.')+'</p>'+visTags+'</div>'+
-      '<div class="sp-specBlock"><h5>Image-generation prompt <button class="sp-copyBtn pl-copy" data-gi="'+gi+'" data-t="'+esc(p.title).replace(/"/g,'&quot;')+'">⧉ Copy</button></h5><details><summary>Show the full self-contained prompt ('+prompt.length.toLocaleString()+' chars — the hub’s live prompt for this card)</summary><pre class="pl-pre" data-gi="'+gi+'">'+esc(prompt)+'</pre></details></div>'+
+      '<div class="sp-specBlock"><h5>'+((/reel|video|clip/i.test(p.format||'')||(p.creative&&p.creative.kind==='video'))?'🎬 Video-generation prompt':'Image-generation prompt')+' <button class="sp-copyBtn pl-copy" data-gi="'+gi+'" data-t="'+esc(p.title).replace(/"/g,'&quot;')+'">⧉ Copy</button></h5><details><summary>Show the full self-contained prompt ('+prompt.length.toLocaleString()+' chars — the hub’s live prompt for this card)</summary><pre class="pl-pre" data-gi="'+gi+'">'+esc(prompt)+'</pre></details></div>'+
       phHtml+
       '<div class="sp-specBlock"><h5>QA before publish</h5><ul class="sp-qa">'+qaHtml+'</ul></div>'+
       ((p._why||p.when)?'<div class="sp-specBlock"><h5>Why this slot</h5><p>'+esc(p._why||('Scheduled '+nice(p.when)+(p._time?' \u00b7 '+p._time:'')))+'</p></div>':'')+
