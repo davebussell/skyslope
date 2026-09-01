@@ -3693,7 +3693,7 @@ try{
     L.push('Fixed palette - never substitute: #0059DA, #006BED, #87C6FF, #3F5B77, #151A27, white; green #28A745 only for positive change. ONE hero accent.');
     L.push('');
     L.push('TEXT BEATS');
-    L.push('- At most 3 on-screen text beats, each visible and steady for at least 1 full second, sentence case, clean geometric sans (serif allowed only for quotes).');
+    L.push('- At most 3 on-screen text beats, each visible and steady for at least 1 full second, sentence case. Font: Proxima Nova (SkySlope\u2019s brand font); if unavailable use Montserrat, Poppins or Avenir Next - any clean geometric sans, never a default serif or handwritten font. Quotes only may use Libre Baskerville (fallbacks: Baskerville, Playfair Display, Georgia).');
     L.push('- Only words and numbers that appear in this prompt. Never invent, round, or extrapolate a number.');
     L.push('');
     L.push('HARD RULES');
@@ -3720,7 +3720,7 @@ try{
     } else if(/meme/.test(fmt)){
       direction='Template: RELATABLE SCENE - a photorealistic, instantly recognizable agent-life moment with meme energy but premium craft: '+scene+'. Leave one clean high-contrast zone for the short punchline: "'+hook+'"';
     } else if(/testimonial/i.test(pil) || /testimonial/.test(fmt)){
-      direction='Template: QUOTE PORTRAIT - a warm candid editorial portrait of a real-estate professional fills the frame (or one half), soft natural light, genuine expression; over it, oversized quotation marks and this line set large in a classic serif (Libre Baskerville look): "'+(qm?qm[1]:hook)+'". Attribution small beneath.';
+      direction='Template: QUOTE PORTRAIT - a warm candid editorial portrait of a real-estate professional fills the frame (or one half), soft natural light, genuine expression; over it, oversized quotation marks and this line set large in Libre Baskerville (fallbacks: Baskerville, Playfair Display, Georgia): "'+(qm?qm[1]:hook)+'". Attribution small beneath.';
     } else if(/data|index/i.test(pil)){
       direction=num
         ? 'Template: STAT ON SCENE - start from a cinematic photograph: '+scene+'. Grade it cool and premium; lay a deep space-navy gradient scrim (#161B28 fading to transparent) across the lower third or one side; on the scrim, set the number '+num+' huge (about a third of the canvas tall) in white or Electric Blue #006BED with its one-line label beneath. The photo tells the story; the number lands it.'
@@ -3752,7 +3752,7 @@ try{
       ? 'Scene mode: DARK - deep space-navy background, #161B28 at the top easing into electric blue #006BED near the bottom edge; white type; accents in Sky Light #87C6FF; gentle blue glows, a hint of faint stars welcome.'
       : 'Scene mode: LIGHT - white easing into ice blue #F4F8FC (or a daylight-sky wash #DAEEFE to #9BCAFD); primary elements in Science Blue #0059DA; secondary text in Slope Slate #3F5B77.');
     L.push('Fixed palette - never substitute: Science Blue #0059DA, Electric Blue #006BED, Sky Light #87C6FF, Slope Slate #3F5B77, Mirage Navy #151A27, white; Success Green #28A745 only for positive change, Alert Red #DC3545 only for risk. ONE hero accent per image.');
-    L.push('Type: clean geometric sans-serif (Proxima Nova look), bold, sentence case, headlines of at most 7 words.');
+    L.push('Type: Proxima Nova, SkySlope\u2019s brand font - bold, sentence case, headlines of at most 7 words. If Proxima Nova is unavailable, use Montserrat, Poppins or Avenir Next (any clean geometric sans); never a default serif, slab or handwritten font for headlines.');
     L.push('Craft: margins of at least 8% of the canvas on every side; softly rounded panels (16px feel); soft long shadows; depth from layered palette gradients, never busy textures. Everything legible at 200px wide.');
     L.push('');
     L.push('HARD RULES');
@@ -4936,8 +4936,8 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
       "Rule: ONE hero accent per image, almost always a blue.",
       "",
       "## TYPE",
-      "- Headlines and numbers: clean geometric sans-serif (Proxima Nova look) - bold, tight, sentence case. Never all-caps blocks.",
-      "- Editorial accent for quotes/testimonials ONLY: a classic serif (Libre Baskerville look), italic welcome.",
+      "- Headlines and numbers: Proxima Nova, SkySlope's brand font - bold, tight, sentence case, never all-caps blocks. If Proxima Nova is unavailable: Montserrat, Poppins or Avenir Next (any clean geometric sans).",
+      "- Editorial accent for quotes/testimonials ONLY: Libre Baskerville, italic welcome. If unavailable: Baskerville, Playfair Display or Georgia.",
       "- One hero element per image: a huge number OR a headline of at most 7 words. All other text minimal; exact spellings as given.",
       "",
       "## PHOTOGRAPHY FIRST",
@@ -5002,7 +5002,7 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
       "Spirit imagery: skyslope.com uses astronauts, spacecraft and glowing geometry as brand characters - elegant accents with rim-light glow, used sparingly, never cartoonish.",
       "",
       "## Typography on images",
-      "- Clean geometric sans-serif (Proxima Nova feel). Sentence case - never all-caps blocks.",
+      "- Brand font: Proxima Nova (licensed via Adobe Fonts). Design fallbacks when it is unavailable: Montserrat, Poppins, Avenir Next - any clean geometric sans. Serif accent for quotes only: Libre Baskerville (fallbacks: Baskerville, Playfair Display, Georgia). Sentence case - never all-caps blocks.",
       "- ONE hero element per image: a huge number or a headline of at most 7 words. Numerals for numbers ('97%', '10 hours per deal').",
       "- Generous white space. Softly rounded corners (12-16px feel) on cards and panels.",
       "",
