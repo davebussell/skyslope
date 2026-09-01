@@ -3863,6 +3863,18 @@ try{
       if(p.format && !seenF[p.format]){ seenF[p.format]=1; formats.push(p.format); }
     });
     pillars.sort(); formats.sort();
+    var xb=document.createElement('button'); xb.className='fbtn'; xb.type='button'; xb.textContent='\u2b07 Export shown';
+    xb.title='Download the currently filtered/searched posts as a CSV';
+    xb.onclick=function(){
+      var pool=ccPosts.filter(visible);
+      if(!pool.length){ showToast('Nothing shown to export \u2014 loosen the filters'); return; }
+      var blob=new Blob([buildContentCSV(pool)],{type:'text/csv;charset=utf-8'});
+      var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+      a.download='skyslope-posts-'+new Date().toISOString().slice(0,10)+'.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      showToast(pool.length+' shown post'+(pool.length===1?'':'s')+' exported as CSV');
+    };
+    row.appendChild(xb);
     dd('pillar', activePillar, pillars, function(v){ activePillar=v; });
     dd('format', activeFormat, formats, function(v){ activeFormat=v; });
     if(activePillar!=='All'||activeFormat!=='All'||activeStatus!=='All'||studioSearch){
@@ -4403,6 +4415,7 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
         function tbtn(label,cls,fn){ var b=document.createElement('button'); b.className='cbtn'+(cls?' '+cls:''); b.textContent=label; b.onclick=fn; tools.appendChild(b); return b; }
         // universal tools
         tbtn('\u29c9 Image prompt','push',function(){ copyText(genPrompt(p),'Image prompt copied \u2014 self-contained, paste straight into Gemini or any image tool'); });
+        tbtn('\u270e Edit','',function(){ var ed=d.querySelector('.pvedit'); if(!ed) return; ed.style.display=(ed.style.display==='none'||!ed.style.display)?'block':'none'; buildEdit(p,d); });
         d.querySelector('.pvcard').appendChild(makeImgUp(p, function(){ return d; }));
         d.querySelector('.pvcard').appendChild(makeVidUp(p, function(){ return d; }));
         // world tools follow the post
@@ -4975,11 +4988,11 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     try{document.execCommand('copy');showToast('State copied to clipboard — send to Click Shift');}catch(err){showToast('State shown below — copy and send to Click Shift');}
   };
   function csvCell(v){ v=(v==null?'':String(v)); return '"'+v.replace(/"/g,'""')+'"'; }
-  function buildContentCSV(){
+  function buildContentCSV(customPool){
     var head=['#','Platform','Stage','Status','Publish day','Pillar','Format','Title','Caption / prompt','Visual instructions','Creative type','Creative link','Creative note','Platform rules','Post note','Last action'];
     var rows=[head.map(csvCell).join(',')];
     var eo={copy:0,creative:1,ready:2};
-    var pool=ccPosts.filter(function(p){return p.sel;});
+    var pool=customPool ? customPool.slice() : ccPosts.filter(function(p){return p.sel;});
     if(!pool.length) pool=ccPosts.slice();
     var sorted=pool.sort(function(a,b){
       var pa=PLATFORM_ORDER.indexOf(a.platform), pb=PLATFORM_ORDER.indexOf(b.platform);
