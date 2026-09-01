@@ -2767,7 +2767,7 @@
     var plotW = W - padL - padR, plotH = H - padT - padB;
     var maxV = 100;
     var groupW = plotW / metrics.length;
-    var barW = Math.min(34, (groupW - 40) / companies.length);
+    var barW = Math.max(1.5, Math.min(34, (groupW - 40) / companies.length));
     var ink2 = cssVar('--ink-2'), muted = cssVar('--muted'), grid = cssVar('--grid'), base = cssVar('--baseline'), surface = cssVar('--surface');
     function y(v){ return padT + plotH - (v/maxV)*plotH; }
     var NS = 'http://www.w3.org/2000/svg';
@@ -2786,7 +2786,8 @@
         var x = gx + ci*(barW+2);
         var by = y(v), bh = padT + plotH - by;
         var color = cssVar(c.varName);
-        var r = el('path',{d:'M'+x+' '+(by+4)+' q0 -4 4 -4 h'+(barW-8)+' q4 0 4 4 v'+(bh-4)+' h-'+barW+' Z', fill:color});
+        var dts = barW>=10 ? 'M'+x+' '+(by+4)+' q0 -4 4 -4 h'+(barW-8)+' q4 0 4 4 v'+Math.max(0,bh-4)+' h-'+barW+' Z' : 'M'+x+' '+by+' h'+barW+' v'+Math.max(0,bh)+' h-'+barW+' Z';
+        var r = el('path',{d:dts, fill:color});
         r.style.cursor='pointer';
         r.addEventListener('mousemove', function(ev){
           tooltip.innerHTML = '<div class="t-title">'+c.name+'</div><div class="t-val">'+m+': <b>'+v+'</b> of 215</div>';
@@ -2882,7 +2883,7 @@ try{
     var plotW=W-padL-padR, plotH=H-padT-padB;
     var maxV = Math.max(10, Math.max.apply(null, posts.map(function(p){return p.likes+p.comments})));
     var n = posts.length;
-    var slot = plotW/n, barW = Math.min(46, slot-14);
+    var slot = plotW/n, barW = Math.max(1.5, Math.min(46, slot-14));
     var muted=cssVar('--muted'), grid=cssVar('--grid'), base=cssVar('--baseline'), ink2=cssVar('--ink-2');
     var NS='http://www.w3.org/2000/svg';
     function el(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e;}
@@ -2897,7 +2898,8 @@ try{
       var x = padL + i*slot + (slot-barW)/2;
       var by = y(v), bh = padT+plotH-by;
       var color = p.format==='Video testimonial' ? cssVar('--s1') : cssVar('--s2');
-      var r = el('path',{d:'M'+x+' '+(by+4)+' q0 -4 4 -4 h'+(barW-8)+' q4 0 4 4 v'+Math.max(0,bh-4)+' h-'+barW+' Z', fill:color});
+      var dts2 = barW>=10 ? 'M'+x+' '+(by+4)+' q0 -4 4 -4 h'+(barW-8)+' q4 0 4 4 v'+Math.max(0,bh-4)+' h-'+barW+' Z' : 'M'+x+' '+by+' h'+barW+' v'+Math.max(0,bh)+' h-'+barW+' Z';
+      var r = el('path',{d:dts2, fill:color});
       r.style.cursor='pointer';
       r.addEventListener('mousemove',function(ev){
         tooltip.innerHTML='<div class="t-title">'+p.title+'</div><div>'+p.channel+' · '+p.date+'</div><div>Likes <b>'+p.likes+'</b> · Comments <b>'+p.comments+'</b></div>';
@@ -4450,9 +4452,9 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     if(ed.getAttribute('data-built')) return;
     ed.setAttribute('data-built','1');
     var ti=document.createElement('input'); ti.type='text'; ti.className='pe-title'; ti.value=p.title; ti.placeholder='Internal title';
-    ti.onchange=function(){ p.title=ti.value; };
+    ti.onchange=function(){ if(p.title!==ti.value){ p.title=ti.value; stamp(p,'edited'); } };
     var vi=document.createElement('textarea'); vi.className='pe-vis'; vi.value=p.visual||''; vi.placeholder='Visual brief / image instructions';
-    vi.onchange=function(){ p.visual=vi.value; };
+    vi.onchange=function(){ if((p.visual||'')!==vi.value){ p.visual=vi.value; stamp(p,'edited'); } };
     var dup=document.createElement('button'); dup.className='cbtn'; dup.textContent='\u29c9 Duplicate post';
     dup.title='Copy this post into Compose \u2014 handy for platform variants';
     dup.onclick=function(){
@@ -5141,6 +5143,26 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
       })
       .catch(function(){ setSt('sync error \u2014 offline?'); });
   }
+  function lastStampAt(p){ var hh=(p&&p.history)||[]; return hh.length?(hh[hh.length-1].at||''):''; }
+  function mergeStates(local, remote){
+    // per-post: whichever side carries the NEWER last history stamp wins;
+    // ties and unstamped conflicts keep the local (actively-edited) copy
+    var changed=0;
+    if(!remote||!Array.isArray(remote.posts)) return {state:local, changed:0};
+    var rby={}; remote.posts.forEach(function(p){ rby[p.title]=p; });
+    (local.posts||[]).forEach(function(p, i){
+      var r=rby[p.title]; if(!r) return;
+      if(lastStampAt(r)>lastStampAt(p)){ local.posts[i]=r; changed++; }
+    });
+    var lby={}; (local.posts||[]).forEach(function(p){ lby[p.title]=1; });
+    remote.posts.forEach(function(p){ if(!lby[p.title]){ local.posts.push(p); changed++; } });
+    // deletions anywhere win everywhere
+    var del={}; (local.deleted||[]).forEach(function(t){ del[t]=1; });
+    (remote.deleted||[]).forEach(function(t){ if(!del[t]){ del[t]=1; changed++; } });
+    local.deleted=Object.keys(del);
+    if(local.deleted.length) local.posts=local.posts.filter(function(p){ return !del[p.title]; });
+    return {state:local, changed:changed};
+  }
   function push(){
     if(!pullSettled) return; // never overwrite the team before we've even seen their state
     var cur=localState(); if(!cur||cur===lastPushed) return;
@@ -5148,20 +5170,21 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     var hasWork=(body.posts||[]).some(function(q){ return q.img||q.when||(q.history&&q.history.length); });
     if(!hasWork && lastRemoteAt && !forcing){ lastPushed=cur; setSt('push held \u2014 an empty pipeline never overwrites the team version'); return; }
     if(forcing){ forcing=false; doPush(cur, body); return; }
-    // stale-device guard: if the team version was edited more recently than this
-    // browser's copy, hold the push instead of clobbering newer work
-    fetch(EP+'?id=eq.1&select=state->>savedAt',{headers:H}).then(function(r){
+    // merge-on-push: read the team version and merge per post before writing,
+    // so no browser ever wholesale-overwrites newer team work
+    fetch(EP+'?id=eq.1&select=state',{headers:H}).then(function(r){
       if(!r.ok) throw new Error(r.status);
       return r.json();
     }).then(function(rows){
-      var remoteSaved=(rows&&rows[0]&&rows[0].savedAt)||'';
-      var localSaved=savedAtOf(cur);
-      if(remoteSaved && localSaved && remoteSaved>localSaved){
-        setSt('push held \u2014 this browser is BEHIND the team version. Click \u21bb Load team version, then make your edits.');
-        if(!remoteNewerShown){ pullFull(false); }
-        return;
+      var remote=rows&&rows[0]&&rows[0].state;
+      var m=mergeStates(body, remote);
+      m.state.savedAt=new Date().toISOString();
+      var ms=JSON.stringify(m.state);
+      if(m.changed){
+        try{ localStorage.setItem('sshub_state', ms); }catch(err){}
+        setSt('synced \u00b7 merged '+m.changed+' newer team edit'+(m.changed===1?'':'s')+' \u2014 refresh to see them');
       }
-      doPush(cur, body);
+      doPush(ms, m.state);
     }).catch(function(){ doPush(cur, body); });
   }
   var ltb=document.getElementById('loadTeam');
@@ -5277,6 +5300,17 @@ var PLANSEP = {"PLAN": [{"gi": 1, "time": "9:30 AM", "why": "Hub-assigned Deploy
       if(!p) return;
       p._time=x.time; p._why=x.why;
       planned.push({gi:x.gi, p:p});
+    });
+    // completeness: every post with a date belongs on this plan, including ones
+    // scheduled in Content Studio after the plan draft was written
+    var __seenT={}; planned.forEach(function(o){ __seenT[o.p.title]=1; });
+    var DEFT={LinkedIn:'9:30 AM',Instagram:'12:00 PM',Facebook:'12:30 PM',X:'10:30 AM',YouTube:'11:00 AM',TikTok:'12:00 PM'};
+    ccPosts.forEach(function(p){
+      if(!p.when || __seenT[p.title]) return;
+      p._time=p._time||DEFT[p.platform]||'10:00 AM';
+      p._why=p._why||'Scheduled from Content Studio after the plan draft \u2014 date and stage are live from the pipeline.';
+      planned.push({gi:(window.__planIdx&&window.__planIdx[p.title]!=null?window.__planIdx[p.title]:-1), p:p});
+      __seenT[p.title]=1;
     });
     // byday for the grid
     var byday={};
