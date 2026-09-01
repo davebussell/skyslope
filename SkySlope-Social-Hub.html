@@ -519,6 +519,18 @@
   .vidcover img{height:44px;width:auto;max-width:120px;border-radius:6px;object-fit:cover}
   .vidcover .coverrm{position:static;opacity:.85;margin-left:auto}
   .fbtn.vidchip.on{background:var(--s1);color:#fff;border-color:transparent;font-weight:700}
+  .pvmedia.coverfirst{padding:0;min-height:0;display:block}
+  .vwrap{position:relative}
+  .vwrap .vcov{width:100%;height:auto;display:block;max-height:600px;object-fit:contain;background:var(--page)}
+  .vwrap video{width:100%;max-height:600px;display:block;background:#000}
+  .vplay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:rgba(21,26,39,.72);color:#fff;font-size:20px;border:2px solid rgba(255,255,255,.9);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s ease,background .12s ease;font-family:inherit;padding:0 0 0 4px}
+  .vplay:hover{transform:translate(-50%,-50%) scale(1.08);background:rgba(0,89,218,.85)}
+  .dlrow{display:flex;gap:6px;align-items:center;padding:7px 10px;border-top:1px solid var(--grid);background:var(--page);flex-wrap:wrap}
+  .dlsp{flex:1}
+  .dlbtn{font-family:inherit;font-size:11px;font-weight:600;border:1px solid var(--grid);border-radius:999px;background:var(--surface);color:var(--ink-2);padding:4px 10px;cursor:pointer}
+  .dlbtn:hover{color:var(--blue);border-color:var(--blue)}
+  .dlbtn.rmb{color:var(--muted)}
+  .dlbtn.rmb:hover{color:var(--crit);border-color:var(--crit)}
   .sfrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex-basis:100%;margin-top:8px}
   .sfsel{padding:6px 8px;border:1px solid var(--grid);border-radius:8px;background:var(--surface);color:var(--ink-2);font-size:12.5px;font-family:inherit;max-width:230px}
   .sfclear{border-color:rgba(220,53,69,.5);color:var(--crit)}
@@ -4272,12 +4284,15 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
       var kind=p.creative.kind||'asset';
       var lk=p.creative.link;
       if(kind==='video' && (/\/storage\/v1\/object\/public\//.test(lk) || /\.(mp4|webm|mov)(\?|$)/i.test(lk))){
-        var cover = p.img ? '<div class="vidcover"><span class="vc-lbl">COVER</span><img src="'+escAttr(p.img)+'" alt="cover thumbnail"><button type="button" class="imgrm coverrm" title="Remove the cover image">\u2715</button></div>' : '';
-        return '<div class="pvmedia vid"><video controls playsinline preload="metadata" src="'+lk.replace(/"/g,'&quot;')+'"></video><button type="button" class="imgrm vidrm" title="Remove video (the post may move back a stage)">\u2715</button>'+cover+'</div>';
+        var dl='<div class="dlrow">'+(p.img?'<button type="button" class="dlbtn dlimg" title="Download the cover image">\u2b07 Cover</button>':'')+'<button type="button" class="dlbtn dlvid" title="Download the video file">\u2b07 Video</button><span class="dlsp"></span>'+(p.img?'<button type="button" class="dlbtn rmb rmcover" title="Remove the cover image">\u2715 Cover</button>':'')+'<button type="button" class="dlbtn rmb rmvideo" title="Remove the video">\u2715 Video</button></div>';
+        if(p.img){
+          return '<div class="pvmedia vid coverfirst" data-vsrc="'+lk.replace(/"/g,'&quot;')+'"><div class="vwrap"><img class="vcov" src="'+escAttr(p.img)+'" alt="video cover"><button type="button" class="vplay" title="Play the reel" aria-label="Play the reel">\u25b6</button></div>'+dl+'</div>';
+        }
+        return '<div class="pvmedia vid"><div class="vwrap"><video controls playsinline preload="metadata" src="'+lk.replace(/"/g,'&quot;')+'"></video></div>'+dl+'</div>';
       }
       return '<a class="pvmedia has" href="'+lk.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+(kind==='video'?'\u25b6':'\ud83d\uddbc\ufe0f')+' '+kind+' attached \u2014 open in Drive</a>';
     }
-    if(p.img) return '<div class="pvmedia img"><img src="'+escAttr(p.img)+'" alt=""><button type="button" class="imgrm" title="Remove image (moves the post back a stage)">✕</button></div>';
+    if(p.img) return '<div class="pvmedia img"><img src="'+escAttr(p.img)+'" alt=""><button type="button" class="imgrm" title="Remove image (moves the post back a stage)">✕</button><div class="dlrow"><button type="button" class="dlbtn dlimg" title="Download this image">\u2b07 Image</button></div></div>';
     var __gi=(p.__gi!=null?p.__gi:ccPosts.indexOf(p));
     var __pgi=(window.__planIdx&&window.__planIdx[p.title]!=null)?window.__planIdx[p.title]:-1;
     if(__pgi>-1&&typeof PLANSEP!=='undefined'&&PLANSEP.CREATIVES&&PLANSEP.CREATIVES[__pgi])
@@ -4662,6 +4677,42 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     document.addEventListener('keydown', onKey);
     document.body.appendChild(ov);
   }
+  document.addEventListener('click', function(e){
+    var t=e.target; if(!t.closest) return;
+    var wrap=t.closest('.pvmedia'); if(!wrap) return;
+    var card=t.closest('.pv'); var gi=card&&card.getAttribute('data-pvi');
+    var p=(gi!=null&&ccPosts[+gi])?ccPosts[+gi]:null;
+    if(!p) return;
+    if(t.closest('.vplay')){
+      e.preventDefault(); e.stopPropagation();
+      var vw=wrap.querySelector('.vwrap');
+      var src=wrap.getAttribute('data-vsrc')||'';
+      if(vw&&src) vw.innerHTML='<video controls autoplay playsinline src="'+src.replace(/"/g,'&quot;')+'"></video>';
+      return;
+    }
+    if(t.closest('.dlvid')){
+      e.preventDefault(); e.stopPropagation();
+      var lk=p.creative&&p.creative.link; if(!lk) return;
+      var a=document.createElement('a');
+      a.href=lk+(lk.indexOf('?')<0?'?download':'&download');
+      a.download=''; a.target='_blank'; a.rel='noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+      showToast('Video download started');
+      return;
+    }
+    if(t.closest('.dlimg')){
+      e.preventDefault(); e.stopPropagation();
+      if(!p.img) return;
+      var a2=document.createElement('a');
+      a2.href=p.img;
+      a2.download=(p.title||'asset').replace(/[^\w-]+/g,'_').slice(0,40)+(p.creative&&p.creative.kind==='video'?'-cover':'')+'.jpg';
+      document.body.appendChild(a2); a2.click(); a2.remove();
+      showToast('Image download started');
+      return;
+    }
+    if(t.closest('.rmcover')){ e.preventDefault(); e.stopPropagation(); removeImage(p); return; }
+    if(t.closest('.rmvideo')){ e.preventDefault(); e.stopPropagation(); removeVideo(p); return; }
+  }, true);
   function renderPreview(){ render(); }
   // ----- calendar view -----
   var calMonth=(function(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),1);})();
