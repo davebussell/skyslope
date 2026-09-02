@@ -4175,10 +4175,10 @@ try{
         var r=syncEnv(p);
         refreshAll();
         showToast('Video uploaded \u2014 it plays right on the card'+(r?' \u2014 moved to '+ENV_LABEL[r.to]:''));
-      } else if(xhr.status===404){
-        showToast('Video storage is not set up yet \u2014 the videos bucket is missing in Supabase (ask Dave)');
+      } else if(xhr.status===404 || /NoSuchBucket|Bucket not found/i.test(xhr.responseText||'')){
+        showToast('Video storage is not set up yet \u2014 the "videos" bucket does not exist in Supabase (ask Dave for the 30-second setup)');
       } else if(xhr.status===400||xhr.status===403){
-        showToast('Storage refused the upload ('+xhr.status+') \u2014 the videos bucket needs its upload policy (ask Dave)');
+        showToast('Storage refused the upload ('+xhr.status+') \u2014 the videos bucket exists but needs its anon upload policy (ask Dave)');
       } else {
         showToast('Upload failed ('+xhr.status+') \u2014 try again, or paste a Drive link');
       }
