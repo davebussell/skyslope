@@ -3674,33 +3674,33 @@ try{
       direction='Template: EXPLAINER BEATS - a real scene ('+scene+') carries the teach; 2-3 short text beats land the lesson in sequence; final beat is the takeaway, held.';
     }
     var L=[];
-    L.push('Generate one finished short-form social video now. Do not describe it or ask questions - produce the video.');
-    L.push('Format: '+(SPEC[p.platform]||SPEC.Instagram)+'. No audio required; design it to work on mute.');
+    L.push('You are directing one finished short-form social video. Make the video itself - no descriptions, no questions. It is a '+(SPEC[p.platform]||SPEC.Instagram)+' piece, and it has to work with the sound off.');
     L.push('');
-    L.push('THE POST THIS VIDEO ACCOMPANIES:');
+    L.push('It accompanies this social post:');
     L.push('"'+cap+'"');
     L.push('');
-    L.push('WHAT THE VIDEO MUST DO');
-    L.push('The hook must land VISUALLY inside the first 1.5 seconds - no logos, no title cards, no slow fades. A scrolling viewer decides in one beat: "'+hook+'"');
+    L.push('Inside the first second and a half, a scrolling viewer should FEEL the idea before reading a word: '+hook+' Open on the motion or the moment itself - never a logo, a title card, or a slow fade.');
     L.push(direction);
-    if(vis) L.push('SHOT LIST FROM THE TEAM (follow this exactly where given): '+vis);
+    if(vis) L.push('The team has written the exact shot list - follow it faithfully: '+vis);
     L.push('');
-    L.push('BRAND LOOK');
-    L.push('The brand is SkySlope, real estate transaction software - a calm, premium "mission control" world; quiet confidence, never sci-fi clutter. Photorealistic cinematic or premium motion-graphics only.');
+    var allowed=[];
+    if(vis){
+      L.push('The only words allowed on screen are the ones quoted inside the shot list above. Nothing else may be written anywhere in the frame - no words from these instructions, no labels, chips, badges, captions or watermarks, and no numbers that are not quoted there. If a word is not quoted in the shot list, it does not appear.');
+    } else {
+      if(num) allowed.push(num);
+      if(hook) allowed.push(hook);
+      L.push('The only text allowed on screen, at most three short moments of it, each held steady and readable for a full second:');
+      allowed.forEach(function(t){ L.push('  "'+t+'"'); });
+      L.push('Nothing else may be written anywhere in the frame - no words from these instructions, no labels, chips, badges, captions or watermarks, and no invented or rounded numbers. If a word is not quoted just above, it does not appear.');
+    }
+    L.push('');
+    L.push('Now the look. SkySlope makes real estate transaction software, and its world feels like calm mission control - quiet confidence, premium and unhurried, never sci-fi clutter. Shoot it photorealistic and cinematic, or as premium motion graphics.');
     L.push(dark
-      ? 'Scene mode: DARK - deep space-navy (#161B28) easing into electric blue (#006BED); white type; Sky Light #87C6FF accents; gentle glows, faint stars welcome.'
-      : 'Scene mode: LIGHT - white into ice blue (#F4F8FC) or natural warm light; Science Blue #0059DA elements; Slope Slate #3F5B77 support.');
-    L.push('Fixed palette - never substitute: #0059DA, #006BED, #87C6FF, #3F5B77, #151A27, white; green #28A745 only for positive change. ONE hero accent.');
-    L.push('');
-    L.push('TEXT BEATS');
-    L.push('- At most 3 on-screen text beats, each visible and steady for at least 1 full second, sentence case. Font: Proxima Nova (SkySlope\u2019s brand font); if unavailable use Montserrat, Poppins or Avenir Next - any clean geometric sans, never a default serif or handwritten font. Quotes only may use Libre Baskerville (fallbacks: Baskerville, Playfair Display, Georgia).');
-    L.push('- Only words and numbers that appear in this prompt. Never invent, round, or extrapolate a number.');
-    L.push('');
-    L.push('HARD RULES');
-    L.push('- No logos, wordmarks or watermarks of any company, including SkySlope. No fake app or platform UI. No gibberish or warping text - text must render crisp and stable.');
-    L.push('- People: diverse, modern, real-feeling professionals and clients; no celebrity likenesses.');
-    L.push('- End on a clean resolve or a loopable frame.');
-    L.push('- ACCESSIBILITY (non-negotiable): every text beat sits on a dark scrim or solid panel at 4.5:1 contrast minimum (WCAG AA); no light-on-light, no thin type over busy motion.');
+      ? 'This one plays dark: a deep night-navy backdrop (around #161B28) easing into a rich electric blue (#006BED), with white type and soft glowing accents in pale blue (#87C6FF). A hint of faint stars is welcome.'
+      : 'This one plays light and real: white and icy pale-blue tones (around #F4F8FC), warm natural light, with the brand\u2019s deep blue (#0059DA) carrying any graphic elements and a muted slate blue (#3F5B77) in support.');
+    L.push('Stay inside those blues, plus white - one dominant accent, never a rainbow. A soft green (#28A745) may appear only to mark something improving.');
+    L.push('Whenever text appears, set it in Proxima Nova - or Montserrat, Poppins or Avenir Next if that font is unavailable - in sentence case, resting on a dark translucent band or a clean solid panel so it reads instantly against the scene (never pale type floating on a pale background, never thin type over busy motion).'+(/testimonial/i.test(pil)?' The quote itself may be set in Libre Baskerville, or Baskerville, Playfair Display or Georgia if unavailable.':''));
+    L.push('The people in frame are modern, diverse, real-feeling professionals and clients - no celebrity lookalikes. No company logos, wordmarks or watermarks anywhere, including SkySlope\u2019s own; no fake app screens. Text stays crisp and stable, never warping. End on a clean hold or a frame that loops.');
     return L.join('\n');
   }
   function genPrompt(p, forceCover){
