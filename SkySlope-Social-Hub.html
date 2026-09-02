@@ -5461,7 +5461,11 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
         setSt('synced \u00b7 merged '+m.changed+' newer team edit'+(m.changed===1?'':'s')+' \u2014 refresh to see them');
       }
       doPush(ms, m.state);
-    }).catch(function(){ doPush(cur, body); });
+    }).catch(function(){
+      // fail CLOSED: never overwrite the team when we could not read their
+      // latest state - hold this push; the next cycle retries the merge
+      setSt('push held \u2014 could not read the team version to merge; will retry');
+    });
   }
   var ltb=document.getElementById('loadTeam');
   if(ltb) ltb.onclick=function(){
