@@ -5595,22 +5595,26 @@ var PLANSEP = {"PLAN": [{"gi": 1, "time": "9:30 AM", "why": "Hub-assigned Deploy
     // byday for the grid
     var byday={};
     planned.forEach(function(o){ if(o.p.when){ (byday[o.p.when]=byday[o.p.when]||[]).push(o.p); } });
+    var booked=planned.filter(function(o){ return !!o.p.when; });
     var counts={LinkedIn:0,Instagram:0,Facebook:0,X:0,YouTube:0};
-    planned.forEach(function(o){ if(counts[o.p.platform]!=null) counts[o.p.platform]++; });
-    var total=planned.length;
+    booked.forEach(function(o){ if(counts[o.p.platform]!=null) counts[o.p.platform]++; });
+    var total=booked.length;
+    var firstDay=''; booked.forEach(function(o){ if(!firstDay||o.p.when<firstDay) firstDay=o.p.when; });
 
     var html='';
     // hero
     html+='<header class="sp-hero"><div class="sp-stars"></div><img class="sp-heroAstro" src="'+PLANSEP.ASTRO+'" alt="">'+
       '<div class="sp-heroInner"><div class="sp-kicker">SKYSLOPE SOCIAL HUB · CLICK SHIFT · SEPTEMBER PLAN</div>'+
       '<h1>The September<br>Content Calendar</h1>'+
-      '<p class="sp-heroSub">'+total+' posts, live from the Content Studio pipeline — laid out post-by-post with comp visuals and this hub’s own image prompt for every card. Reschedule a post in Content Studio and it moves here automatically.</p>'+
-      '<div class="sp-statRow"><div class="sp-stat"><b>'+total+'</b><span>scheduled posts</span></div>'+
+      '<p class="sp-heroSub">'+(total
+        ? total+' booked post'+(total===1?'':'s')+', live from the Content Studio pipeline — laid out post-by-post with comp visuals and this hub’s own generation prompt for every card. Reschedule a post in Content Studio and it moves here automatically.'
+        : 'The calendar is clear — nothing is booked right now. Give posts a day with the \ud83d\udcc5 button in Content Studio and they appear here automatically, week by week.')+'</p>'+
+      '<div class="sp-statRow"><div class="sp-stat"><b>'+total+'</b><span>booked posts</span></div>'+
       '<div class="sp-stat"><b>'+counts.LinkedIn+'</b><span>LinkedIn</span></div>'+
       '<div class="sp-stat"><b>'+counts.Instagram+'</b><span>Instagram</span></div>'+
       '<div class="sp-stat"><b>'+counts.Facebook+'</b><span>Facebook</span></div>'+
       '<div class="sp-stat"><b>'+counts.X+'</b><span>X</span></div>'+
-      '<div class="sp-stat hi"><b>Mon Sep 7</b><span>Launch day</span></div></div></div></header>';
+      (firstDay?'<div class="sp-stat hi"><b>'+esc(nice(firstDay))+'</b><span>first booked day</span></div>':'')+'</div></div></header>';
     // month + how
     html+='<section class="sp-monthWrap"><div class="sp-monthCard"><h3>At a glance <span class="sp-legend"><i style="background:#0A66C2"></i>LinkedIn <i style="background:#E1306C"></i>Instagram <i style="background:#1877F2"></i>Facebook <i style="background:#111"></i>X</span></h3>'+monthGrid(byday)+
       '<p class="sp-mgNote">Anchored dates verified: NAR Existing-Home Sales (Aug data) — <b>Thu Sep 10, 10:00 AM ET</b> · FOMC decision — <b>Wed Sep 16, 2:00 PM ET</b>. Launch is <b>Mon Sep 7</b> — nothing publishes before it. The Q3 report now sits in early October behind the data pack; its teaser runs Sep 29 only if the report is real.</p></div>'+
