@@ -531,6 +531,21 @@
   .dlbtn:hover{color:var(--blue);border-color:var(--blue)}
   .dlbtn.rmb{color:var(--muted)}
   .dlbtn.rmb:hover{color:var(--crit);border-color:var(--crit)}
+  /* ---- v13: slide carousel ---- */
+  .pvmedia.slides{padding:0;min-height:0;display:block}
+  .slidewrap{position:relative}
+  .slidetrack{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .slidetrack::-webkit-scrollbar{display:none}
+  .slidetrack .slide{flex:0 0 100%;scroll-snap-align:center}
+  .slidetrack .slide img{width:100%;height:auto;max-height:600px;object-fit:contain;background:var(--page);display:block}
+  .snav{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:none;background:rgba(21,26,39,.55);color:#fff;font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0 0 2px;transition:background .12s ease}
+  .snav:hover{background:rgba(0,89,218,.85)}
+  .sprev{left:10px}
+  .snext{right:10px}
+  .scount{position:absolute;top:10px;right:12px;background:rgba(21,26,39,.7);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:3px 10px}
+  .sdots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+  .sdots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 3px rgba(0,0,0,.4)}
+  .sdots i.on{background:#fff}
   .sfrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex-basis:100%;margin-top:8px}
   .sfsel{padding:6px 8px;border:1px solid var(--grid);border-radius:8px;background:var(--surface);color:var(--ink-2);font-size:12.5px;font-family:inherit;max-width:230px}
   .sfclear{border-color:rgba(220,53,69,.5);color:var(--crit)}
@@ -4041,7 +4056,7 @@ try{
       setTimeout((function(cc){return function(){cc.remove();};})(c),760);
     }
   }
-  function creativeFulfilled(p){ return !!(p.img || (p.creative&&p.creative.link)); }
+  function creativeFulfilled(p){ return !!(p.img || (p.slides&&p.slides.length) || (p.creative&&p.creative.link)); }
   function inferKind(p){ if(!p.creative.kind && (p.img||p.creative.link)){ p.creative.kind = (!p.img && /video|mp4|reel/i.test(p.creative.link||''))?'video':'image'; } }
   // The stage is DERIVED from the post's content \u2014 nobody moves cards by hand:
   //   publish day (or Scheduled/Published status) -> Deploy
@@ -4288,6 +4303,14 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
       +'</aside>';
   }
   function pvMedia(p){
+    if(p.slides && p.slides.length){
+      var sl=p.slides.map(function(u,i){ return '<div class="slide"><img src="'+escAttr(u)+'" alt="slide '+(i+1)+' of '+p.slides.length+'" loading="lazy"></div>'; }).join('');
+      var dots=p.slides.map(function(_,i){ return '<i'+(i===0?' class="on"':'')+'></i>'; }).join('');
+      var nav=p.slides.length>1
+        ? '<button type="button" class="snav sprev" aria-label="Previous slide">\u2039</button><button type="button" class="snav snext" aria-label="Next slide">\u203a</button><span class="scount">1/'+p.slides.length+'</span><div class="sdots">'+dots+'</div>'
+        : '';
+      return '<div class="pvmedia slides"><div class="slidewrap"><div class="slidetrack">'+sl+'</div>'+nav+'</div><div class="dlrow"><button type="button" class="dlbtn dlslide" title="Download the slide you are viewing">\u2b07 Slide</button><span class="dlsp"></span><button type="button" class="dlbtn rmb rmslide" title="Remove the slide you are viewing from the set">\u2715 Slide</button></div></div>';
+    }
     if(p.creative&&p.creative.link){
       var kind=p.creative.kind||'asset';
       var lk=p.creative.link;
@@ -4596,6 +4619,44 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     ti.onchange=function(){ if(p.title!==ti.value){ p.title=ti.value; stamp(p,'edited'); } };
     var vi=document.createElement('textarea'); vi.className='pe-vis'; vi.value=p.visual||''; vi.placeholder='Visual brief / image instructions';
     vi.onchange=function(){ if((p.visual||'')!==vi.value){ p.visual=vi.value; stamp(p,'edited'); } };
+    var sb=document.createElement('button'); sb.className='cbtn'; sb.textContent='\ud83d\uddbc\ufe0f Add slides';
+    sb.title='Upload one or more slide images \u2014 the card becomes a swipeable carousel';
+    sb.onclick=function(){
+      var store=window.__sshubStore;
+      if(!store){ showToast('Slide upload needs the shared database connected'); return; }
+      var fi=document.createElement('input'); fi.type='file'; fi.accept='image/*'; fi.multiple=true;
+      fi.onchange=function(){
+        var files=Array.prototype.slice.call(fi.files||[]);
+        if(!files.length) return;
+        var done=0, urls=[];
+        showToast('Uploading '+files.length+' slide'+(files.length>1?'s':'')+'\u2026');
+        files.forEach(function(f, i){
+          var ext=(f.name.match(/\.(\w+)$/)||[0,'jpg'])[1].toLowerCase();
+          var path='slides/'+Date.now()+'-'+i+'.'+ext;
+          var xr=new XMLHttpRequest();
+          xr.open('POST', store.url+'/storage/v1/object/videos/'+path);
+          xr.setRequestHeader('apikey', store.anonKey);
+          xr.setRequestHeader('Authorization','Bearer '+store.anonKey);
+          xr.setRequestHeader('Content-Type', f.type||'image/jpeg');
+          xr.onload=function(){
+            done++;
+            if(xr.status>=200&&xr.status<300) urls[i]=store.url+'/storage/v1/object/public/videos/'+path;
+            if(done===files.length){
+              var ok=urls.filter(Boolean);
+              if(ok.length){
+                p.slides=(p.slides||[]).concat(ok);
+                var r=syncEnv(p);
+                refreshAll();
+                showToast(ok.length+' slide'+(ok.length>1?'s':'')+' added \u2014 swipe on the card'+(r?' \u2014 moved to '+ENV_LABEL[r.to]:''));
+              } else showToast('Slide upload failed \u2014 check storage setup');
+            }
+          };
+          xr.onerror=function(){ done++; };
+          xr.send(f);
+        });
+      };
+      fi.click();
+    };
     var dup=document.createElement('button'); dup.className='cbtn'; dup.textContent='\u29c9 Duplicate post';
     dup.title='Copy this post into Compose \u2014 handy for platform variants';
     dup.onclick=function(){
@@ -4609,7 +4670,7 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     };
     var del=document.createElement('button'); del.className='cbtn'; del.textContent='\u2715 Delete post';
     del.onclick=function(){ openDelModal(p); };
-    ed.appendChild(ti); ed.appendChild(vi); ed.appendChild(dup); ed.appendChild(del);
+    ed.appendChild(ti); ed.appendChild(vi); ed.appendChild(sb); ed.appendChild(dup); ed.appendChild(del);
   }
   // ----- v8.1: delete post \u2014 X on every card, one confirmation modal -----
   var delTarget=null;
@@ -4720,6 +4781,43 @@ var COMP_BY_TITLE={"Office Hours — pilot episode":{"u":"https://images.unsplas
     }
     if(t.closest('.rmcover')){ e.preventDefault(); e.stopPropagation(); removeImage(p); return; }
     if(t.closest('.rmvideo')){ e.preventDefault(); e.stopPropagation(); removeVideo(p); return; }
+    var track=wrap.querySelector&&wrap.querySelector('.slidetrack');
+    function slideIndex(){ return track?Math.round(track.scrollLeft/Math.max(1,track.clientWidth)):0; }
+    if(t.closest('.sprev')||t.closest('.snext')){
+      e.preventDefault(); e.stopPropagation();
+      if(track) track.scrollBy({left:(t.closest('.snext')?1:-1)*track.clientWidth, behavior:'smooth'});
+      return;
+    }
+    if(t.closest('.dlslide')){
+      e.preventDefault(); e.stopPropagation();
+      var u=(p.slides||[])[slideIndex()]; if(!u) return;
+      var a3=document.createElement('a');
+      a3.href=u+(u.indexOf('?')<0?'?download':'&download'); a3.download=''; a3.target='_blank'; a3.rel='noopener';
+      document.body.appendChild(a3); a3.click(); a3.remove();
+      showToast('Slide download started');
+      return;
+    }
+    if(t.closest('.rmslide')){
+      e.preventDefault(); e.stopPropagation();
+      var idx=slideIndex();
+      if(p.slides && p.slides.length>idx && confirm('Remove slide '+(idx+1)+' of '+p.slides.length+' from this post?')){
+        p.slides.splice(idx,1);
+        if(!p.slides.length) delete p.slides;
+        render();
+        showToast('Slide removed');
+      }
+      return;
+    }
+  }, true);
+  document.addEventListener('scroll', function(e){
+    var track=e.target;
+    if(!track.classList || !track.classList.contains('slidetrack')) return;
+    var i=Math.round(track.scrollLeft/Math.max(1,track.clientWidth));
+    var wrap=track.parentElement;
+    var cnt=wrap.querySelector('.scount');
+    if(cnt) cnt.textContent=(i+1)+'/'+track.children.length;
+    var dots=wrap.querySelectorAll('.sdots i');
+    dots.forEach(function(d,di){ d.classList.toggle('on', di===i); });
   }, true);
   function renderPreview(){ render(); }
   // ----- calendar view -----
